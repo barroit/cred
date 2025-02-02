@@ -8,7 +8,7 @@
 
 #include "iter.h"
 #include "strbuf.h"
-#include "xchar.h"
+#include "xc.h"
 
 #ifdef CONFIG_WIDE_CHAR
 # pragma GCC diagnostic ignored "-Wmissing-prototypes"

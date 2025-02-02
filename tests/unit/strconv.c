@@ -6,6 +6,8 @@
 #include "unitest.h"
 
 #include <locale.h>
+#include <string.h>
+#include <wchar.h>
 
 #include "calc.h"
 #include "strconv.h"

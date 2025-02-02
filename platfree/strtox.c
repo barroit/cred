@@ -5,11 +5,13 @@
 
 #include "strtox.h"
 
+#include <ctype.h>
 #include <errno.h>
 #include <limits.h>
 
 #include "attr.h"
-#include "xchar.h"
+#include "compiler.h"
+#include "xc.h"
 
 #define STRTOX_OVERFLOW (-1U << 31)
 

@@ -5,6 +5,9 @@
 
 #include "ussert.h"
 
+#include <string.h>
+#include <wchar.h>
+
 #include "calc.h"
 #include "strconv.h"
 

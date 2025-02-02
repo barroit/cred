@@ -8,7 +8,7 @@
 #include "compiler.h"
 #include "strbuf.h"
 #include "xalloc.h"
-#include "xchar.h"
+#include "xc.h"
 
 const xchar *pth_prefix(void)
 {

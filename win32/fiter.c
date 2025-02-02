@@ -11,6 +11,7 @@
 
 #include "fiter.h"
 
+#include <stdlib.h>
 #include <windows.h>
 
 #include "gettext.h"
@@ -19,7 +20,7 @@
 #include "strlist.h"
 #include "tercol.h"
 #include "termas.h"
-#include "xchar.h"
+#include "xc.h"
 
 #define FILE_ATTRIBUTE_REGULAR \
 	(FILE_ATTRIBUTE_READONLY | FILE_ATTRIBUTE_HIDDEN | \

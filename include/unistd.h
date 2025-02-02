@@ -15,6 +15,7 @@
 #include <direct.h>
 #include <io.h>
 #include <process.h>
+#include <stdio.h>
 
 #define STDIN_FILENO  ({ fileno(stdin); })
 #define STDOUT_FILENO ({ fileno(stdout); })

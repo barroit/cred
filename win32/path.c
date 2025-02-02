@@ -11,7 +11,7 @@
 #include "strconv.h"
 #include "termas.h"
 #include "xalloc.h"
-#include "xchar.h"
+#include "xc.h"
 
 int chr_is_sep(xchar c)
 {

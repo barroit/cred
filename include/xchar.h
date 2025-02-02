@@ -13,7 +13,6 @@
 #include <wctype.h>
 
 #include "xalloc.h"
-#include "xc.h"
 
 #define __mbslen_a    __mbslen
 #define __strchrnul_a __strchrnul

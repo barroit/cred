@@ -11,7 +11,7 @@
 #include "attr.h"
 #include "compiler.h"
 #include "termas.h"
-#include "xchar.h"
+#include "xc.h"
 
 extern uint __test_failure_count;
 

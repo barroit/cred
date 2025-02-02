@@ -6,6 +6,7 @@
 #include "unitest.h"
 
 #include "strbuf.h"
+#include "xchar.h"
 
 TESTDECL_BEGIN();
 

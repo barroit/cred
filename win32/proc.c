@@ -13,6 +13,7 @@
 #include "strbuf.h"
 #include "termas.h"
 #include "xchar.h"
+#include "xc.h"
 
 int proc_rd_io(const xchar *name, u32 flags)
 {
