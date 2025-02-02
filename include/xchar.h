@@ -13,14 +13,7 @@
 #include <wctype.h>
 
 #include "xalloc.h"
-
-#define XC(x) __XC(x)
-
-#ifdef ANSI
-# define __XC(x) x
-#else
-# define __XC(x) L##x
-#endif
+#include "xc.h"
 
 #define __mbslen_a    __mbslen
 #define __strchrnul_a __strchrnul
