@@ -550,8 +550,8 @@ static void show_opt_usage(struct opt *opts)
 
 		printf("%*s", (int)len, "");
 
-		if (opt->__snam)
-			len += printf("-%c, ", opt->__snam);
+		if (opt->snam)
+			len += printf("-%c, ", opt->snam);
 
 		int no_neg = opt->flags & OPT_NO_NEG;
 
