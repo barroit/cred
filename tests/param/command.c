@@ -25,7 +25,7 @@ static int pop(int argc, const char **argv)
 
 int __main(int argc, const char **argv)
 {
-	command_callback_t cmd = NULL;
+	cmd_cb cmd = NULL;
 
 	struct opt opt[] = {
 		OPT_COMMAND("push", &cmd, push),

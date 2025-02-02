@@ -163,7 +163,7 @@ static int parse_command(struct opt *opts, const xchar *cmd)
 		if (xc_strcmp(opt->lnam, cmd) != 0)
 			continue;
 
-		*(command_callback_t *)opt->ptr = opt->cmd;
+		*(cmd_cb *)opt->ptr = opt->cmd;
 		return 39;
 	}
 

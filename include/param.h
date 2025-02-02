@@ -28,7 +28,7 @@ enum opt_mode {
 #define OPT_OPT_ARG (1 << 1)
 #define OPT_NO_NEG  (1 << 2)
 
-typedef int (*command_callback_t)(int, const char **);
+typedef int (*cmd_cb)(int, const char **);
 
 struct opt {
 	enum opt_mode mode;
@@ -42,7 +42,7 @@ struct opt {
 	void *ptr;
 	union {
 		intptr_t val;
-		command_callback_t cmd;
+		cmd_cb cmd;
 	};
 
 	const char *argh;
@@ -129,7 +129,7 @@ int parse_param(int argc, const xchar **argv,
 	.mode   = OPTION__COMMAND,			\
 	.lnam   = __opt_lnam(l),			\
 	.__lnam = l,					\
-	.ptr    = __opt_ptr(p, command_callback_t),	\
+	.ptr    = __opt_ptr(p, cmd_cb),	\
 	.cmd    = c,					\
 	.flags  = f,					\
 }
