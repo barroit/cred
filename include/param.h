@@ -9,7 +9,7 @@
 #include "compiler.h"
 #include "gettext.h"
 #include "types.h"
-#include "xchar.h"
+#include "xc.h"
 
 enum opt_mode {
 	OPTION_SWITCH,
