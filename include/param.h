@@ -28,7 +28,7 @@ enum opt_mode {
 #define OPT_OPT_ARG (1 << 1)
 #define OPT_NO_NEG  (1 << 2)
 
-typedef int (*cmd_cb)(int, const char **);
+typedef int (*cmd_cb)(int, const xchar **);
 
 struct opt {
 	enum opt_mode mode;
