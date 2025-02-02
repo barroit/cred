@@ -104,37 +104,37 @@ msgid   "hint:"
 msgstr  "ヒント:"
 
 #: /home/barroit/workspace/brukit/platfree/termas.c:138
-msgid   "\033[1;33mhint:\033[0m"
-msgstr  "\033[1;33mヒント:\033[0m"
+msgid   "[1;33mhint:[0m"
+msgstr  "[1;33mヒント:[0m"
 
 #: /home/barroit/workspace/brukit/platfree/termas.c:139
 msgid   "warn:"
-msgstr  "警告"
+msgstr  "警告:"
 
 #: /home/barroit/workspace/brukit/platfree/termas.c:139
-msgid   "\033[1;35mwarn:\033[0m"
-msgstr  "\033[1;35m警告:\033[0m"
+msgid   "[1;35mwarn:[0m"
+msgstr  "[1;35m警告:[0m"
 
 #: /home/barroit/workspace/brukit/platfree/termas.c:140
 msgid   "error:"
-msgstr  "エラー"
+msgstr  "エラー:"
 
 #: /home/barroit/workspace/brukit/platfree/termas.c:140
-msgid   "\033[1;31merror:\033[0m"
-msgstr  "\033[1;31mエラー:\033[0m"
+msgid   "[1;31merror:[0m"
+msgstr  "[1;31mエラー:[0m"
 
 #: /home/barroit/workspace/brukit/platfree/termas.c:141
 msgid   "fatal:"
-msgstr  "致命的な"
+msgstr  "致命的な:"
 
 #: /home/barroit/workspace/brukit/platfree/termas.c:141
-msgid   "\033[1;31mfatal:\033[0m"
-msgstr  "\033[1;31m致命的な:\033[0m"
+msgid   "[1;31mfatal:[0m"
+msgstr  "[1;31m致命的な:[0m"
 
 #: /home/barroit/workspace/brukit/platfree/termas.c:142
 msgid   "BUG:"
-msgstr  "バグ"
+msgstr  "バグ:"
 
 #: /home/barroit/workspace/brukit/platfree/termas.c:142
-msgid   "\033[1;31;40mBUG:\033[0m"
-msgstr  "\033[1;31;40mバグ:\033[0m"
+msgid   "[1;31;40mBUG:[0m"
+msgstr  "[1;31;40mバグ:[0m"
