@@ -384,7 +384,7 @@ static int parse_cmd_arg(struct param *ctx)
 	const xchar *str = ctx->argv[0];
 
 	if (str[0] != '-') {
-		if (ctx->flags & PRM_RET_NOPT)
+		if (ctx->flags & PRM_RET_ARG)
 			return 39;
 		else if (ctx->flags & PRM_PAR_CMD)
 			return parse_command(ctx->opts, str);
@@ -431,7 +431,7 @@ int parse_param(int argc, const xchar **argv,
 	int __argc = argc - 1;
 
 	if (has_command(opts)) {
-		BUG_ON(flags & PRM_RET_NOPT);
+		BUG_ON(flags & PRM_RET_ARG);
 		flags |= PRM_PAR_CMD;
 	}
 
