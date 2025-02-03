@@ -21,7 +21,7 @@ typedef PROCESS_INFORMATION proc_t;
 #define PROC_RD_STDOUT (1U << 30)
 #define PROC_RD_STDERR (1U << 31)
 
-int proc_rd_io(const xchar *name, u32 flags);
+int proc_redir_std(const xchar *name, u32 flags);
 
 int proc_exec(u32 flags, proc_t *proc, const xchar *file, ...);
 

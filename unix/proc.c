@@ -24,7 +24,7 @@ enum cherr_type {
 	CHERR_SIZE,
 };
 
-int proc_rd_io(const char *name, u32 flags)
+int proc_redir_std(const char *name, u32 flags)
 {
 	int ret = 0;
 	int fd = creat(name, 0664);
@@ -67,7 +67,7 @@ int proc_exec(u32 flags, proc_t *proc, const xchar *file, ...)
 	}
 
 	if (__rd_io_flags(flags)) {
-		int err = proc_rd_io(CONFIG_NULL_DEVICE, flags);
+		int err = proc_redir_std(CONFIG_NULL_DEVICE, flags);
 
 		if (err)
 			warn(_("failed to redirect output (0x%x)"), flags);

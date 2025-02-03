@@ -15,7 +15,7 @@
 #include "xchar.h"
 #include "xc.h"
 
-int proc_rd_io(const xchar *name, u32 flags)
+int proc_redir_std(const xchar *name, u32 flags)
 {
 	int err = 0;
 	SECURITY_ATTRIBUTES sec = {
