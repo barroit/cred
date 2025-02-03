@@ -12,6 +12,7 @@
 #include "xc.h"
 
 enum opt_mode {
+	OPTION_BIT,
 	OPTION_SWITCH,
 	OPTION_NUMBER,
 	OPTION_STRING,
@@ -81,6 +82,18 @@ int parse_param(int argc, const xchar **argv,
 
 #define OPT_END()    { .mode = OPTION__END }
 #define OPT_GROUP(l) { .mode = OPTION__GROUP, .__lnam = l }
+
+#define OPT_BIT(s, l, p, v, h) __OPT_BIT(s, l, p, v, h, 0)
+#define __OPT_BIT(s, l, p, v, h, f) {	\
+	.mode   = OPTION_BIT,		\
+	.snam   = __opt_snam(s),	\
+	.lnam   = __opt_lnam(l),	\
+	.__lnam = l,			\
+	.ptr    = __opt_ptr(p, u32),	\
+	.val    = v,			\
+	.usage  = h,			\
+	.flags  = OPT_NO_ARG | (f),	\
+}
 
 #define OPT_SWITCH(s, l, p, h) __OPT_SWITCH(s, l, p, h, 0)
 #define __OPT_SWITCH(s, l, p, h, f) {	\

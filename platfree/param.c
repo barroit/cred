@@ -175,6 +175,16 @@ static int parse_command(struct opt *opts, const xchar *cmd)
 	die(_("unknown command `%s', see '%s -h'"), name, cmdpath);
 }
 
+static void __setopt(bit)(struct opt *opt, const xchar *arg, u32 flags)
+{
+	u32 *p = opt->ptr;
+
+	if (flags & OPT_UNSET)
+		*p &= ~opt->val;
+	else
+		*p |= opt->val;
+}
+
 static void __setopt(switch)(struct opt *opt, const xchar *arg, u32 flags)
 {
 	int *p = opt->ptr;
@@ -224,6 +234,7 @@ static void set_opt_val(struct param *ctx,
 			struct opt *opt, const xchar *arg, u32 flags)
 {
 	static typeof(__setopt(switch)) *map[__OPTION__SIZE] = {
+		[OPTION_BIT]     = __setopt(bit),
 		[OPTION_SWITCH]  = __setopt(switch),
 		[OPTION_NUMBER]  = __setopt(number),
 		[OPTION_STRING]  = __setopt(string),
