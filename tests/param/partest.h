@@ -10,6 +10,7 @@
 
 int __main(int argc, const char **argv);
 
+#define pprint_hex(var)  printf("39\t%s\t%02x\n", #var, var)
 #define pprint_int(var)  printf("39\t%s\t%d\n", #var, var)
 #define pprint_uint(var) printf("39\t%s\t%u\n", #var, var)
 
