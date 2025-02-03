@@ -89,6 +89,9 @@ if(WIN32 AND CONFIG_PROG_WITH_SANITIZER)
   add_compile_options(-U_DLL)
 endif()
 
+get_directory_property(cflags COMPILE_OPTIONS)
+set(COMPILE_FLAGS ${cflags})
+
 string(REPLACE -rc . prog_version_cmake ${prog_version})
 project(${prog_name} VERSION ${prog_version_cmake} LANGUAGES C)
 
