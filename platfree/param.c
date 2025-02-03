@@ -64,8 +64,8 @@ struct cmdmode {
 
 static void __noreturn show_help(const char **usage, struct opt *opts);
 
-static struct strbuf __cmdname = SB_INIT;
-static char *cmdname;
+static struct strbuf __cmdpath = SB_INIT;
+static char *cmdpath;
 
 static int has_command(struct opt *opts)
 {
@@ -79,19 +79,19 @@ static int has_command(struct opt *opts)
 	return 0;
 }
 
-static void cmdname_append(const xchar *name)
+static void cmdpath_append(const xchar *name)
 {
-	if (__cmdname.len != 0)
-		sb_putc(&__cmdname, XC(' '));
+	if (__cmdpath.len != 0)
+		sb_putc(&__cmdpath, XC(' '));
 
-	sb_puts(&__cmdname, name);
+	sb_puts(&__cmdpath, name);
 
 	if (IS_ENABLED(CONFIG_WIDE_CHAR)) {
-		if (cmdname)
-			free(cmdname);
-		cmdname = sb_mb_str_fb(&__cmdname, "����");
+		if (cmdpath)
+			free(cmdpath);
+		cmdpath = sb_mb_str_fb(&__cmdpath, "����");
 	} else {
-		cmdname = (char *)__cmdname.buf;
+		cmdpath = (char *)__cmdpath.buf;
 	}
 }
 
@@ -170,7 +170,7 @@ static int parse_command(struct opt *opts, const xchar *cmd)
 
 	char *name = pretty_arg_name(cmd, "����");
 
-	die(_("unknown command `%s', see '%s -h'"), name, cmdname);
+	die(_("unknown command `%s', see '%s -h'"), name, cmdpath);
 }
 
 static void __setopt(switch)(struct opt *opt, const xchar *arg, u32 flags)
@@ -390,7 +390,7 @@ static int parse_cmd_arg(struct param *ctx)
 			return parse_command(ctx->opts, str);
 		else if (ctx->flags & PRM_NO_ARG)
 			die(_("'%s' takes no arguments, but got `%s'"),
-			    cmdname, str);
+			    cmdpath, str);
 
 		ctx->outv[ctx->outc] = str;
 		ctx->outc += 1;
@@ -450,7 +450,7 @@ int parse_param(int argc, const xchar **argv,
 		.mode  = LIST_HEAD_INIT(ctx.mode),
 	};
 
-	cmdname_append(argv[0]);
+	cmdpath_append(argv[0]);
 
 	while (ctx.argc) {
 		int ret = parse_cmd_arg(&ctx);
@@ -473,7 +473,7 @@ int parse_param(int argc, const xchar **argv,
 
 	if (flags & PRM_PAR_CMD && ret == 0) {
 		if (!(flags & PRM_OPT_CMD) && __argc)
-			error(_("'%s' requires a subcommand\n"), cmdname);
+			error(_("'%s' requires a subcommand\n"), cmdpath);
 
 		show_help(ctx.usage, ctx.opts);
 	}
