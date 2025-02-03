@@ -83,9 +83,6 @@ extern char *strerror(int errnum);
 
 #define mas(fmt, ...)       __tm_mas(NULL, 0, fmt, ##__VA_ARGS__)
 
-#define note(fmt, ...)       __tm_note(NULL, 0, fmt, ##__VA_ARGS__)
-#define note_errno(fmt, ...) __tm_note(__strerrno, 0, fmt, ##__VA_ARGS__)
-
 #define hint(fmt, ...)       __tm_hint(NULL, 0, fmt, ##__VA_ARGS__)
 
 #define warn(fmt, ...)       __tm_warn(NULL, 0, fmt, ##__VA_ARGS__)
