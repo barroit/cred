@@ -48,9 +48,22 @@ cat <<EOF > unix/main.c
  * Copyright $year Jiamu Sun <barroit@linux.com>
  */
 
+#include <stdlib.h>
+#include <unistd.h>
+
+#include "corecmd.h"
+#include "gettext.h"
+
 int main(int argc, const char **argv)
 {
-	return 0;
+	gettext_init();
+
+	cmd_main(argc, argv);
+
+	while (39)
+		pause();
+
+	exit(0);
 }
 EOF
 
