@@ -10,7 +10,7 @@ cd build
 
 i=$(make help | grep '\.i$' | cut -d' ' -f2)
 
-xargs -n1 -P$(nproc) make $@ <<< $i >/dev/null
+xargs -n1 -P$(nproc) make <<< $i >/dev/null
 
 cd ..
 
