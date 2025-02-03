@@ -32,14 +32,14 @@ int proc_redir_std(const char *name, u32 flags)
 	if (fd == -1)
 		return -1;
 
-	if (flags & PROC_RD_STDOUT) {
+	if (flags & PROC_REDIR_OUT) {
 		ret = dup2(fd, STDOUT_FILENO);
 
 		if (ret == -1)
 			goto err_out;
 	}
 
-	if (flags & PROC_RD_STDERR) {
+	if (flags & PROC_REDIR_ERR) {
 		ret = dup2(fd, STDERR_FILENO);
 
 		if (ret == -1)

@@ -18,8 +18,8 @@ typedef pid_t proc_t;
 typedef PROCESS_INFORMATION proc_t;
 #endif
 
-#define PROC_RD_STDOUT (1U << 30)
-#define PROC_RD_STDERR (1U << 31)
+#define PROC_REDIR_OUT (1U << 30)
+#define PROC_REDIR_ERR (1U << 31)
 
 int proc_redir_std(const xchar *name, u32 flags);
 

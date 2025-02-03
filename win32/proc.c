@@ -35,7 +35,7 @@ int proc_redir_std(const xchar *name, u32 flags)
 		goto err_open_fd;
 	fd = ret;
 
-	if (flags & PROC_RD_STDOUT) {
+	if (flags & PROC_REDIR_OUT) {
 		err = !SetStdHandle(STD_OUTPUT_HANDLE, file);
 		if (err)
 			goto err_rd_io;
@@ -45,7 +45,7 @@ int proc_redir_std(const xchar *name, u32 flags)
 			goto err_rd_io;
 	}
 
-	if (flags & PROC_RD_STDERR) {
+	if (flags & PROC_REDIR_ERR) {
 		err = !SetStdHandle(STD_ERROR_HANDLE, file);
 		if (err)
 			goto err_rd_io;
@@ -111,12 +111,12 @@ int proc_exec(u32 flags, proc_t *proc, const xchar *file, ...)
 		info.dwFlags = STARTF_USESTDHANDLES;
 		info.hStdInput = GetStdHandle(STD_INPUT_HANDLE);
 
-		if (flags & PROC_RD_STDOUT)
+		if (flags & PROC_REDIR_OUT)
 			info.hStdOutput = nul;
 		else
 			info.hStdOutput = GetStdHandle(STD_OUTPUT_HANDLE);
 
-		if (flags & PROC_RD_STDERR)
+		if (flags & PROC_REDIR_ERR)
 			info.hStdError = nul;
 		else
 			info.hStdError = GetStdHandle(STD_ERROR_HANDLE);

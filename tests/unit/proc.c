@@ -22,9 +22,9 @@ TESTDECL_ROUTINE(proc_exec_wait)
 	const xchar *file = XC(PROG_PATH);
 	u32 flags[] = {
 		0,
-		PROC_RD_STDOUT,
-		PROC_RD_STDERR,
-		PROC_RD_STDOUT | PROC_RD_STDERR,
+		PROC_REDIR_OUT,
+		PROC_REDIR_ERR,
+		PROC_REDIR_OUT | PROC_REDIR_ERR,
 	};
 	proc_t proc[sizeof_array(flags)];
 	uint i;
