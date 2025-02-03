@@ -81,8 +81,10 @@ static int has_command(struct opt *opts)
 
 static void cmdpath_append(const xchar *name)
 {
-	if (__cmdpath.len != 0)
+	if (__cmdpath.len)
 		sb_putc(&__cmdpath, XC(' '));
+	else
+		name = XC(PROGRAM_NAME);
 
 	sb_puts(&__cmdpath, name);
 
