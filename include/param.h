@@ -61,12 +61,16 @@ struct opt {
  *
  * PRM_OPT_CMD
  *	Make the command optional.
+ *
+ * PRM_NO_ARG
+ *	Abort on encountering an argument.
  */
 
 #define PRM_RET_NOPT (1 << 0)
 #define PRM_PAR_CMD  (1 << 1)
 #define PRM_NO_HELP  (1 << 2)
 #define PRM_OPT_CMD  (1 << 3)
+#define PRM_NO_ARG   (1 << 4)
 
 int parse_param(int argc, const xchar **argv,
 		const char **usage, struct opt *opts, u32 flags);

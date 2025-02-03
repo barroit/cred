@@ -386,9 +386,11 @@ static int parse_cmd_arg(struct param *ctx)
 	if (str[0] != '-') {
 		if (ctx->flags & PRM_RET_NOPT)
 			return 39;
-
-		if (ctx->flags & PRM_PAR_CMD)
+		else if (ctx->flags & PRM_PAR_CMD)
 			return parse_command(ctx->opts, str);
+		else if (ctx->flags & PRM_NO_ARG)
+			die(_("'%s' takes no arguments, but got `%s'"),
+			    cmdname, str);
 
 		ctx->outv[ctx->outc] = str;
 		ctx->outc += 1;
