@@ -7,5 +7,5 @@
 
 const xchar *udef_termas_dest;
 int udef_use_tercol = 1;
-int udef_termas_ts = 0;
-int udef_termas_pid = 0;
+int udef_termas_ts;
+int udef_termas_pid;
