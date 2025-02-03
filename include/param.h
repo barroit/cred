@@ -71,9 +71,6 @@ struct opt {
 int parse_param(int argc, const xchar **argv,
 		const char **usage, struct opt *opts, u32 flags);
 
-#define OPT_NUM_UNSET (-39)
-#define OPT_PTR_UNSET ((void *)-39)
-
 #define __opt_snam(s) __st_isascii(s) + s
 #define __opt_lnam(l) XC(l)
 #define __opt_ptr(p, t) __st_same_type(p, t *) + p

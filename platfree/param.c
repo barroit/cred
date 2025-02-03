@@ -177,13 +177,13 @@ static void __setopt(switch)(struct opt *opt, const xchar *arg, u32 flags)
 {
 	int *p = opt->ptr;
 
-	*p = flags & OPT_UNSET ? OPT_NUM_UNSET : 1;
+	*p = flags & OPT_UNSET ? 0 : 1;
 }
 
 static void __setopt(number)(struct opt *opt, const xchar *arg, u32 flags)
 {
 	if (flags & OPT_UNSET) {
-		*(u32 *)opt->ptr = OPT_NUM_UNSET;
+		*(u32 *)opt->ptr = 0;
 		return;
 	}
 
@@ -204,7 +204,7 @@ static void __setopt(string)(struct opt *opt, const xchar *arg, u32 flags)
 	const xchar **p = opt->ptr;
 
 	if (flags & OPT_UNSET)
-		*p = OPT_PTR_UNSET;
+		*p = NULL;
 	else if (arg)
 		*p = arg;
 	else if (opt->flags & OPT_OPT_ARG)
