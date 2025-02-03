@@ -8,6 +8,9 @@
 
 #include "types.h"
 
+#define UDEF_DEF_NUM (-39)
+#define UDEF_DEF_PTR ((void *)-39)
+
 extern const xchar *udef_termas_dest;
 				/* output destination */
 
