@@ -70,7 +70,7 @@ int proc_exec(u32 flags, proc_t *proc, const xchar *file, ...)
 		int err = proc_rd_io(CONFIG_NULL_DEVICE, flags);
 
 		if (err)
-			warn("failed to redirect output (0x%x)", flags);
+			warn(_("failed to redirect output (0x%x)"), flags);
 	}
 
 	va_list ap;
