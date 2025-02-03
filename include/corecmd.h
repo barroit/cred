@@ -8,6 +8,8 @@
 
 #include "types.h"
 
+int cmd_main(int argc, const xchar **argv);
+
 int cmd_version(int argc, const xchar **argv);
 
 #endif
