@@ -21,7 +21,7 @@ cd locale
 src=$(find ../build/CMakeFiles -type f -name '*.i')
 lang=(zh_CN ja_JP)
 
-xgettext --omit-header \
+xgettext --omit-header --no-location \
 	 --from-code=UTF-8 -LC -i -k_ -kN_ -k__H_ -k__HN_ $src
 
 if [[ $1 && $(grep $1 <<< ${lang[@]}) ]]; then
@@ -29,7 +29,7 @@ if [[ $1 && $(grep $1 <<< ${lang[@]}) ]]; then
 fi
 
 for l in ${lang[@]}; do
-	msgmerge -i -U $l.po messages.po
+	msgmerge -i --no-location -U $l.po messages.po
 	mkdir -p $l/LC_MESSAGES
 	msgfmt -o $l/LC_MESSAGES/$domain.mo $l.po
 done
