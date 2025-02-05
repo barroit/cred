@@ -11,8 +11,8 @@
 #include "udef.h"
 
 static const char *usage[] = {
-	PROGRAM_NAME " [--quiet] [--no-tercol] [--show-ts] [--show-pid]"
-		     " <command> [<args>]",
+	PROGRAM_NAME " [--output [<dest>] | --no-output] [--no-tercol]"
+		     " [--show-ts] [--show-pid] <command> [<args>]",
 	NULL,
 };
 
