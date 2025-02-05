@@ -46,6 +46,11 @@ static struct opt opts[] = {
 
 static void show_build(void)
 {
+	/*
+	 * TRANSLATORS
+	 * Keep the two leading space characters, and make sure the area before
+	 * the first %s is 12 half-width characters wide.
+	 */
 	printf(_("  build     %s-%s\n"), PROGRAM_BUILD, PROGRAM_ARCH);
 }
 
@@ -74,6 +79,11 @@ static void show_prefix(void)
 	if (IS_ENABLED(CONFIG_WIDE_CHAR))
 		mb_wcstombs_fb(&name, (wchar_t *)__name, "���");
 
+	/*
+	 * TRANSLATORS
+	 * Keep the two leading space characters, and make sure the area before
+	 * %s is 12 half-width characters wide.
+	 */
 	print_line(_("  prefix    %s\n"), name);
 
 	if (IS_ENABLED(CONFIG_WIDE_CHAR))
@@ -90,6 +100,10 @@ static void show_libvar(void)
 	if (show_mode & ~SHOW_LIBVER)
 		putchar('\n');
 
+	/*
+	 * TRANSLATORS
+	 * Keep the two leading space characters.
+	 */
 	puts(_("  libraries"));
 
 #ifdef HAVE_INTL
