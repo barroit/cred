@@ -25,7 +25,7 @@ static cmd_cb subcmd;
 
 static struct opt opts[] = {
 	__OPT_STRING(0, "output", &udef_termas_dest,
-		     N_("output destination"), 0),
+		     N_("specify output destination"), 0),
 	OPT_SWITCH(0, "tercol", &udef_use_tercol,
 		   N_("enable colorized terminal output")),
 	__OPT_SWITCH(0, "show-ts", &udef_termas_ts,
