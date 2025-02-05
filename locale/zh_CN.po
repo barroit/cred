@@ -10,102 +10,166 @@ msgstr  "Report-Msgid-Bugs-To: Jiamu Sun <barroit@linux.com>\n"
         "Content-Transfer-Encoding: 8bit\n"
 
 #, c-format
+msgid   "failed to redirect output (0x%x)"
+msgstr  "重定向输出失败 (0x%x)"
+
+#, c-format
 msgid   "failed to execute `%s'"
-msgstr  ""
+msgstr  "执行`%s'失败"
 
 #, c-format
 msgid   "failed to get status for link `%s'"
-msgstr  ""
+msgstr  "获取链接`%s'的状态失败"
 
 #, c-format
 msgid   "failed to open file `%s'"
-msgstr  ""
+msgstr  "打开文件`%s'失败"
 
 #, c-format
 msgid   "failed to get status for file `%s'"
-msgstr  ""
+msgstr  "获取`%s'的信息失败"
 
 #, c-format
 msgid   "failed to determine file type for `%s'"
-msgstr  ""
+msgstr  "无法确定`%s'的文件类型"
 
 #, c-format
 msgid   "`%s' has unsupported file type `%d', skipped"
-msgstr  ""
+msgstr  "不支持`%s'的文件类型`%d'，已跳过"
 
 #, c-format
 msgid   "failed to open directory `%s'"
-msgstr  ""
+msgstr  "打开目录`%s'失败"
 
 #, c-format
 msgid   "options %s and %s cannot be used together"
-msgstr  ""
+msgstr  "选项 %s 和 %s 不能同时使用"
 
 #, c-format
 msgid   "unknown command `%s', see '%s -h'"
-msgstr  ""
+msgstr  "未知命令`%s'，请参见'%s -h'"
 
 #, c-format
 msgid   "option %s has an invalid integer value `%s'"
-msgstr  ""
+msgstr  "选项 %s 的整数值`%s'无效"
 
 #, c-format
 msgid   "option -%c requires a value"
-msgstr  ""
+msgstr  "选项 -%c 需要一个值"
 
 #, c-format
 msgid   "unknown option -%c"
-msgstr  ""
+msgstr  "未知选项 -%c"
 
 #, c-format
 msgid   "option `%s%s' takes no value"
-msgstr  ""
+msgstr  "选项`%s%s'不接受值"
 
 #, c-format
 msgid   "option `%s%s' requires a value"
-msgstr  ""
+msgstr  "选项`%s%s'需要一个值"
 
 #, c-format
 msgid   "ambiguous option --%s, could be %s or %s"
-msgstr  ""
+msgstr  "模糊的选项 --%s，可能是 %s 或 %s"
 
 #, c-format
 msgid   "unknown option --%s"
-msgstr  ""
+msgstr  "未知选项 --%s"
+
+#, c-format
+msgid   "'%s' takes no arguments, but got `%s'"
+msgstr  "'%s'不接受参数，但收到了`%s'"
 
 msgid   "unknown option -"
-msgstr  ""
+msgstr  "未知选项 -"
 
 #, c-format
 msgid   "'%s' requires a subcommand\n"
-msgstr  ""
+msgstr  "'%s'需要一个子命令\n"
 
 msgid   "hint:"
-msgstr  ""
+msgstr  "提示:"
 
 msgid   "[1;33mhint:[0m"
-msgstr  ""
+msgstr  "[1;33m提示:[0m"
 
 msgid   "warn:"
-msgstr  ""
+msgstr  "警告:"
 
 msgid   "[1;35mwarn:[0m"
-msgstr  ""
+msgstr  "[1;35m警告:[0m"
 
 msgid   "error:"
-msgstr  ""
+msgstr  "错误:"
 
 msgid   "[1;31merror:[0m"
-msgstr  ""
+msgstr  "[1;31m错误:[0m"
 
 msgid   "fatal:"
-msgstr  ""
+msgstr  "致命的:"
 
 msgid   "[1;31mfatal:[0m"
-msgstr  ""
+msgstr  "[1;31m致命的:[0m"
 
 msgid   "BUG:"
-msgstr  ""
+msgstr  "BUG:"
 
 msgid   "[1;31;40mBUG:[0m"
-msgstr  ""
+msgstr  "[1;31;40mBUG:[0m"
+
+msgid   "specify output destination"
+msgstr  "指定输出到的文件"
+
+msgid   "enable colorized terminal output"
+msgstr  "启用终端彩色输出"
+
+msgid   "prefix messages with timestamp"
+msgstr  "为消息添加时间戳前缀"
+
+msgid   "prefix messages with current PID"
+msgstr  "为消息添加当前PID前缀"
+
+msgid   "failed to run process in silent mode"
+msgstr  "以静默模式(无消息)运行进程失败"
+
+msgid   "display all info"
+msgstr  "显示所有信息"
+
+msgid   "show build platform"
+msgstr  "显示构建平台"
+
+msgid   "show install location"
+msgstr  "显示安装位置"
+
+msgid   "list compile flags"
+msgstr  "列出编译选项"
+
+msgid   "list library versions"
+msgstr  "列出库版本"
+
+#. TRANSLATORS
+#. Keep the two leading space characters, and make sure the area before
+#. the first %s is 12 half-width characters wide.
+#.
+#, c-format
+msgid   "  build     %s-%s\n"
+msgstr  "  构建       %s-%s\n"
+
+#. TRANSLATORS
+#. Keep the two leading space characters, and make sure the area before
+#. %s is 12 half-width characters wide.
+#.
+#, c-format
+msgid   "  prefix    %s\n"
+msgstr  "  前缀       %s\n"
+
+#. TRANSLATORS
+#. Keep the two leading space characters.
+#.
+msgid   "  libraries"
+msgstr  "  库"
+
+#, c-format
+msgid   "%s version %s\n"
+msgstr  "%s 版本 %s\n"
