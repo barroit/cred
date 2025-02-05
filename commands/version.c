@@ -82,7 +82,7 @@ static void show_prefix(void)
 
 static void show_cflags(void)
 {
-	print_line(_("  CFLAGS    %s\n"), COMPILE_FLAGS);
+	print_line("  CFLAGS    %s\n", COMPILE_FLAGS);
 }
 
 static void show_libvar(void)
