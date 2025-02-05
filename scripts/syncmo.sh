@@ -4,7 +4,7 @@
 set -e
 
 echo 'preparing...'
-make configure EXTOPT='-DCMAKE_C_FLAGS="-DINTL_PREP_MO"' >/dev/null
+make configure EXTOPT='-DCMAKE_C_FLAGS="-C -DINTL_PREP_MO"' >/dev/null
 
 cd build
 
@@ -21,7 +21,7 @@ cd locale
 src=$(find ../build/CMakeFiles -type f -name '*.i')
 lang=(zh_CN ja_JP)
 
-xgettext --omit-header --no-location \
+xgettext --add-comments=TRANSLATORS --omit-header --no-location \
 	 --from-code=UTF-8 -LC -i -k_ -kN_ -k__H_ -k__HN_ $src
 
 if [[ $1 && $(grep $1 <<< ${lang[@]}) ]]; then
