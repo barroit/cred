@@ -11,6 +11,10 @@ msgstr  "Report-Msgid-Bugs-To: Jiamu Sun <barroit@linux.com>\n"
         "Plural-Forms: nplurals=1; plural=0;\n"
 
 #, c-format
+msgid   "failed to redirect output (0x%x)"
+msgstr  "出力のリダイレクトに失敗しました (0x%x)"
+
+#, c-format
 msgid   "failed to execute `%s'"
 msgstr  "`%s'の実行に失敗しました"
 
@@ -40,7 +44,7 @@ msgstr  "ディレクトリ`%s'のオープンに失敗しました"
 
 #, c-format
 msgid   "options %s and %s cannot be used together"
-msgstr  "オプション`%s'と`%s'は同時に使用できません"
+msgstr  "オプション %s と %s は同時に使用できません"
 
 #, c-format
 msgid   "unknown command `%s', see '%s -h'"
@@ -48,15 +52,15 @@ msgstr  "不明なコマンド`%s'、`%s -h'を参照してください"
 
 #, c-format
 msgid   "option %s has an invalid integer value `%s'"
-msgstr  "オプション%sは無効な整数値`%s'を持っています"
+msgstr  "オプション %s は無効な整数値`%s'を持っています"
 
 #, c-format
 msgid   "option -%c requires a value"
-msgstr  "オプション-%cには値が必要です"
+msgstr  "オプション -%c には値が必要です"
 
 #, c-format
 msgid   "unknown option -%c"
-msgstr  "不明なオプション-%c"
+msgstr  "不明なオプション -%c"
 
 #, c-format
 msgid   "option `%s%s' takes no value"
@@ -68,14 +72,18 @@ msgstr  "オプション`%s%s'には値が必要です"
 
 #, c-format
 msgid   "ambiguous option --%s, could be %s or %s"
-msgstr  "曖昧なオプション--%s、%sまたは%sの可能性があります"
+msgstr  "曖昧なオプション --%s、 %s または %s の可能性があります"
 
 #, c-format
 msgid   "unknown option --%s"
-msgstr  "不明なオプション--%s"
+msgstr  "不明なオプション --%s"
+
+#, c-format
+msgid   "'%s' takes no arguments, but got `%s'"
+msgstr  "'%s'は引数を取りませんが、`%s'が渡されました"
 
 msgid   "unknown option -"
-msgstr  "不明なオプション-"
+msgstr  "不明なオプション -"
 
 #, c-format
 msgid   "'%s' requires a subcommand\n"
@@ -110,3 +118,59 @@ msgstr  "バグ:"
 
 msgid   "[1;31;40mBUG:[0m"
 msgstr  "[1;31;40mバグ:[0m"
+
+msgid   "specify output destination"
+msgstr  "出力先を指定"
+
+msgid   "enable colorized terminal output"
+msgstr  "ターミナルのカラー出力を有効化"
+
+msgid   "prefix messages with timestamp"
+msgstr  "メッセージにタイムスタンプを付加"
+
+msgid   "prefix messages with current PID"
+msgstr  "メッセージに現在のPIDを付加"
+
+msgid   "failed to run process in silent mode"
+msgstr  "サイレントモードでプロセスの実行に失敗しました"
+
+msgid   "display all info"
+msgstr  "すべての情報を表示"
+
+msgid   "show build platform"
+msgstr  "ビルドプラットフォームを表示"
+
+msgid   "show install location"
+msgstr  "インストール先を表示"
+
+msgid   "list compile flags"
+msgstr  "コンパイルフラグを一覧表示"
+
+msgid   "list library versions"
+msgstr  "ライブラリのバージョンを一覧表示"
+
+#. TRANSLATORS
+#. Keep the two leading space characters, and make sure the area before
+#. the first %s is 12 half-width characters wide.
+#.
+#, c-format
+msgid   "  build     %s-%s\n"
+msgstr  "  ビルド     %s-%s\n"
+
+#. TRANSLATORS
+#. Keep the two leading space characters, and make sure the area before
+#. %s is 12 half-width characters wide.
+#.
+#, c-format
+msgid   "  prefix    %s\n"
+msgstr  "  ルート     %s\n"
+
+#. TRANSLATORS
+#. Keep the two leading space characters.
+#.
+msgid   "  libraries"
+msgstr  "  ライブラリ"
+
+#, c-format
+msgid   "%s version %s\n"
+msgstr  "%s バージョン %s\n"
