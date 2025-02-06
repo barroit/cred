@@ -41,9 +41,8 @@ int cmd_main(int argc, const xchar **argv)
 	argc = parse_param(argc, argv, usage, opts, PRM_PAR_CMD);
 
 	if (udef_termas_dest != UDEF_DEF_PTR) {
-		const xchar *dest = udef_termas_dest ? : CONFIG_NULL_DEVICE;
-		int err = proc_redir_std(dest,
-					 PROC_REDIR_OUT | PROC_REDIR_ERR);
+		const xchar *out = udef_termas_dest ? : XC(CONFIG_NULL_DEVICE);
+		int err = proc_redir_std(out, PROC_REDIR_OUT | PROC_REDIR_ERR);
 
 		if (err)
 			warn(_("failed to run process in silent mode"));
