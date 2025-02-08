@@ -12,6 +12,7 @@
 #include <stdlib.h>
 
 #include "compiler.h"
+#include "init.h"
 #include "path.h"
 
 #ifdef CONFIG_TEXT_LOCALE
@@ -62,4 +63,9 @@ void __gettext_init(void)
 	setlocale(LC_TIME, locale);
 	setlocale(LC_MONETARY, locale);
 	setlocale(LC_MESSAGES, locale);
+}
+
+INIT_ROUTINE(gettext)
+{
+	gettext_init();
 }
