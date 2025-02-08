@@ -381,7 +381,10 @@ static void parse_long_opt(struct param *ctx, const xchar *arg)
 		die(_("ambiguous option --%s, could be %s or %s"),
 		    nam, &nam1[2], &nam2[2]);
 	} else if (abbrev.opt) {
-		arg = &asep[1];
+		arg = XC("");
+		if (*asep)
+			arg = asep;
+
 		err = __parse_long_opt(ctx, abbrev.opt,
 				       arg, aflg, abbrev.flags);
 		BUG_ON(err);
