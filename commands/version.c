@@ -27,7 +27,7 @@
 #define __mode(m) ((m) | __bias(m))
 
 static const char *usage[] = {
-	"version [-a | --all] [<options...>]",
+	"version [-a | --all] [<options>]",
 	NULL,
 };
 
