@@ -110,9 +110,7 @@ static void show_libvar(void)
 	 */
 	puts(_("  libraries"));
 
-#ifdef HAVE_INTL
-	printf("            gettext-%s\n", GETTEXT_VERSION);
-#endif
+	printf("            gettext-%s\n", VERSION(GETTEXT_VERSION));
 }
 
 int cmd_version(int argc, const xchar **argv)
