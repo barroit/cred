@@ -622,5 +622,5 @@ static void show_help(const char **usage, struct opt *opts)
 
 	show_opt_usage(opts);
 
-	exit(0);
+	exit(EXIT_CONOUT);
 }

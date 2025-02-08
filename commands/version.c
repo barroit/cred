@@ -139,5 +139,5 @@ int cmd_version(int argc, const xchar **argv)
 	if (show_mode & SHOW_LIBVER)
 		show_libvar();
 
-	exit(0);
+	exit(EXIT_CONOUT);
 }
