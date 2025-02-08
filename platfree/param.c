@@ -52,7 +52,6 @@ struct param {
 
 struct abbrev {
 	struct opt *opt;
-	const xchar *arg;
 	u32 flags;
 };
 
@@ -280,17 +279,15 @@ static const xchar *parse_shrt_opt(struct param *ctx, const xchar *args)
 	die(_("unknown option -%c"), (char)snam);
 }
 
-static void opt_abbrev(struct opt *opt, const xchar *arg, u32 flags,
+static void opt_abbrev(struct opt *opt, u32 flags,
 		       struct abbrev *abbrev, struct abbrev *ambig)
 {
 	if (abbrev->opt && abbrev->flags != flags) {
 		ambig->opt = abbrev->opt;
-		ambig->arg = arg;
 		ambig->flags = abbrev->flags;
 	}
 
 	abbrev->opt = opt;
-	abbrev->arg = arg;
 	abbrev->flags = flags;
 }
 
@@ -369,13 +366,11 @@ static void parse_long_opt(struct param *ctx, const xchar *arg)
 			return;
 		}
 
-		ptrdiff_t len = asep - anam;
+		if (xc_strncmp(onam, anam, asep - anam) == 0)
+			opt_abbrev(opt, aflg ^ oflg, &abbrev, &ambig);
 
-		if (xc_strncmp(onam, anam, len) == 0)
-			opt_abbrev(opt, &anam[len], aflg ^ oflg, &abbrev, &ambig);
-
-		if (!no_neg && aflg & OPT_UNSET)
-			opt_abbrev(opt, &anam[len], OPT_UNSET ^ oflg, &abbrev, &ambig);
+		if (!no_neg && strskip(XC("no-"), arg) != NULL)
+			opt_abbrev(opt, OPT_UNSET ^ oflg, &abbrev, &ambig);
 	}
 
 	if (ambig.opt) {
@@ -386,8 +381,9 @@ static void parse_long_opt(struct param *ctx, const xchar *arg)
 		die(_("ambiguous option --%s, could be %s or %s"),
 		    nam, &nam1[2], &nam2[2]);
 	} else if (abbrev.opt) {
+		arg = &asep[1];
 		err = __parse_long_opt(ctx, abbrev.opt,
-				       abbrev.arg, aflg, abbrev.flags);
+				       arg, aflg, abbrev.flags);
 		BUG_ON(err);
 	} else {
 		char *nam = pretty_arg_name(arg, "���");
