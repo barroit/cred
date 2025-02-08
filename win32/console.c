@@ -35,37 +35,35 @@ static int resize_window(short size)
 	if (err)
 		goto cleanup;
 
-	if (info.dwSize.X >= size) {
-		ret = 0;
-		goto cleanup;
-	}
-
 	COORD coord = {
 		.X = size,
 		.Y = info.dwSize.Y,
 	};
 
-	err = !SetConsoleScreenBufferSize(con, coord);
-	if (err)
-		goto cleanup;
-
 	SMALL_RECT rect = {
 		.Left   = 0,
 		.Top    = 0,
 		.Right  = (short)(coord.X - 1),
-		.Bottom = 24,
+		.Bottom = 20,
 	};
 
 	err = !SetConsoleWindowInfo(con, TRUE, &rect);
-	if (err) {
+	if (err)
+		goto reset_window_size;
+
+	err = !SetConsoleScreenBufferSize(con, coord);
+	if (err)
+		goto reset_window_size;
+
+	ret = 0;
+
+	if (0) {
+reset_window_size:
 		errnum = GetLastError();
 		SetConsoleScreenBufferSize(con, info.dwSize);
 
 		SetLastError(errnum);
-		goto cleanup;
 	}
-
-	ret = 0;
 
 cleanup:
 	errnum = GetLastError();
