@@ -3,12 +3,11 @@
  * Copyright 2025 Jiamu Sun <barroit@linux.com>
  */
 
+#include <sanitizer/asan_interface.h>
+
 /*
  * See also: https://github.com/google/sanitizers/wiki/AddressSanitizerFlags
  */
-
-#pragma GCC diagnostic ignored "-Wmissing-prototypes"
-
 const char *__asan_default_options(void)
 {
 	return "abort_on_error=1:"
