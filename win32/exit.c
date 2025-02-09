@@ -22,7 +22,7 @@ void __exit(int status)
 		if (!udef_no_console && status) {
 			console_show();
 
-			puts(_("Press any key to continue..."));
+			puts(_("\nPress any key to continue..."));
 			_getch();
 		}
 	}
