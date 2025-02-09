@@ -21,4 +21,8 @@ void __noreturn __exit(int status);
 # define EXIT_CONOUT 0
 #endif
 
+#ifdef _WIN32
+int setenv(const char *name, const char *value, int overwrite);
+#endif
+
 #endif /* NG39_STDLIB_H */
