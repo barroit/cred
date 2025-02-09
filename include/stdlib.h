@@ -10,7 +10,7 @@
 
 #include "attr.h"
 
-#define EXIT_CONOUT -39
+#define EXIT_CONOUT 0x3939
 
 #define exit __exit
 void __noreturn __exit(int status);
