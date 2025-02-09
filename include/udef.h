@@ -22,8 +22,6 @@ extern int udef_termas_pid;	/* prefix message with process id */
 
 #ifdef CONFIG_WIN32_GUI
 extern int udef_no_console;	/* do not allocate console */
-#else
-# define udef_no_console (*((volatile int *)NULL))
 #endif
 
 #endif /* NG39_UDEF_H */
