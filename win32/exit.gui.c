@@ -16,15 +16,17 @@
 # undef exit
 #endif
 
+void __exit_show_step(void)
+{
+	puts(_("\nPress any key to continue..."));
+	_getch();
+}
+
 void __exit(int status)
 {
-	if (IS_ENABLED(CONFIG_WIN32_GUI)) {
-		if (!udef_no_console && status) {
-			console_show();
-
-			puts(_("\nPress any key to continue..."));
-			_getch();
-		}
+	if (!udef_no_console && status) {
+		console_show();
+		__exit_show_step();
 	}
 
 	if (status == EXIT_CONOUT)

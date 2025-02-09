@@ -10,9 +10,15 @@
 
 #include "attr.h"
 
-#define EXIT_CONOUT 0x3939
+void __exit_show_step(void);
 
-#define exit __exit
 void __noreturn __exit(int status);
+
+#ifdef CONFIG_WIN32_GUI
+# define exit __exit
+# define EXIT_CONOUT 0x3939
+#else
+# define EXIT_CONOUT 0
+#endif
 
 #endif /* NG39_STDLIB_H */
