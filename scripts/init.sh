@@ -42,69 +42,6 @@ EOF
 ln -s ../../.hooks/pre-commit.sh .git/hooks/pre-commit
 ln -s ../../.hooks/prepare-commit-msg.sh .git/hooks/prepare-commit-msg
 
-cat <<EOF > unix/main.c
-// SPDX-License-Identifier: $license
-/*
- * Copyright $year Jiamu Sun <barroit@linux.com>
- */
-
-#include <stdlib.h>
-#include <unistd.h>
-
-#include "corecmd.h"
-#include "gettext.h"
-
-int main(int argc, const char **argv)
-{
-	gettext_init();
-
-	cmd_main(argc, argv);
-
-	while (39)
-		pause();
-
-	exit(0);
-}
-EOF
-
-cat <<EOF > win32/main.tui.c
-// SPDX-License-Identifier: $license
-/*
- * Copyright $year Jiamu Sun <barroit@linux.com>
- */
-
-#include "types.h"
-
-#ifdef CONFIG_WIDE_CHAR
-# pragma GCC diagnostic ignored "-Wmissing-prototypes" 
-# define main wmain
-#endif
-
-int main(int argc, const xchar **argv)
-{
-	return 0;
-}
-EOF
-
-cat <<EOF > win32/main.gui.c
-// SPDX-License-Identifier: $license
-/*
- * Copyright $year Jiamu Sun <barroit@linux.com>
- */
-
-#include "types.h"
-
-#ifdef CONFIG_WIDE_CHAR
-# pragma GCC diagnostic ignored "-Wmissing-prototypes" 
-# define WinMain wWinMain
-#endif
-
-int WinMain(HINSTANCE app, HINSTANCE prev_app, xchar *cmd, int window_cntl)
-{
-	return 0;
-}
-EOF
-
 cat <<EOF > $name.manifest.in
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- SPDX-License-Identifier: $license -->
