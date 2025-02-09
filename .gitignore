@@ -32,6 +32,5 @@ EastAsianWidth.txt
 *.ico
 *.rc
 *.manifest.in
-**/main*.c
 !tests/**/main.c
 locale/**/*.mo
