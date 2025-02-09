@@ -1,6 +1,6 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later or MIT */
 /*
- * Copyright 2024 Jiamu Sun <barroit@linux.com>
+ * Copyright 2024, 2025 Jiamu Sun <barroit@linux.com>
  */
 
 #ifndef NG39_COMPILER_H
@@ -36,6 +36,8 @@
 #define __st_isascii(c) BUILD_BUG_ON_ZERO(((unsigned char)c) & 0x80)
 
 #define unreachable __builtin_unreachable
+
+#define trap __builtin_trap
 
 #define popcount __builtin_popcount
 
