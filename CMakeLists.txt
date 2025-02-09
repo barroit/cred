@@ -134,7 +134,9 @@ endforeach()
 
 file(GLOB source LIST_DIRECTORIES false ${pathspec})
 list(FILTER source EXCLUDE REGEX main\.)
-
+if(WIN32 AND NOT CONFIG_WIN32_GUI)
+  list(FILTER source EXCLUDE REGEX \\.gui\\.c$)
+endif()
 add_library(platspec OBJECT ${source})
 
 file(GLOB source LIST_DIRECTORIES false platfree/*.c commands/*.c)
