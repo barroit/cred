@@ -56,6 +56,10 @@ style:
 license:
 	only use this tag when license amendments affect multiple files
 
+cleanup:
+	only use this tag when removing a file or a bunch of code from multiple
+	files
+
 NB: There are some files at the top level of the project with names in all
 uppercase. For commits to these files, the tag should be the name of the file.
 
