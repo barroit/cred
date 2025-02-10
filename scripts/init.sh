@@ -118,6 +118,9 @@ fi
 perl -i -ne 'last if /^# みくみくにしてあげる♪$/; print' .gitignore
 sed -i -e :a -e '/^\n*$/{$d;N;};/\n$/ba' .gitignore
 
+printf '%s\n' .program.in* > .pickignore
+echo scripts/init.sh >> .pickignore
+
 rm .program.in*
 (rm $0) &
 
