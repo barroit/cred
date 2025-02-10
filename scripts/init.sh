@@ -129,6 +129,9 @@ rm .program.in*
 git add .
 scripts/amend-license.sh "$__license" "$license"
 
+scripts/syncmo.sh
+make distclean
+
 git add .
 git commit -sm 'INITIAL CONSUMER'
 
