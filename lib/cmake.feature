@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: GPL-3.0-or-later or MIT
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 function(test_cc_builtin prog def)
   execute_process(COMMAND ${Python3_EXECUTABLE}

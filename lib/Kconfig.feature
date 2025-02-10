@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: GPL-3.0-or-later or MIT
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 config CC_HAS_TOPLEVEL_REORDER
 	def_bool $(cc-option,-ftoplevel-reorder)

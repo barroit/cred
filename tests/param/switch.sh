@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: GPL-3.0-or-later or MIT
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 run -f --enable
 PSSERT_OPTEQUAL force  1

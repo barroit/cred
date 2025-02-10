@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: GPL-3.0-or-later or MIT
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 .gdbinit
 
@@ -26,11 +26,3 @@ locale/messages.po
 DRAFT
 
 EastAsianWidth.txt
-
-# みくみくにしてあげる♪
-.program
-*.ico
-*.rc
-*.manifest.in
-!tests/**/main.c
-locale/**/*.mo

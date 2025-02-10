@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: GPL-3.0-or-later or MIT
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 set(prog_name_manifest ${prog_name})
 set(prog_version_manifest ${prog_version_cmake})

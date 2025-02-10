@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: GPL-3.0-or-later or MIT
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 if(DEFINED ENV{KCONFIG_CONFIG})
   set(file $ENV{KCONFIG_CONFIG})

@@ -1,4 +1,4 @@
-# SPDX-License-Identifier: GPL-3.0-or-later or MIT
+# SPDX-License-Identifier: GPL-3.0-or-later
 # Using PowerShell feels like shoving a cactus up your ass. This is what
 # you get when you let a bunch of clueless idiots design a language. It's
 # a fucking nightmare dressed as a tool.

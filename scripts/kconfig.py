@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# SPDX-License-Identifier: GPL-3.0-or-later or MIT
+# SPDX-License-Identifier: GPL-3.0-or-later
 
 # Start menuconfig/alldefconfig in a portable manner.
 # You must provide TREE, CC, and LD in the process that starts this script.

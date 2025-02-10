@@ -1,10 +1,7 @@
-Brukit
-======
+Cred
+====
 
-Brukit is a utility designed for quickly starting a desktop application project.
-It is tailored for C/C++ development and includes commonly used APIs, such as
-strbuf and strlist. Most importantly, it provides Unicode text handling and is
-compatible with Linux, macOS, FreeBSD, and Windows.
-
-Brukit is dual-licensed under GPLv3 and MIT. You can choose either of these
-licenses or any license compatible with them and apply it to your project.
+Cred is a lightweight password entry manager. It uses SQLite to store data
+securely, supporting not only passwords but also memos and images, such as
+screenshots containing recovery codes. Additionally, it offers optional
+encrypted storage to enhance data protection.
