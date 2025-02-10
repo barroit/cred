@@ -49,5 +49,6 @@ the default arguments to configure the build.
 
 NB: Before running 'make build', you must configure the build. I don't mix
 configuration and building into a single target because the overhead is huge
-and often causes freezes. However, for a build after reconfiguration, you can
-simply run 'make build', as CMake will handle the configuration automatically.
+and often causes freezes. However, for a build after Kconfig changes (not
+including the initial configuration), you can simply run 'make build', as
+CMake will handle the configuration automatically.
