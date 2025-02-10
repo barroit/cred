@@ -14,11 +14,16 @@
 
 #define __pure __attr((__pure__))
 
-#undef __nonnull
-#define __nonnull(...) __attr((__nonnull__(__VA_ARGS__)))
+/*
+ * Due to compatibility, the usage of __nonnull() is different than other
+ * attributes.
+ */
+#ifndef __nonnull
+# define __nonnull(...) __attr((__nonnull__ __VA_ARGS__))
+#endif
 
 #ifdef ANSI
-# define __printf(m, n) __attr((__format__(__printf__, m, n))) __nonnull(m)
+# define __printf(m, n) __attr((__format__(__printf__, m, n))) __nonnull((m))
 #else
 # define __printf(m, n)
 #endif
