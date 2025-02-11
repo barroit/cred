@@ -17,29 +17,22 @@
 # define freopen _wfreopen
 #endif
 
-static HWND console;
+static HWND conwin;
+static HANDLE conout;
 
 static int resize_window(short size)
 {
-	int ret = -1;
-	DWORD errnum;
-	HANDLE con = CreateFile(XC("CONOUT$"), GENERIC_READ | GENERIC_WRITE,
-				0, NULL, OPEN_EXISTING,
-				FILE_ATTRIBUTE_NORMAL, NULL);
-
-	BUG_ON(con == INVALID_HANDLE_VALUE);
-
 	CONSOLE_SCREEN_BUFFER_INFO info;
-	int err = !GetConsoleScreenBufferInfo(con, &info);
+	int err = !GetConsoleScreenBufferInfo(conout, &info);
 
 	if (err)
-		goto cleanup;
+		return -1;
 
+	DWORD errnum;
 	COORD coord = {
 		.X = size,
 		.Y = info.dwSize.Y,
 	};
-
 	SMALL_RECT rect = {
 		.Left   = 0,
 		.Top    = 0,
@@ -47,31 +40,22 @@ static int resize_window(short size)
 		.Bottom = 20,
 	};
 
-	err = !SetConsoleWindowInfo(con, TRUE, &rect);
+	err = !SetConsoleWindowInfo(conout, TRUE, &rect);
 	if (err)
-		goto reset_window_size;
+		goto err_out;
 
-	err = !SetConsoleScreenBufferSize(con, coord);
+	err = !SetConsoleScreenBufferSize(conout, coord);
 	if (err)
-		goto reset_window_size;
+		goto err_out;
 
-	ret = 0;
+	return 0;
 
-	if (0) {
-reset_window_size:
-		errnum = GetLastError();
-		SetConsoleScreenBufferSize(con, info.dwSize);
-
-		SetLastError(errnum);
-	}
-
-cleanup:
+err_out:
 	errnum = GetLastError();
-
-	CloseHandle(con);
+	SetConsoleScreenBufferSize(conout, info.dwSize);
 
 	SetLastError(errnum);
-	return ret;
+	return -1;
 }
 
 void console_attach(void)
@@ -91,24 +75,38 @@ void console_attach(void)
 	stream = freopen(XC("CONOUT$"), XC("w"), stderr);
 	BUG_ON(!stream);
 
+	conout = CreateFile(XC("CONOUT$"), GENERIC_READ | GENERIC_WRITE, 0,
+			    NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	BUG_ON(conout == INVALID_HANDLE_VALUE);
+
 	err = resize_window(CONFIG_LINE_WRAP + 4);
 	if (err)
 		warn_winerr(_("failed to resize console window"));
 
-	console = GetConsoleWindow();
+	conwin = GetConsoleWindow();
+	BUG_ON(!conwin);
+
 	console_hide();
 
 	err = !SetConsoleOutputCP(CP_UTF8);
-	if (err)
-		warn_winerr(_("failed to set CONOUT$ codepage to UTF-8"));
+	BUG_ON(err);
+
+	DWORD mode;
+
+	err = !GetConsoleMode(conout, &mode);
+	BUG_ON(err);
+
+	mode |= ENABLE_PROCESSED_OUTPUT | ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+	err = !SetConsoleMode(conout, mode);
+	BUG_ON(err);
 }
 
 void console_show(void)
 {
-	ShowWindow(console, SW_SHOW);
+	ShowWindow(conwin, SW_SHOW);
 }
 
 void console_hide(void)
 {
-	ShowWindow(console, SW_HIDE);
+	ShowWindow(conwin, SW_HIDE);
 }
