@@ -623,6 +623,23 @@ static void show_opt_usage(FILE *stream, struct opt *opts)
 		putc('\n', stream);
 }
 
+static void show_cmd_ext_usage(FILE *stream, const char **usage)
+{
+	while (*usage++);
+
+	uint lines = 0;
+
+	while (*usage) {
+		if (lines++)
+			putc('\n', stream);
+
+		fputs(_(*usage), stream);
+		putc('\n', stream);
+
+		usage++;
+	}
+}
+
 static void show_help(const char **usage, struct opt *opts, int is_err)
 {
 	FILE *stream = is_err ? stderr : stdout;
@@ -630,6 +647,8 @@ static void show_help(const char **usage, struct opt *opts, int is_err)
 	show_cmd_usage(stream, usage);
 
 	show_opt_usage(stream, opts);
+
+	show_cmd_ext_usage(stream, usage);
 
 	exit(EXIT_CONOUT);
 }

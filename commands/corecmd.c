@@ -14,6 +14,7 @@ static const char *usage[] = {
 	PROGRAM_NAME " [--output <dest> | --no-output] [--no-tercol]"
 		     " [--show-ts] [--show-pid] <command> [<args>]",
 	NULL,
+	NULL,
 };
 
 const xchar *udef_termas_dest = UDEF_DEF_PTR;

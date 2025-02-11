@@ -29,6 +29,7 @@
 static const char *usage[] = {
 	"version [-a | --all] [<options>]",
 	NULL,
+	NULL,
 };
 
 static int show_all;
