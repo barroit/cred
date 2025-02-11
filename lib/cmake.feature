@@ -52,8 +52,6 @@ ssize_t a = 0;
 
 if(CONFIG_WIDE_CHAR)
   set(UNICODE 1)
-else()
-  set(ANSI 1)
 endif()
 
 configure_file(${TREE}/include/features.h.in ${GEN}/features.h)
