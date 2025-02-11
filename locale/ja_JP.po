@@ -119,6 +119,16 @@ msgstr  "バグ:"
 msgid   "[1;31;40mBUG:[0m"
 msgstr  "[1;31;40mバグ:[0m"
 
+msgid   "These are common cred commands:"
+msgstr  "よく使われる cred コマンド一覧:"
+
+#. TRANSLATORS
+#. Do not modify the prefix '   version   '. Only translate the description of
+#. the command.
+#.
+msgid   "   version   display version information about cred"
+msgstr  "   version   cred のバージョン情報を表示"
+
 msgid   "specify output destination"
 msgstr  "出力先を指定"
 

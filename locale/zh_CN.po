@@ -118,6 +118,16 @@ msgstr  "BUG:"
 msgid   "[1;31;40mBUG:[0m"
 msgstr  "[1;31;40mBUG:[0m"
 
+msgid   "These are common cred commands:"
+msgstr  "以下是常见的 cred 命令:"
+
+#. TRANSLATORS
+#. Do not modify the prefix '   version   '. Only translate the description of
+#. the command.
+#.
+msgid   "   version   display version information about cred"
+msgstr  "   version   显示 cred 的版本信息"
+
 msgid   "specify output destination"
 msgstr  "指定输出到的文件"
 

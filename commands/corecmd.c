@@ -14,6 +14,16 @@ static const char *usage[] = {
 	PROGRAM_NAME " [--output <dest> | --no-output] [--no-tercol]"
 		     " [--show-ts] [--show-pid] <command> [<args>]",
 	NULL,
+N_(
+"These are common " PROGRAM_NAME " commands:"
+), N_(
+/*
+ * TRANSLATORS
+ * Do not modify the prefix '   version   '. Only translate the description of
+ * the command.
+ */
+"   version   display version information about " PROGRAM_NAME
+),
 	NULL,
 };
 
