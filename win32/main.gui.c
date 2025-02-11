@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <windows.h>
 
-#include "console.h"
+#include "legacy_cons.h"
 #include "corecmd.h"
 #include "proc.h"
 #include "udef.h"
@@ -30,7 +30,7 @@ int WinMain(HINSTANCE app, HINSTANCE prev_app, xchar *cmd, int wd_cntl)
 
 	udef_no_console = proc_no_console('?');
 	if (!udef_no_console)
-		console_attach();
+		leg_cons_attach();
 
 	cmd_main(argc, (const xchar **)argv);
 
