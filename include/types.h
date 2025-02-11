@@ -1,6 +1,6 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 /*
- * Copyright 2024 Jiamu Sun <barroit@linux.com>
+ * Copyright 2024, 2025 Jiamu Sun <barroit@linux.com>
  */
 
 #ifndef NG39_TYPES_H
@@ -31,7 +31,7 @@ typedef unsigned long ulong;
 typedef long long ssize_t;
 #endif
 
-#ifdef ANSI
+#ifndef CONFIG_WIDE_CHAR
 typedef char xchar;
 #else
 typedef wchar_t xchar;

@@ -1,6 +1,6 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 /*
- * Copyright 2024 Jiamu Sun <barroit@linux.com>
+ * Copyright 2024, 2025 Jiamu Sun <barroit@linux.com>
  */
 
 #ifndef	NG39_ATTR_H
@@ -22,7 +22,7 @@
 # define __nonnull(...) __attr((__nonnull__ __VA_ARGS__))
 #endif
 
-#ifdef ANSI
+#ifndef CONFIG_WIDE_CHAR
 # define __printf(m, n) __attr((__format__(__printf__, m, n))) __nonnull((m))
 #else
 # define __printf(m, n)

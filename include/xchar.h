@@ -1,6 +1,6 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later */
 /*
- * Copyright 2024 Jiamu Sun <barroit@linux.com>
+ * Copyright 2024, 2025 Jiamu Sun <barroit@linux.com>
  */
 
 #ifndef NG39_XCHAR_H
@@ -14,40 +14,40 @@
 
 #include "xalloc.h"
 
-#define __mbslen_a    __mbslen
-#define __strchrnul_a __strchrnul
-#define __strcmp_a    strcmp
-#define __strdup_a    xstrdup
-#define __strlen_a    strlen
-#define __stpncpy_a   strncpy
-#define __strncmp_a   strncmp
-#define __strrchr_a   strrchr
-#define __vsnprintf_a vsnprintf
-#define __ispunct_a   ispunct
-#define __isspace_a   isspace
-#define __isxdigit_a  isxdigit
-#define __tolower_a   tolower
-#define __mbsws_a     mbsws
+#define __mbslen_mb    __mbslen
+#define __strchrnul_mb __strchrnul
+#define __strcmp_mb    strcmp
+#define __strdup_mb    xstrdup
+#define __strlen_mb    strlen
+#define __stpncpy_mb   strncpy
+#define __strncmp_mb   strncmp
+#define __strrchr_mb   strrchr
+#define __vsnprintf_mb vsnprintf
+#define __ispunct_mb   ispunct
+#define __isspace_mb   isspace
+#define __isxdigit_mb  isxdigit
+#define __tolower_mb   tolower
+#define __mbsws_mb     mbsws
 
-#define __mbslen_u    wcslen
-#define __strchrnul_u __strchrnul
-#define __strcmp_u    wcscmp
-#define __strdup_u    xwcsdup
-#define __strlen_u    wcslen
-#define __stpncpy_u   wcsncpy
-#define __strncmp_u   wcsncmp
-#define __strrchr_u   wcsrchr
-#define __vsnprintf_u vswprintf
-#define __ispunct_u   iswpunct
-#define __isspace_u   iswspace
-#define __isxdigit_u  iswxdigit
-#define __tolower_u   towlower
-#define __mbsws_u     wcsws
+#define __mbslen_wc    wcslen
+#define __strchrnul_wc __strchrnul
+#define __strcmp_wc    wcscmp
+#define __strdup_wc    xwcsdup
+#define __strlen_wc    wcslen
+#define __stpncpy_wc   wcsncpy
+#define __strncmp_wc   wcsncmp
+#define __strrchr_wc   wcsrchr
+#define __vsnprintf_wc vswprintf
+#define __ispunct_wc   iswpunct
+#define __isspace_wc   iswspace
+#define __isxdigit_wc  iswxdigit
+#define __tolower_wc   towlower
+#define __mbsws_wc     wcsws
 
-#ifdef ANSI
-# define __xchar_type _a
+#ifndef CONFIG_WIDE_CHAR
+# define __xchar_type _mb
 #else
-# define __xchar_type _u
+# define __xchar_type _wc
 #endif
 
 #define __XCHAR_ALIAS(x)      ___XCHAR_ALIAS(x, __xchar_type)

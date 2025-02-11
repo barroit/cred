@@ -62,7 +62,8 @@ struct cmdmode {
 	struct list_head list;
 };
 
-static void __noreturn show_help(const char **usage, struct opt *opts);
+static void __noreturn show_help(const char **usage,
+				 struct opt *opts, int is_err);
 
 static struct strbuf __cmdpath = SB_INIT;
 static char *cmdpath;
@@ -415,7 +416,7 @@ static int parse_cmd_arg(struct param *ctx)
 
 		if (!(ctx->flags & PRM_NO_HELP) &&
 		    str[0] == 'h' && str[1] == 0)
-			show_help(ctx->usage, ctx->opts);
+			show_help(ctx->usage, ctx->opts, 0);
 		else if (str[0] == 0)
 			die(_("unknown option -"));
 
@@ -433,7 +434,7 @@ static int parse_cmd_arg(struct param *ctx)
 
 		if (!(ctx->flags & PRM_NO_HELP) &&
 		    xc_strcmp(str, XC("help")) == 0)
-			show_help(ctx->usage, ctx->opts);
+			show_help(ctx->usage, ctx->opts, 0);
 
 		parse_long_opt(ctx, str);
 	}
@@ -488,10 +489,14 @@ int parse_param(int argc, const xchar **argv,
 	int ret = ctx.outc + ctx.argc;
 
 	if (flags & PRM_PAR_CMD && ret == 0) {
+		int err = 1;
+
 		if (!(flags & PRM_OPT_CMD) && __argc)
 			error(_("'%s' requires a subcommand\n"), cmdpath);
+		else
+			err = 0;
 
-		show_help(ctx.usage, ctx.opts);
+		show_help(ctx.usage, ctx.opts, err);
 	}
 
 	argc = ctx.outc + ctx.argc;
@@ -499,7 +504,7 @@ int parse_param(int argc, const xchar **argv,
 	return argc;
 }
 
-static void show_cmd_usage(const char **usage)
+static void show_cmd_usage(FILE *stream, const char **usage)
 {
 	const char *pref = "usage: ";
 	size_t __len = strlen("usage: ");
@@ -521,20 +526,21 @@ static void show_cmd_usage(const char **usage)
 		if ((CONFIG_LINE_WRAP >> 1) > pad)
 			wrap -= len;
 
-		printf("%*s%.*s", (int)__len, pref, (int)len, line);
+		fprintf(stream, "%*s%.*s", (int)__len, pref, (int)len, line);
 
 		if (!*rest) {
-			putchar('\n');
+			putc('\n', stream);
 			goto next;
 		}
 		sl_read_line_chr(&sl, rest, wrap);
 
 		str = sl_pop_chr(&sl);
-		puts(str);
+		fputs(str, stream);
+		putc('\n', stream);
 		free(str);
 
 		while ((str = sl_pop_chr(&sl))) {
-			printf("%*s%s\n", (int)pad, "", str);
+			fprintf(stream, "%*s%s\n", (int)pad, "", str);
 			free(str);
 		}
 
@@ -544,10 +550,10 @@ next:
 	}
 
 	sl_destroy(&sl);
-	putchar('\n');
+	putc('\n', stream);
 }
 
-static void show_opt_usage(struct opt *opts)
+static void show_opt_usage(FILE *stream, struct opt *opts)
 {
 	int cnt = 0;
 	struct opt *opt;
@@ -557,8 +563,9 @@ static void show_opt_usage(struct opt *opts)
 	opt_for_each(opt, opts) {
 		switch (opt->mode) {
 		case OPTION__GROUP:
-			putchar('\n');
-			puts(opt->__lnam);
+			putc('\n', stream);
+			fputs(opt->__lnam, stream);
+			putc('\n', stream);
 		case OPTION__COMMAND:
 			continue;
 		}
@@ -566,15 +573,15 @@ static void show_opt_usage(struct opt *opts)
 		const char *fmt;
 		size_t len = CONFIG_HELP_OPT_INDENT;
 
-		printf("%*s", (int)len, "");
+		fprintf(stream, "%*s", (int)len, "");
 
 		if (opt->snam)
-			len += printf("-%c, ", opt->snam);
+			len += fprintf(stream, "-%c, ", opt->snam);
 
 		int no_neg = opt->flags & OPT_NO_NEG;
 
 		fmt = no_neg ? "--%s" : "--[no-]%s";
-		len += printf(fmt, opt->__lnam);
+		len += fprintf(stream, fmt, opt->__lnam);
 
 		if (opt->argh) {
 			char *occur = strpbrk(opt->argh, "()<>[]|");
@@ -584,11 +591,11 @@ static void show_opt_usage(struct opt *opts)
 				fmt = no_brac ? "[=%s]" : "[=<%s>]";
 			else
 				fmt = no_brac ? " %s" : " <%s>";
-			len += printf(fmt, opt->argh);
+			len += fprintf(stream, fmt, opt->argh);
 		}
 
 		if (len >= CONFIG_HELP_OPT_WRAP) {
-			putchar('\n');
+			putc('\n', stream);
 			len = 0;
 		}
 
@@ -600,11 +607,11 @@ static void show_opt_usage(struct opt *opts)
 		sl_read_line_chr(&sl, _(opt->usage), wrap);
 
 		str = sl_pop_chr(&sl);
-		printf("%*s%s\n", (int)pad, "", str);
+		fprintf(stream, "%*s%s\n", (int)pad, "", str);
 		free(str);
 
 		while ((str = sl_pop_chr(&sl))) {
-			printf("%*s%s\n", (int)__pad, "", str);
+			fprintf(stream, "%*s%s\n", (int)__pad, "", str);
 			free(str);
 		}
 
@@ -613,14 +620,35 @@ static void show_opt_usage(struct opt *opts)
 
 	sl_destroy(&sl);
 	if (cnt)
-		putchar('\n');
+		putc('\n', stream);
 }
 
-static void show_help(const char **usage, struct opt *opts)
+static void show_cmd_ext_usage(FILE *stream, const char **usage)
 {
-	show_cmd_usage(usage);
+	while (*usage++);
 
-	show_opt_usage(opts);
+	uint lines = 0;
+
+	while (*usage) {
+		if (lines++)
+			putc('\n', stream);
+
+		fputs(_(*usage), stream);
+		putc('\n', stream);
+
+		usage++;
+	}
+}
+
+static void show_help(const char **usage, struct opt *opts, int is_err)
+{
+	FILE *stream = is_err ? stderr : stdout;
+
+	show_cmd_usage(stream, usage);
+
+	show_opt_usage(stream, opts);
+
+	show_cmd_ext_usage(stream, usage);
 
 	exit(EXIT_CONOUT);
 }
