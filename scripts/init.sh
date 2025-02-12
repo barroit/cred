@@ -39,6 +39,9 @@ scripts/initloc.sh $repo
 cat <<EOF > .program
 name	$name
 version	0.0
+license	$license
+
+license_old	$__license
 EOF
 
 cat <<EOF > $name.manifest.in
