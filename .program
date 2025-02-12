@@ -1,2 +1,5 @@
 name	cred
 version	0.0
+license	GPL-3.0-or-later
+
+license_old	GPL-3.0-or-later or MIT
