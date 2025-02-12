@@ -34,13 +34,12 @@ no_arch=$(grep no_arch <<< $conf)
 
 section readme .program.in > README
 
+scripts/initloc.sh $repo
+
 cat <<EOF > .program
 name	$name
 version	0.0
 EOF
-
-ln -s ../../.hooks/pre-commit.sh .git/hooks/pre-commit
-ln -s ../../.hooks/prepare-commit-msg.sh .git/hooks/prepare-commit-msg
 
 cat <<EOF > $name.manifest.in
 <?xml version="1.0" encoding="UTF-8"?>
@@ -134,13 +133,3 @@ make distclean
 
 git add .
 git commit -sm 'INITIAL CONSUMER'
-
-git remote add brukit $(git remote get-url origin)
-git remote set-url origin $repo
-git branch --set-upstream-to origin/master
-
-git switch -c brukit HEAD^
-git fetch brukit
-git branch --set-upstream-to brukit/master
-
-git rebase --onto brukit $(git merge-base master brukit) master
