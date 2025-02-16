@@ -2,7 +2,7 @@
 
 [codespell]
 
-skip = *.po
+skip = *.po,sqlite
 
 ignore-words-list = delink,nam,fiter,clen
 
