@@ -14,10 +14,12 @@
 		"TAGS": "plaintext"
 	},
 	"search.exclude": {
-		"**/locale/**": true
+		"**/locale/**": true,
+		"**/sqlite/**": true
 	},
 	"C_Cpp.files.exclude": {
-		"**/sandbox/*": true
+		"**/sandbox/*": true,
+		"**/sqlite/**": true
 	},
 	"C_Cpp.default.includePath": [
 		"${workspaceFolder}/include"
