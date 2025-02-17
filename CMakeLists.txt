@@ -95,6 +95,9 @@ set(COMPILE_FLAGS ${cflags})
 string(REPLACE -rc . prog_version_cmake ${prog_version})
 project(${prog_name} VERSION ${prog_version_cmake} LANGUAGES C)
 
+include_scp(lib/cmake.sqlite)
+include_directories(${SQLITE_INCLUDE_DIR})
+
 if(CONFIG_DUMP_CPL_CMD)
   set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 endif()
@@ -177,6 +180,7 @@ if(WIN32)
 endif()
 
 add_executable(${exec_name} ${source})
+target_link_libraries(${exec_name} PRIVATE SQLite::SQLite)
 
 add_compile_definitions(_GNU_SOURCE)
 
