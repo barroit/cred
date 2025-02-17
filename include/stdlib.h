@@ -5,8 +5,8 @@
 
 #ifndef NG39_STDLIB_H
 #define NG39_STDLIB_H
-
 #include_next <stdlib.h>
+#ifndef NG39_NO_STD_HDR_PATCH
 
 #include "attr.h"
 
@@ -25,4 +25,5 @@ void __noreturn __exit(int status);
 int setenv(const char *name, const char *value, int overwrite);
 #endif
 
+#endif /* NG39_NO_STD_HDR_PATCH */
 #endif /* NG39_STDLIB_H */
