@@ -10,8 +10,8 @@
 
 #ifndef NG39_STRING_H
 #define NG39_STRING_H
-
 #include_next <string.h>
+#ifndef NG39_NO_STD_HDR_PATCH
 
 #include <stddef.h>
 
@@ -35,4 +35,5 @@ char *mbsws(const char *s);
 
 wchar_t *wcsws(const wchar_t *s);
 
+#endif /* NG39_NO_STD_HDR_PATCH */
 #endif /* NG39_STRING_H */
