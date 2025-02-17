@@ -6,8 +6,7 @@
 #ifndef NG39_CTYPE_H
 #define NG39_CTYPE_H
 
-#include "attr.h"
-#include "compiler.h"
+#define __same_type(a, b) __builtin_types_compatible_p(typeof(a), typeof(b))
 
 #define _3C  0x01  /* Control character */
 #define _3S  0x02  /* Space character */
