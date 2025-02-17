@@ -2,7 +2,7 @@
 
 [codespell]
 
-skip = *.po,sqlite,platfree/sqlite3.c,include/sqlite3.h
+skip = *.po,sqlite
 
 ignore-words-list = delink,nam,fiter,clen
 
