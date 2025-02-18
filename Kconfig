@@ -8,4 +8,6 @@ source "lib/Kconfig.build"
 
 source "lib/Kconfig.feature"
 
+source "lib/Kconfig.sqlite"
+
 source "lib/Kconfig.debug"

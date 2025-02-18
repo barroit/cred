@@ -3,6 +3,8 @@
  * Copyright 2025 Jiamu Sun <barroit@linux.com>
  */
 
+#include <openssl/opensslv.h>
+#include <sqlite3.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -111,7 +113,10 @@ static void show_libvar(void)
 	 */
 	puts(_("  libraries"));
 
-	printf("            gettext-%s\n", VERSION(GETTEXT_VERSION));
+	printf("            gettext  %s\n", VERSION(GETTEXT_VERSION));
+	printf("            openssl  %s\n", OPENSSL_VERSION_STR);
+	printf("            sqlite   %s-%.12s\n", SQLITE_VERSION,
+	       &SQLITE_SOURCE_ID[CONFIG_SQLITE_SOURCE_ID_OFFSET]);
 }
 
 int cmd_version(int argc, const xchar **argv)
