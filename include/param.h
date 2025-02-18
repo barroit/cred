@@ -6,6 +6,7 @@
 #ifndef NG39_PARAM_H
 #define NG39_PARAM_H
 
+#include "attr.h"
 #include "compiler.h"
 #include "gettext.h"
 #include "types.h"
@@ -73,8 +74,14 @@ struct opt {
 #define PRM_OPT_CMD  (1 << 3)
 #define PRM_NO_ARG   (1 << 4)
 
+#define opt_for_each(pos, opts) \
+	for (pos = opts; (pos)->mode != OPTION__END; (pos)++)
+
 int param_parse(int argc, const xchar **argv,
 		const char **usage, struct opt *opts, u32 flags);
+
+void __noreturn param_show_help(const char **usage,
+				struct opt *opts, int is_err);
 
 #define __opt_snam(s) __st_isascii(s) + s
 #define __opt_lnam(l) XC(l)
