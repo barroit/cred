@@ -70,3 +70,6 @@ config CC_IS_CLNAG
 
 config CC_IS_GCC
 	def_bool CC_NAME = "GCC"
+
+config CC_HAS_TOPLEVEL_REORDER
+	def_bool $(cc-option,-ftoplevel-reorder)
