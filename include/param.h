@@ -77,6 +77,8 @@ struct opt {
 #define opt_for_each(pos, opts) \
 	for (pos = opts; (pos)->mode != OPTION__END; (pos)++)
 
+void *param_set_ex(u32 flag, const void *val);
+
 int param_parse(int argc, const xchar **argv,
 		const char **usage, struct opt *opts, u32 flags);
 

@@ -58,8 +58,20 @@ struct cmdmode {
 	struct list_head list;
 };
 
-static void __noreturn show_help(const char **usage,
-				 struct opt *opts, int is_err);
+static const void *ex[32];
+
+void *param_set_ex(u32 flag, const void *val)
+{
+	BUG_ON(!flag);
+
+	uint i = ctz(flag);
+
+	if (!val)
+		return (void *)ex[i];
+
+	ex[i] = val;
+	return NULL;
+}
 
 static struct strbuf __cmdpath = SB_INIT;
 static char *cmdpath;
