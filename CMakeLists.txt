@@ -42,6 +42,10 @@ set(CMAKE_C_COMPILER $ENV{CC})
 string(TOLOWER ${CONFIG_LD_NAME} ld)
 add_link_options(-fuse-ld=${ld})
 
+if(CONFIG_PROG_WITH_SANITIZER)
+  add_link_options(-fsanitize=address,undefined)
+endif()
+
 if(WIN32)
   add_link_options(-Xlinker /ignore:longsections)
 endif()
@@ -132,26 +136,28 @@ endif()
 
 foreach(plat ${platlist})
   include_directories(${plat})
-  list(APPEND pathspec ${plat}/*.c)
+  list(APPEND pspec_path ${plat}/*.c)
 endforeach()
 
-file(GLOB source LIST_DIRECTORIES false ${pathspec})
-list(FILTER source EXCLUDE REGEX main\.)
+file(GLOB pspec_src LIST_DIRECTORIES false ${pspec_path})
+list(FILTER pspec_src EXCLUDE REGEX main\.)
 if(WIN32 AND NOT CONFIG_WIN32_GUI)
-  list(FILTER source EXCLUDE REGEX \\.gui\\.c$)
+  list(FILTER pspec_src EXCLUDE REGEX \\.gui\\.c$)
 endif()
-add_library(platspec OBJECT ${source})
+add_library(platspec OBJECT ${pspec_src})
 
-file(GLOB source LIST_DIRECTORIES false platfree/*.c commands/*.c)
+file(GLOB pfree_src LIST_DIRECTORIES false platfree/*.c)
 if(NOT HAVE_INTL)
-  list(FILTER source EXCLUDE REGEX gettext\.c)
+  list(FILTER pfree_src EXCLUDE REGEX gettext\.c)
 endif()
-add_library(platfree OBJECT ${source})
+add_library(platfree OBJECT ${pfree_src})
+
+file(GLOB cmd_src LIST_DIRECTORIES false commands/*.c)
+add_library(command OBJECT ${cmd_src})
+target_link_libraries(command PUBLIC SQLite::SQLite)
 
 if(CONFIG_PROG_WITH_SANITIZER)
-  target_compile_options(platfree PRIVATE -fsanitize=address,undefined)
-  target_compile_options(platspec PRIVATE -fsanitize=address,undefined)
-  add_link_options(-fsanitize=address,undefined)
+  sanitize_targets(platfree platspec command)
 endif()
 
 if(UNIX)
@@ -180,7 +186,11 @@ if(WIN32)
 endif()
 
 add_executable(${exec_name} ${source})
-target_link_libraries(${exec_name} PRIVATE SQLite::SQLite)
+target_link_libraries(${exec_name} PRIVATE command)
+
+if(CONFIG_PROG_WITH_SANITIZER)
+  sanitize_targets(${exec_name} PRIVATE -fsanitize=address,undefined)
+endif()
 
 add_compile_definitions(_GNU_SOURCE)
 

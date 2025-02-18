@@ -5,6 +5,8 @@ set(PARAM ${TREE}/tests/param)
 file(GLOB param_src *.c)
 list(FILTER param_src EXCLUDE REGEX "(main)\\.c")
 
+link_libraries(command)
+
 foreach(name ${param_src})
   get_filename_component(name ${name} NAME_WE)
 
