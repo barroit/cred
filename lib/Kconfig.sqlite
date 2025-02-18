@@ -1,0 +1,9 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+menu "SQLite tuning"
+
+config SQLITE_SOURCE_ID_OFFSET
+	int "Source ID hash offset"
+	default 20
+
+endmenu # Sqlite tuning
