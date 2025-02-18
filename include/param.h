@@ -73,7 +73,7 @@ struct opt {
 #define PRM_OPT_CMD  (1 << 3)
 #define PRM_NO_ARG   (1 << 4)
 
-int parse_param(int argc, const xchar **argv,
+int param_parse(int argc, const xchar **argv,
 		const char **usage, struct opt *opts, u32 flags);
 
 #define __opt_snam(s) __st_isascii(s) + s

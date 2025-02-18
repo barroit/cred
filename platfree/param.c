@@ -442,7 +442,7 @@ static int parse_cmd_arg(struct param *ctx)
 	return 0;
 }
 
-int parse_param(int argc, const xchar **argv,
+int param_parse(int argc, const xchar **argv,
 		const char **usage, struct opt *opts, u32 flags)
 {
 	int __argc = argc - 1;

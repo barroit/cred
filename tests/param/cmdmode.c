@@ -27,7 +27,7 @@ int __main(int argc, const char **argv)
 		OPT_END(),
 	};
 
-	parse_param(argc, argv, usage, opt, 0);
+	param_parse(argc, argv, usage, opt, 0);
 
 	if (mode == OP_PROC)
 		pprint_cmdmode(OP_PROC);

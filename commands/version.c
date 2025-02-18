@@ -116,7 +116,7 @@ static void show_libvar(void)
 
 int cmd_version(int argc, const xchar **argv)
 {
-	parse_param(argc, argv, usage, opts, PRM_NO_ARG);
+	param_parse(argc, argv, usage, opts, PRM_NO_ARG);
 
 	printf(_("%s version %s\n"), PROGRAM_NAME, PROGRAM_VERSION);
 
