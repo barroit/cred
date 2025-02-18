@@ -34,8 +34,6 @@ no_arch=$(grep no_arch <<< $conf)
 
 section readme .program.in > README
 
-scripts/initloc.sh $repo
-
 cat <<EOF > .program
 name	$name
 version	0.0
@@ -127,6 +125,11 @@ EOF
 
 rm .program.in*
 (rm $0) &
+
+printf 'brukit\t%s\n' $repo > .remote
+printf 'this\t%s\n' $(git remote get-url origin) >> .remote
+
+scripts/initloc.sh
 
 git add .
 scripts/amend-license.sh "$__license" "$license"

@@ -4,7 +4,7 @@
 set -e
 
 git switch brukit
-git pull
+git pull burkit master
 
 git switch master
 set +e
