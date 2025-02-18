@@ -52,6 +52,8 @@ struct opt {
 };
 
 /*
+ * Flags that do not use ex[]:
+ * +++++++++++
  * PRM_RET_ARG
  *	Stop parsing on encountering a non-option argument.
  *
@@ -67,12 +69,19 @@ struct opt {
  * PRM_NO_ARG
  *	Abort on encountering an argument.
  */
-
 #define PRM_RET_ARG  (1 << 0)
 #define PRM_PAR_CMD  (1 << 1)
 #define PRM_NO_HELP  (1 << 2)
 #define PRM_OPT_CMD  (1 << 3)
 #define PRM_NO_ARG   (1 << 4)
+
+/*
+ * Flags that use ex[]:
+ * +++++++++++
+ * PRM_LIM_ARG
+ *	Abort if the number of arguments exceeds the limit specified in ex[].
+ */
+#define PRM_LIM_ARG  (1 << 16)
 
 #define opt_for_each(pos, opts) \
 	for (pos = opts; (pos)->mode != OPTION__END; (pos)++)

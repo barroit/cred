@@ -8,7 +8,9 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "iter.h"
 #include "list.h"
+#include "noleak.h"
 #include "strbuf.h"
 #include "strconv.h"
 #include "strtox.h"
@@ -450,6 +452,23 @@ static int parse_cmd_arg(struct param *ctx)
 	return 0;
 }
 
+static void err_huge_arg(int argc, const xchar **argv)
+{
+	int i;
+	const char *fmt = N_("'%s' takes no extra arguments:\n%s\n");
+	struct strbuf sb = SB_INIT;
+
+	idx_for_each(i, argc)
+		sb_printf(&sb, XC("  %s\n"), argv[i]);
+	sb_trunc(&sb, 1);
+
+	if (argc == 1)
+		fmt = N_("'%s' takes no extra argument:\n%s\n");
+
+	error(_(fmt), cmdpath, sb.buf);
+	noleak(sb);
+}
+
 int param_parse(int argc, const xchar **argv,
 		const char **usage, struct opt *opts, u32 flags)
 {
@@ -495,6 +514,16 @@ int param_parse(int argc, const xchar **argv,
 			ctx.argv, ctx.argc * sizeof(*ctx.argv));
 
 	int ret = ctx.outc + ctx.argc;
+
+	if (ctx.flags & PRM_LIM_ARG) {
+		uint *__limit = param_set_ex(PRM_LIM_ARG, NULL);
+		uint limit = *__limit;
+
+		if (ret > limit) {
+			err_huge_arg(ret - limit, &ctx.outv[limit]);
+			param_show_help(usage, opts, 1);
+		}
+	}
 
 	if (flags & PRM_PAR_CMD && ret == 0) {
 		int err = 1;
