@@ -1,19 +1,21 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
-# Written with reference to OpenSSLConfig.cmake
 
-set(osslcmake sqlite/build.crypto/lib64/cmake sqlite/build.crypto/lib/cmake)
+if(UNIX)
+  set(ext  a)
+  set(plat unix)
+elseif(WIN32)
+  set(ext  lib)
+  set(plat win32)
+endif()
+
+set(osslcmake sqlite/${plat}.build.crypto/lib/cmake
+	      sqlite/${plat}.build.crypto/lib64/cmake)
 
 find_package(OpenSSL REQUIRED HINTS ${osslcmake})
 
-set(prefix ${TREE}/sqlite/install)
+set(prefix ${TREE}/sqlite/${plat}.install)
 set(libdir ${prefix}/lib)
 set(incdir ${prefix}/include)
-
-if(UNIX)
-  set(ext a)
-elseif(WIN32)
-  set(ext lib)
-endif()
 
 set(libsqlite  ${libdir}/libsqlite3.${ext})
 set(dependency OpenSSL::Crypto)
