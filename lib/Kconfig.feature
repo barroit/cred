@@ -1,8 +1,5 @@
 # SPDX-License-Identifier: GPL-3.0-or-later or MIT
 
-config CC_HAS_TOPLEVEL_REORDER
-	def_bool $(cc-option,-ftoplevel-reorder)
-
 menu "Core features"
 
 menuconfig I18N_SUPPORT
