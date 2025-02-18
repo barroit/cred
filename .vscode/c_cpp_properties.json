@@ -3,7 +3,12 @@
 		{
 			"name": "gcc",
 			"intelliSenseMode": "linux-gcc-x64",
-			"compilerPath": "${env:HOME}/.local/bin/gcc"
+			"compilerPath": "${env:HOME}/.local/bin/gcc",
+			"includePath": [
+				"${default}",
+				"${workspaceFolder}/sqlite/unix.install/include",
+				"${workspaceFolder}/sqlite/unix.build.crypto/include"
+			]
 		},
 		{
 			"name": "mingw64",
@@ -14,7 +19,12 @@
 				"_WIN32_WINNT=_WIN32_WINNT_WIN7"
 			],
 			"intelliSenseMode": "windows-gcc-x64",
-			"compilerPath": "/usr/bin/x86_64-w64-mingw32-gcc"
+			"compilerPath": "/usr/bin/x86_64-w64-mingw32-gcc",
+			"includePath": [
+				"${default}",
+				"${workspaceFolder}/sqlite/win32.install/include",
+				"${workspaceFolder}/sqlite/win32.build.crypto/include"
+			]
 		}
 	],
 	"version": 4
