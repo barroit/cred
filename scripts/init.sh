@@ -132,7 +132,7 @@ printf 'this\t%s\n' $(git remote get-url origin) >> .remote
 scripts/initloc.sh
 
 git add .
-scripts/amend-license.sh "$__license" "$license"
+scripts/fix-license.sh "$__license" "$license"
 
 scripts/syncmo.sh
 make distclean
