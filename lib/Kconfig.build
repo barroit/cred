@@ -65,4 +65,7 @@ config ENABLE_TESTING
 config TERMAS_SMALL_BUFFER
 	bool "Use small (1K) buffer in termas report functions"
 
+config IGNORE_ANNOT_LEAKS
+	bool "Suppress annotated leaks"
+
 endmenu # Executable build options
