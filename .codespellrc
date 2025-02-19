@@ -2,7 +2,7 @@
 
 [codespell]
 
-skip = *.po
+skip = *.po,tests/unit/levenshtein.c
 
 ignore-words-list = delink,nam,fiter,clen
 
