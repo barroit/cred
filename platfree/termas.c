@@ -26,11 +26,7 @@ struct tm_tag {
 	const char *colored;
 };
 
-#ifdef CONFIG_TERMAS_SMALL_BUFFER
-# define MAS_BUF_CAP SZ_1K
-#else
-# define MAS_BUF_CAP SZ_4K
-#endif
+#define MAS_BUF_CAP SZ_4K
 
 #ifdef CONFIG_SPEC_ALT_CNTRL
 # define ALT_CNTRL CONFIG_ALT_CNTRL

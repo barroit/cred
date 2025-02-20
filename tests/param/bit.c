@@ -41,7 +41,7 @@ struct opt opt[] = {
 
 int __main(int argc, const char **argv)
 {
-	parse_param(argc, argv, usage, opt, 0);
+	param_parse(argc, argv, usage, opt, 0);
 
 	if (!all)
 		show >>= 16;

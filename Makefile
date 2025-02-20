@@ -9,10 +9,6 @@ MAKEFLAGS += --no-print-directory
 
 export TREE := $(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 
-ifneq ($(PWD),$(TREE))
-$(error you need to be inside the source tree ($(TREE)))
-endif
-
 ifneq ($(LLVM),)
 CC := clang
 LD := ld.lld

@@ -21,7 +21,7 @@ int __main(int argc, const char **argv)
 		OPT_END(),
 	};
 
-	parse_param(argc, argv, usage, opt, 0);
+	param_parse(argc, argv, usage, opt, 0);
 
 	pprint_str(name);
 	return 0;

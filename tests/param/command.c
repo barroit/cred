@@ -33,7 +33,7 @@ int __main(int argc, const char **argv)
 		OPT_END(),
 	};
 
-	argc = parse_param(argc, argv, usage, opt, 0);
+	argc = param_parse(argc, argv, usage, opt, 0);
 
 	if (cmd == push)
 		pprint_cmd(push);

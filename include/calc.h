@@ -58,4 +58,15 @@ void __noreturn __die_overflow(const char *file, int line, const char *func,
 #define lgrow(x) align_down(((x + 8) * 3) >> 1, 8)
 #define sgrow(x) align_down(x + (x >> 3) + 6, 8)
 
+#ifdef min
+# undef min
+#endif
+
+#ifdef max
+# undef max
+#endif
+
+#define min(a, b) ((a) < (b) ? (a) : (b))
+#define max(a, b) ((a) > (b) ? (a) : (b))
+
 #endif /* NG39_CALC_H */

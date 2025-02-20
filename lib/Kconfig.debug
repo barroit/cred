@@ -49,6 +49,7 @@ endchoice # Compressed Debug information
 
 config PROG_WITH_SANITIZER
 	bool "Build program with sanitizers"
+	select IGNORE_ANNOT_LEAKS
 	default DEBUG_PROG
 
 config DUMP_CPL_CMD
