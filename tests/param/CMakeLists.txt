@@ -5,7 +5,7 @@ set(PARAM ${TREE}/tests/param)
 file(GLOB param_src *.c)
 list(FILTER param_src EXCLUDE REGEX "(main)\\.c")
 
-link_libraries(command OpenSSL::CryptoSO)
+link_libraries(command OpenSSL::CryptoSO SQLite::SQLiteSO)
 
 foreach(name ${param_src})
   get_filename_component(name ${name} NAME_WE)
@@ -18,5 +18,5 @@ foreach(name ${param_src})
 endforeach()
 
 if(WIN32)
-  fixup_runtime(${fake} ${OPENSSL_RUNTIME_LIB})
+  fixup_runtime(${fake} ${OPENSSL_RUNTIME_LIB} ${SQLITE_RUNTIME_LIB})
 endif()

@@ -1,22 +1,36 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-if(UNIX)
-  set(ext  a)
-elseif(WIN32)
-  set(ext  lib)
-endif()
-
 set(prefix ${TREE}/sqlite/${PLAT}.install)
+set(bindir ${prefix}/bin)
 set(libdir ${prefix}/lib)
 set(incdir ${prefix}/include)
 
-set(libsqlite  ${libdir}/libsqlite3.${ext})
+if(UNIX)
+  set(sosqlite  ${libdir}/libsqlite3.so)
+  set(libsqlite ${libdir}/libsqlite3.a)
+elseif(WIN32)
+  set(sosqlite  ${bindir}/sqlite3.dll)
+  set(libsqlite ${libdir}/libsqlite3.lib)
+  set(sqlitelib ${libdir}/sqlite3.lib)
+endif()
 
-add_library(SQLite::SQLite STATIC IMPORTED)
+add_library(SQLite::SQLite   STATIC IMPORTED)
+add_library(SQLite::SQLiteSO SHARED IMPORTED)
 
 set_target_properties(SQLite::SQLite PROPERTIES
 		      IMPORTED_LOCATION ${libsqlite}
 		      IMPORTED_LINK_INTERFACE_LANGUAGES C)
-target_include_directories(SQLite::SQLite INTERFACE ${incdir})
+set_target_properties(SQLite::SQLiteSO PROPERTIES
+		      IMPORTED_LOCATION ${sosqlite}
+		      IMPORTED_LINK_INTERFACE_LANGUAGES C)
 
-set(SQLITE_INCLUDE_DIR ${incdir} PARENT_SCOPE)
+if(WIN32)
+  set_target_properties(SQLite::SQLiteSO PROPERTIES
+		        IMPORTED_IMPLIB ${sqlitelib})
+endif()
+
+target_include_directories(SQLite::SQLite   INTERFACE ${incdir})
+target_include_directories(SQLite::SQLiteSO INTERFACE ${incdir})
+
+set(SQLITE_RUNTIME_LIB ${sosqlite} PARENT_SCOPE)
+set(SQLITE_INCLUDE_DIR ${incdir}   PARENT_SCOPE)
