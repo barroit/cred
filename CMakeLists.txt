@@ -105,8 +105,9 @@ set(COMPILE_FLAGS ${cflags})
 string(REPLACE -rc . prog_version_cmake ${prog_version})
 project(${prog_name} VERSION ${prog_version_cmake} LANGUAGES C)
 
+include_scp(lib/cmake.openssl)
 include_scp(lib/cmake.sqlite)
-include_directories(${SQLITE_INCLUDE_DIR})
+include_directories(${SQLITE_INCLUDE_DIR} ${OPENSSL_INCLUDE_DIR})
 
 if(CONFIG_DUMP_CPL_CMD)
   set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -160,7 +161,6 @@ add_library(platfree OBJECT ${pfree_src})
 
 file(GLOB cmd_src LIST_DIRECTORIES false commands/*.c)
 add_library(command OBJECT ${cmd_src})
-target_link_libraries(command PUBLIC SQLite::SQLite)
 
 if(CONFIG_PROG_WITH_SANITIZER)
   sanitize_targets(platfree platspec command)
@@ -192,7 +192,12 @@ if(WIN32)
 endif()
 
 add_executable(${exec_name} ${source})
-target_link_libraries(${exec_name} PRIVATE command)
+target_link_libraries(${exec_name} PRIVATE
+		      command OpenSSL::Crypto SQLite::SQLite)
+
+if(NOT OPENSSL_USE_STATIC_LIBS)
+  fixup_runtime(${exec_name} ${OPENSSL_RUNTIME_LIB})
+endif()
 
 if(CONFIG_PROG_WITH_SANITIZER)
   sanitize_targets(${exec_name} PRIVATE -fsanitize=address,undefined)
