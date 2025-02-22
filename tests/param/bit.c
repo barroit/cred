@@ -20,6 +20,7 @@
 const char *usage[] = {
 	"run [-a | --all] [<options...>]",
 	NULL,
+	NULL,
 };
 
 int all;
@@ -39,7 +40,7 @@ struct opt opt[] = {
 	OPT_END(),
 };
 
-int __main(int argc, const char **argv)
+int __main(int argc, const xchar **argv)
 {
 	param_parse(argc, argv, usage, opt, 0);
 

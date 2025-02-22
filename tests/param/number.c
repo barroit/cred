@@ -10,9 +10,10 @@
 const char *usage[] = {
 	"run [--job=<N>]",
 	NULL,
+	NULL,
 };
 
-int __main(int argc, const char **argv)
+int __main(int argc, const xchar **argv)
 {
 	uint job = 0;
 
