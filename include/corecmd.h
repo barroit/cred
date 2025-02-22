@@ -10,6 +10,7 @@
 
 int cmd_main(int argc, const xchar **argv);
 
+int cmd_init(int argc, const xchar **argv);
 int cmd_version(int argc, const xchar **argv);
 
 #endif

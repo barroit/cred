@@ -19,9 +19,10 @@ N_(
 ), N_(
 /*
  * TRANSLATORS
- * Do not modify the prefix '   version   '. Only translate the description of
+ * Do not modify the prefix '   xxxxxx   '. Only translate the description of
  * the command.
  */
+"   init      initialize a credential file\n"
 "   version   display version information about " PROGRAM_NAME
 ),
 	NULL,
@@ -38,6 +39,7 @@ static struct opt opts[] = {
 		     N_("prefix messages with timestamp"), OPT_NO_NEG),
 	__OPT_SWITCH(0, "show-pid", &udef_termas_pid,
 		     N_("prefix messages with current PID"), OPT_NO_NEG),
+	OPT_COMMAND("init",    &subcmd, cmd_init),
 	OPT_COMMAND("version", &subcmd, cmd_version),
 	OPT_END(),
 };
