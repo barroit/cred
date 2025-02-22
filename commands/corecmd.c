@@ -17,11 +17,6 @@ static const char *usage[] = {
 	NULL,
 };
 
-const xchar *udef_termas_dest = UDEF_DEF_PTR;
-int udef_use_tercol = 1;
-int udef_termas_ts;
-int udef_termas_pid;
-
 static cmd_cb subcmd;
 
 static struct opt opts[] = {
