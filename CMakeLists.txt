@@ -156,7 +156,9 @@ add_library(command OBJECT ${cmd_src})
 target_link_libraries(command PUBLIC)
 
 if(CONFIG_PROG_WITH_SANITIZER)
-  compile_add_sanitizer(platfree platspec)
+  target_compile_options(platfree PRIVATE -fsanitize=address,undefined)
+  target_compile_options(platspec PRIVATE -fsanitize=address,undefined)
+  add_link_options(-fsanitize=address,undefined)
 endif()
 
 if(UNIX)
@@ -186,11 +188,6 @@ endif()
 
 add_executable(${exec_name} ${source})
 target_link_libraries(${exec_name} PRIVATE command)
-
-if(CONFIG_PROG_WITH_SANITIZER)
-  compile_add_sanitizer(${exec_name})
-  link_add_sanitizer(${exec_name})
-endif()
 
 add_compile_definitions(_GNU_SOURCE)
 
