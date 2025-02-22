@@ -6,6 +6,12 @@ set(TREE $ENV{TREE})
 set(GEN  ${TREE}/include/generated)
 set(BIN  ${CMAKE_BINARY_DIR})
 
+if(UNIX)
+  set(PLAT unix)
+elseif(WIN32)
+  set(PLAT win32)
+endif()
+
 file(MAKE_DIRECTORY ${GEN})
 
 include(lib/cmake.include)
