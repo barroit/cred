@@ -10,6 +10,7 @@
 const char *usage[] = {
 	"run [--proc | --thrd]",
 	NULL,
+	NULL,
 };
 
 enum op_mode {
@@ -17,7 +18,7 @@ enum op_mode {
 	OP_THRD,
 };
 
-int __main(int argc, const char **argv)
+int __main(int argc, const xchar **argv)
 {
 	enum op_mode mode = OP_PROC;
 

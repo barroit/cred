@@ -10,11 +10,12 @@
 const char *usage[] = {
 	"run [--name=<name>]",
 	NULL,
+	NULL,
 };
 
-int __main(int argc, const char **argv)
+int __main(int argc, const xchar **argv)
 {
-	const char *name = NULL;
+	const xchar *name = NULL;
 
 	struct opt opt[] = {
 		OPT_STRING(0, "name", &name, "someone's name"),

@@ -10,9 +10,10 @@
 const char *usage[] = {
 	"run [-f | --[no-]force] [--[no-]enable]",
 	NULL,
+	NULL,
 };
 
-int __main(int argc, const char **argv)
+int __main(int argc, const xchar **argv)
 {
 	int force = 0;
 	int enable = 0;

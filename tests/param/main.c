@@ -5,7 +5,12 @@
 
 #include "partest.h"
 
-int main(int argc, const char **argv)
+#if defined(_WIN32) && defined(CONFIG_WIDE_CHAR)
+# pragma GCC diagnostic ignored "-Wmissing-prototypes"
+# define main wmain
+#endif
+
+int main(int argc, const xchar **argv)
 {
 	return __main(argc, argv);
 }
