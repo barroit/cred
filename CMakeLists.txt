@@ -200,7 +200,7 @@ if(NOT OPENSSL_USE_STATIC_LIBS)
 endif()
 
 if(CONFIG_PROG_WITH_SANITIZER)
-  sanitize_targets(${exec_name} PRIVATE -fsanitize=address,undefined)
+  sanitize_targets(${exec_name})
 endif()
 
 add_compile_definitions(_GNU_SOURCE)
