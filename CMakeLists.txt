@@ -93,8 +93,9 @@ set(COMPILE_FLAGS ${cflags})
 string(REPLACE -rc . prog_version_cmake ${prog_version})
 project(${prog_name} VERSION ${prog_version_cmake} LANGUAGES C)
 
+include_scp(lib/cmake.openssl)
 include_scp(lib/cmake.sqlite)
-include_directories(${SQLITE_INCLUDE_DIR})
+include_directories(${SQLITE_INCLUDE_DIR} ${OPENSSL_INCLUDE_DIR})
 
 if(CONFIG_DUMP_COMPILE_COMMAND)
   set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
@@ -180,7 +181,12 @@ endif()
 
 add_executable(${exec_name} ${source})
 add_dependencies(${exec_name} genconfig feature)
-target_link_libraries(${exec_name} PRIVATE SQLite::SQLite command)
+target_link_libraries(${exec_name} PRIVATE
+		      OpenSSL::Crypto SQLite::SQLite command)
+
+if(NOT OPENSSL_USE_STATIC_LIBS)
+  fixup_runtime(${exec_name} ${OPENSSL_RUNTIME_LIB})
+endif()
 
 add_compile_definitions(_GNU_SOURCE)
 

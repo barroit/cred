@@ -1,0 +1,33 @@
+# SPDX-License-Identifier: GPL-3.0-or-later
+
+set(OPENSSL_USE_STATIC_LIBS 1)
+set(osslcmake sqlite/${PLAT}.build.crypto/lib/cmake
+ 	      sqlite/${PLAT}.build.crypto/lib64/cmake)
+
+if(WIN32 AND CONFIG_ENABLE_SANITIZER)
+  # Fuck dealing with symbol conflicts, just link to the shared object.
+  set(OPENSSL_USE_STATIC_LIBS 0)
+endif()
+
+find_package(OpenSSL REQUIRED HINTS ${osslcmake})
+add_library(OpenSSL::CryptoSO SHARED IMPORTED)
+
+if(UNIX)
+  find_library(lib crypto PATHS ${OPENSSL_LIBRARY_DIR} NO_DEFAULT_PATH)
+elseif(WIN32)
+  set(lib    ${OPENSSL_LIBRARY_DIR}/../bin/libcrypto-3-x64.dll)
+  set(implib ${OPENSSL_LIBRARY_DIR}/libcrypto.lib)
+endif()
+
+set_target_properties(OpenSSL::CryptoSO PROPERTIES
+		      IMPORTED_LOCATION ${lib}
+		      IMPORTED_LINK_INTERFACE_LANGUAGES C)
+target_include_directories(OpenSSL::CryptoSO INTERFACE ${OPENSSL_INCLUDE_DIR})
+
+if(WIN32)
+  set_target_properties(OpenSSL::CryptoSO PROPERTIES IMPORTED_IMPLIB ${implib})
+endif()
+
+set(OPENSSL_RUNTIME_LIB ${lib} PARENT_SCOPE)
+set(OPENSSL_INCLUDE_DIR ${OPENSSL_INCLUDE_DIR} PARENT_SCOPE)
+set(OPENSSL_USE_STATIC_LIBS ${OPENSSL_USE_STATIC_LIBS} PARENT_SCOPE)

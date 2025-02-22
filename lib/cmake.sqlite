@@ -2,31 +2,21 @@
 
 if(UNIX)
   set(ext  a)
-  set(plat unix)
 elseif(WIN32)
   set(ext  lib)
-  set(plat win32)
 endif()
 
-set(osslcmake sqlite/${plat}.build.crypto/lib/cmake
-	      sqlite/${plat}.build.crypto/lib64/cmake)
-
-find_package(OpenSSL REQUIRED HINTS ${osslcmake})
-
-set(prefix ${TREE}/sqlite/${plat}.install)
+set(prefix ${TREE}/sqlite/${PLAT}.install)
 set(libdir ${prefix}/lib)
 set(incdir ${prefix}/include)
 
 set(libsqlite  ${libdir}/libsqlite3.${ext})
-set(dependency OpenSSL::Crypto)
 
 add_library(SQLite::SQLite STATIC IMPORTED)
 
 set_target_properties(SQLite::SQLite PROPERTIES
 		      IMPORTED_LOCATION ${libsqlite}
-		      IMPORTED_LINK_INTERFACE_LANGUAGES C
-		      INTERFACE_LINK_LIBRARIES ${dependency}
-		      INTERFACE_INCLUDE_DIRECTORIES ${incdir})
+		      IMPORTED_LINK_INTERFACE_LANGUAGES C)
+target_include_directories(SQLite::SQLite INTERFACE ${incdir})
 
 set(SQLITE_INCLUDE_DIR ${incdir} PARENT_SCOPE)
-set(SQLITE_LIBRARIES ${libsqlite} ${dependency} PARENT_SCOPE)
