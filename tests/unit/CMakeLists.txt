@@ -15,5 +15,10 @@ foreach(name ${unit_tests})
   get_filename_component(name ${name} NAME_WE)
 
   add_executable(${name}.t ${name}.c ussert.c main.c)
+
+  if(CONFIG_PROG_WITH_SANITIZER)
+    link_add_sanitizer(${name}.p)
+  endif()
+
   add_test(NAME api_${name} COMMAND ${name}.t WORKING_DIRECTORY ${BIN})
 endforeach()

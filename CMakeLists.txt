@@ -146,9 +146,7 @@ endif()
 add_library(platfree OBJECT ${source})
 
 if(CONFIG_PROG_WITH_SANITIZER)
-  target_compile_options(platfree PRIVATE -fsanitize=address,undefined)
-  target_compile_options(platspec PRIVATE -fsanitize=address,undefined)
-  add_link_options(-fsanitize=address,undefined)
+  compile_add_sanitizer(platfree platspec)
 endif()
 
 if(UNIX)
@@ -177,6 +175,11 @@ if(WIN32)
 endif()
 
 add_executable(${exec_name} ${source})
+
+if(CONFIG_PROG_WITH_SANITIZER)
+  compile_add_sanitizer(${exec_name})
+  link_add_sanitizer(${exec_name})
+endif()
 
 add_compile_definitions(_GNU_SOURCE)
 
