@@ -2,15 +2,15 @@
 
 menu "Hacking"
 
-config DEBUG_PROG
-	bool "Program debugging"
+config ENABLE_DEBUG
+	bool "Debug program"
 
 config DEBUG_INFO
 	bool
 
 choice
 	prompt "Debug information"
-	depends on DEBUG_PROG
+	depends on ENABLE_DEBUG
 	default DEBUG_INFO_DWARF5 if CC_IS_GCC || \
 				     (CC_IS_CLANG && CC_VERSION > 11000)
 	default DEBUG_INFO_DWARF4
@@ -47,36 +47,32 @@ config DEBUG_INFO_COMPRESSED_ZSTD
 
 endchoice # Compressed Debug information
 
-config PROG_WITH_SANITIZER
+config ENABLE_SANITIZER
 	bool "Build program with sanitizers"
-	default DEBUG_PROG
+	select IGNORE_ANNOT_LEAKS
+	default ENABLE_DEBUG
 
-config DUMP_CPL_CMD
+config DUMP_COMPILE_COMMAND
 	bool "Dump compile command"
-	default DEBUG_PROG
-
-config REP_HOOK
-	bool "Mount runtime report hook"
-	default DEBUG_PROG
-	depends on $(WIN32)
+	default ENABLE_DEBUG
 
 config DEBUG_INTL
 	bool "Link with the non-inline function call version of intl"
-	depends on I18N_SUPPORT
+	depends on ENABLE_I18N
 
 menu "String Buffer options"
 
 config STRBUF_SANITIZE_PATH
 	bool "Add path format checks"
-	default DEBUG_PROG
+	default ENABLE_DEBUG
 
 endmenu # String Buffer options
 
 menu "List options"
 
-config LIST_SANITIZE_MOD
+config LIST_SANITIZE_MODIFICATION
 	bool "Validate list modification"
-	default DEBUG_PROG
+	default ENABLE_DEBUG
 
 endmenu # List options
 

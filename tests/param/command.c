@@ -11,19 +11,20 @@ static const char *usage[] = {
 	"run push",
 	"run pop",
 	NULL,
+	NULL,
 };
 
-static int push(int argc, const char **argv)
+static int push(int argc, const xchar **argv)
 {
 	return 0;
 }
 
-static int pop(int argc, const char **argv)
+static int pop(int argc, const xchar **argv)
 {
 	return 0;
 }
 
-int __main(int argc, const char **argv)
+int __main(int argc, const xchar **argv)
 {
 	cmd_cb cmd = NULL;
 
@@ -33,7 +34,7 @@ int __main(int argc, const char **argv)
 		OPT_END(),
 	};
 
-	argc = parse_param(argc, argv, usage, opt, 0);
+	argc = param_parse(argc, argv, usage, opt, 0);
 
 	if (cmd == push)
 		pprint_cmd(push);

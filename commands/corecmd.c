@@ -11,7 +11,7 @@
 #include "udef.h"
 
 static const char *usage[] = {
-	PROGRAM_NAME " [--output <dest> | --no-output] [--no-tercol]"
+	PROGRAM_NAME " [--termas <dest> | --no-termas] [--no-tercol]"
 		     " [--show-ts] [--show-pid] <command> [<args>]",
 	NULL,
 N_(
@@ -27,15 +27,10 @@ N_(
 	NULL,
 };
 
-const xchar *udef_termas_dest = UDEF_DEF_PTR;
-int udef_use_tercol = 1;
-int udef_termas_ts;
-int udef_termas_pid;
-
 static cmd_cb subcmd;
 
 static struct opt opts[] = {
-	__OPT_STRING(0, "output", &udef_termas_dest,
+	__OPT_STRING(0, "termas", &udef_termas_dest,
 		     N_("specify output destination"), 0),
 	OPT_SWITCH(0, "tercol", &udef_use_tercol,
 		   N_("enable colorized terminal output")),
@@ -49,7 +44,7 @@ static struct opt opts[] = {
 
 int cmd_main(int argc, const xchar **argv)
 {
-	argc = parse_param(argc, argv, usage, opts, PRM_PAR_CMD);
+	argc = param_parse(argc, argv, usage, opts, PRM_PAR_CMD);
 
 	if (udef_termas_dest != UDEF_DEF_PTR) {
 		const xchar *out = udef_termas_dest ? : XC(CONFIG_NULL_DEVICE);

@@ -27,7 +27,7 @@ int proc_exec(u32 flags, proc_t *proc, const xchar *file, ...);
 
 int proc_wait(proc_t *proc, int *ret);
 
-#ifdef CONFIG_WIN32_GUI
+#ifdef CONFIG_ENABLE_GUI
 int proc_no_console(char act);
 #endif
 

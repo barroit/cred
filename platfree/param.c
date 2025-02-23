@@ -5,13 +5,14 @@
 
 #include "param.h"
 
-#include "bitopt.h"
+#include <stdlib.h>
+#include <string.h>
+
 #include "iter.h"
 #include "list.h"
+#include "noleak.h"
 #include "strbuf.h"
 #include "strconv.h"
-#include "string.h"
-#include "strlist.h"
 #include "strtox.h"
 #include "termas.h"
 #include "xalloc.h"
@@ -23,9 +24,6 @@
 #ifdef __argc
 # undef __argc
 #endif
-
-#define opt_for_each(pos, opts) \
-	for (pos = opts; (pos)->mode != OPTION__END; (pos)++)
 
 #define OPT_SHORT_OPT (1 << 0)
 #define OPT_LONG_OPT  (1 << 1)
@@ -62,8 +60,20 @@ struct cmdmode {
 	struct list_head list;
 };
 
-static void __noreturn show_help(const char **usage,
-				 struct opt *opts, int is_err);
+static const void *ex[32];
+
+void *param_set_ex(u32 flag, const void *val)
+{
+	BUG_ON(!flag);
+
+	uint i = ctz(flag);
+
+	if (!val)
+		return (void *)ex[i];
+
+	ex[i] = val;
+	return NULL;
+}
 
 static struct strbuf __cmdpath = SB_INIT;
 static char *cmdpath;
@@ -89,7 +99,7 @@ static void cmdpath_append(const xchar *name)
 
 	sb_puts(&__cmdpath, name);
 
-	if (IS_ENABLED(CONFIG_WIDE_CHAR)) {
+	if (IS_ENABLED(CONFIG_ENABLE_WCHAR)) {
 		if (cmdpath)
 			free(cmdpath);
 		cmdpath = sb_mb_str_fb(&__cmdpath, "����");
@@ -128,7 +138,7 @@ static char *pretty_arg_name(const xchar *arg, const char *fb)
 {
 	char *ret = (char *)arg;
 
-	if (IS_ENABLED(CONFIG_WIDE_CHAR))
+	if (IS_ENABLED(CONFIG_ENABLE_WCHAR))
 		mb_wcstombs_fb(&ret, (wchar_t *)arg, fb);
 
 	return ret;
@@ -416,7 +426,7 @@ static int parse_cmd_arg(struct param *ctx)
 
 		if (!(ctx->flags & PRM_NO_HELP) &&
 		    str[0] == 'h' && str[1] == 0)
-			show_help(ctx->usage, ctx->opts, 0);
+			param_show_help(ctx->usage, ctx->opts, 0);
 		else if (str[0] == 0)
 			die(_("unknown option -"));
 
@@ -434,7 +444,7 @@ static int parse_cmd_arg(struct param *ctx)
 
 		if (!(ctx->flags & PRM_NO_HELP) &&
 		    xc_strcmp(str, XC("help")) == 0)
-			show_help(ctx->usage, ctx->opts, 0);
+			param_show_help(ctx->usage, ctx->opts, 0);
 
 		parse_long_opt(ctx, str);
 	}
@@ -442,7 +452,24 @@ static int parse_cmd_arg(struct param *ctx)
 	return 0;
 }
 
-int parse_param(int argc, const xchar **argv,
+static void err_huge_arg(int argc, const xchar **argv)
+{
+	int i;
+	const char *fmt = N_("'%s' takes no extra arguments:\n%s\n");
+	struct strbuf sb = SB_INIT;
+
+	idx_for_each(i, argc)
+		sb_printf(&sb, XC("  %s\n"), argv[i]);
+	sb_trunc(&sb, 1);
+
+	if (argc == 1)
+		fmt = N_("'%s' takes no extra argument:\n%s\n");
+
+	error(_(fmt), cmdpath, sb.buf);
+	noleak(sb);
+}
+
+int param_parse(int argc, const xchar **argv,
 		const char **usage, struct opt *opts, u32 flags)
 {
 	int __argc = argc - 1;
@@ -488,6 +515,16 @@ int parse_param(int argc, const xchar **argv,
 
 	int ret = ctx.outc + ctx.argc;
 
+	if (ctx.flags & PRM_LIM_ARG) {
+		uint *__limit = param_set_ex(PRM_LIM_ARG, NULL);
+		uint limit = *__limit;
+
+		if (ret > limit) {
+			err_huge_arg(ret - limit, &ctx.outv[limit]);
+			param_show_help(usage, opts, 1);
+		}
+	}
+
 	if (flags & PRM_PAR_CMD && ret == 0) {
 		int err = 1;
 
@@ -496,159 +533,10 @@ int parse_param(int argc, const xchar **argv,
 		else
 			err = 0;
 
-		show_help(ctx.usage, ctx.opts, err);
+		param_show_help(ctx.usage, ctx.opts, err);
 	}
 
 	argc = ctx.outc + ctx.argc;
 	ctx.outv[argc] = 0;
 	return argc;
-}
-
-static void show_cmd_usage(FILE *stream, const char **usage)
-{
-	const char *pref = "usage: ";
-	size_t __len = strlen("usage: ");
-
-	STRLIST(sl, SL__STORE_CHR);
-
-	while (*usage) {
-		const char *line = *usage;
-		const char *rest = line;
-
-		while (isalpha(*rest) || isspace(*rest))
-			rest++;
-
-		size_t len = rest - line;
-		size_t pad = __len + len;
-		size_t wrap = CONFIG_LINE_WRAP - __len;
-		char *str;
-
-		if ((CONFIG_LINE_WRAP >> 1) > pad)
-			wrap -= len;
-
-		fprintf(stream, "%*s%.*s", (int)__len, pref, (int)len, line);
-
-		if (!*rest) {
-			putc('\n', stream);
-			goto next;
-		}
-		sl_read_line_chr(&sl, rest, wrap);
-
-		str = sl_pop_chr(&sl);
-		fputs(str, stream);
-		putc('\n', stream);
-		free(str);
-
-		while ((str = sl_pop_chr(&sl))) {
-			fprintf(stream, "%*s%s\n", (int)pad, "", str);
-			free(str);
-		}
-
-next:
-		usage++;
-		pref = "or: ";
-	}
-
-	sl_destroy(&sl);
-	putc('\n', stream);
-}
-
-static void show_opt_usage(FILE *stream, struct opt *opts)
-{
-	int cnt = 0;
-	struct opt *opt;
-
-	STRLIST(sl, SL__STORE_CHR);
-
-	opt_for_each(opt, opts) {
-		switch (opt->mode) {
-		case OPTION__GROUP:
-			putc('\n', stream);
-			fputs(opt->__lnam, stream);
-			putc('\n', stream);
-		case OPTION__COMMAND:
-			continue;
-		}
-
-		const char *fmt;
-		size_t len = CONFIG_HELP_OPT_INDENT;
-
-		fprintf(stream, "%*s", (int)len, "");
-
-		if (opt->snam)
-			len += fprintf(stream, "-%c, ", opt->snam);
-
-		int no_neg = opt->flags & OPT_NO_NEG;
-
-		fmt = no_neg ? "--%s" : "--[no-]%s";
-		len += fprintf(stream, fmt, opt->__lnam);
-
-		if (opt->argh) {
-			char *occur = strpbrk(opt->argh, "()<>[]|");
-			int no_brac = occur != NULL;
-
-			if (opt->flags & OPT_OPT_ARG)
-				fmt = no_brac ? "[=%s]" : "[=<%s>]";
-			else
-				fmt = no_brac ? " %s" : " <%s>";
-			len += fprintf(stream, fmt, opt->argh);
-		}
-
-		if (len >= CONFIG_HELP_OPT_WRAP) {
-			putc('\n', stream);
-			len = 0;
-		}
-
-		size_t __pad = CONFIG_HELP_OPT_WRAP + 2;
-		size_t pad = __pad - len;
-		size_t wrap = CONFIG_LINE_WRAP - __pad;
-		char *str;
-
-		sl_read_line_chr(&sl, _(opt->usage), wrap);
-
-		str = sl_pop_chr(&sl);
-		fprintf(stream, "%*s%s\n", (int)pad, "", str);
-		free(str);
-
-		while ((str = sl_pop_chr(&sl))) {
-			fprintf(stream, "%*s%s\n", (int)__pad, "", str);
-			free(str);
-		}
-
-		cnt++;
-	}
-
-	sl_destroy(&sl);
-	if (cnt)
-		putc('\n', stream);
-}
-
-static void show_cmd_ext_usage(FILE *stream, const char **usage)
-{
-	while (*usage++);
-
-	uint lines = 0;
-
-	while (*usage) {
-		if (lines++)
-			putc('\n', stream);
-
-		fputs(_(*usage), stream);
-		putc('\n', stream);
-
-		usage++;
-	}
-}
-
-static void show_help(const char **usage, struct opt *opts, int is_err)
-{
-	FILE *stream = is_err ? stderr : stdout;
-
-	show_cmd_usage(stream, usage);
-
-	show_opt_usage(stream, opts);
-
-	show_cmd_ext_usage(stream, usage);
-
-	exit(EXIT_CONOUT);
 }

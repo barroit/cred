@@ -2,7 +2,7 @@
 
 [codespell]
 
-skip = *.po,sqlite
+skip = *.po,sqlite,tests/unit/levenshtein.c
 
 ignore-words-list = delink,nam,fiter,clen
 

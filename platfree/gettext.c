@@ -2,7 +2,7 @@
 /*
  * Copyright 2025 Jiamu Sun <barroit@linux.com>
  *
- * This file is compiled only when CONFIG_I18N_SUPPORT is enabled.
+ * This file is compiled only when CONFIG_ENABLE_I18N is enabled.
  */
 
 #include "gettext.h"
@@ -15,8 +15,8 @@
 #include "init.h"
 #include "path.h"
 
-#ifdef CONFIG_TEXT_LOCALE
-# define TEXT_LOCALE CONFIG_TEXT_LOCALE
+#ifdef CONFIG_ENABLE_CUSTOM_TEXT_LOCALE
+# define TEXT_LOCALE CONFIG_CUSTOM_TEXT_LOCALE
 #else
 # define TEXT_LOCALE ""
 #endif

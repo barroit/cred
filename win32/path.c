@@ -58,7 +58,7 @@ const xchar *pth_home(void)
 		err = SHGetKnownFolderPath(&FOLDERID_Profile, 0, NULL, &buf);
 		BUG_ON(err);
 
-		if (IS_ENABLED(CONFIG_WIDE_CHAR)) {
+		if (IS_ENABLED(CONFIG_ENABLE_WCHAR)) {
 			name = (typeof(name))buf;
 		} else {
 			size_t len = mb_wcstombs((char **)&name, buf);

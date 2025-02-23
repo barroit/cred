@@ -39,7 +39,7 @@ static __always_inline void __list_assert_add_valid(const struct list_head *new,
 						    const struct list_head *prev,
 						    const struct list_head *next)
 {
-	if (IS_ENABLED(CONFIG_LIST_SANITIZE_MOD)) {
+	if (IS_ENABLED(CONFIG_LIST_SANITIZE_MODIFICATION)) {
 		if (likely(new != prev && new != next &&
 			   next->prev == prev && prev->next == next))
 			return;
@@ -52,7 +52,7 @@ void __cold __noreturn __list_del_report_invalid(const struct list_head *entry);
 
 static __always_inline void __list_assert_del_valid(const struct list_head *entry)
 {
-	if (IS_ENABLED(CONFIG_LIST_SANITIZE_MOD)) {
+	if (IS_ENABLED(CONFIG_LIST_SANITIZE_MODIFICATION)) {
 		struct list_head *next = entry->next;
 		struct list_head *prev = entry->prev;
 

@@ -6,34 +6,28 @@ set(TREE $ENV{TREE})
 set(GEN  ${TREE}/include/generated)
 set(BIN  ${CMAKE_BINARY_DIR})
 
+if(UNIX)
+  set(PLAT unix)
+elseif(WIN32)
+  set(PLAT win32)
+endif()
+
+set(SANFLAGS -fsanitize=address,undefined)
+
 file(MAKE_DIRECTORY ${GEN})
 
 include(lib/cmake.include)
-
-if(NOT EXISTS ${TREE}/.config)
-  set(ENV{KCONFIG_CONFIG} ${TREE}/.config.def)
-  if(NOT EXISTS ${TREE}/.config.def)
-    python3(scripts/kconfig.py alldefconfig)
-  endif()
-endif()
-
-python3(scripts/kconfig.py genconfig --header-path ${GEN}/autoconf.h)
 include_scp(lib/cmake.kconfig)
+include_scp(lib/cmake.features)
 
-if(EXISTS ${TREE}/.config)
-  set(ENV{CC} ${CONFIG_CC_COMMAND})
-  set(ENV{LD} ${CONFIG_LD_COMMAND})
-endif()
+set(ENV{CC} ${CONFIG_CC_COMMAND})
+set(ENV{LD} ${CONFIG_LD_COMMAND})
 
-set(prog_name ${CONFIG_PROG_NAME})
-if(CONFIG_SPEC_EXEC_NAME)
-  set(exec_name ${CONFIG_EXEC_NAME})
-else()
-  set(exec_name ${CONFIG_PROG_NAME})
-endif()
+set(prog_name    ${CONFIG_PROG_NAME})
+set(exec_name    ${CONFIG_EXEC_NAME})
 set(prog_version ${CONFIG_PROG_VERSION})
 
-if(CONFIG_ARCH_SPEC)
+if(CONFIG_ENABLE_ARCH_SPEC)
   include_scp(lib/cmake.arch)
   file(CREATE_LINK ../arch/${arch} include/arch SYMBOLIC)
 endif()
@@ -80,12 +74,16 @@ add_compile_options(-Wall
 
 add_compile_options(-funsigned-char -fno-common)
 
-if(CONFIG_DEBUG_PROG)
+if(CONFIG_ENABLE_DEBUG)
   add_compile_options(-fno-omit-frame-pointer)
 endif()
 
+if(CONFIG_ENABLE_SANITIZER)
+  add_link_options(${SANFLAGS})
+endif()
+
 # ASAN library lacks certain C library functions.
-if(WIN32 AND CONFIG_PROG_WITH_SANITIZER)
+if(WIN32 AND CONFIG_ENABLE_SANITIZER)
   add_compile_options(-U_DLL)
 endif()
 
@@ -98,15 +96,13 @@ project(${prog_name} VERSION ${prog_version_cmake} LANGUAGES C)
 include_scp(lib/cmake.sqlite)
 include_directories(${SQLITE_INCLUDE_DIR})
 
-if(CONFIG_DUMP_CPL_CMD)
+if(CONFIG_DUMP_COMPILE_COMMAND)
   set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 endif()
 
-if(CONFIG_I18N_SUPPORT)
+if(CONFIG_ENABLE_I18N)
   include_scp(lib/cmake.gettext)
 endif()
-
-include_scp(lib/cmake.feature)
 
 configure_file(include/program.h.in ${GEN}/program.h)
 
@@ -132,32 +128,38 @@ endif()
 
 foreach(plat ${platlist})
   include_directories(${plat})
-  list(APPEND pathspec ${plat}/*.c)
+  list(APPEND pspec_path ${plat}/*.c)
 endforeach()
 
-file(GLOB source LIST_DIRECTORIES false ${pathspec})
-list(FILTER source EXCLUDE REGEX main\.)
-if(WIN32 AND NOT CONFIG_WIN32_GUI)
-  list(FILTER source EXCLUDE REGEX \\.gui\\.c$)
+file(GLOB pspec_src LIST_DIRECTORIES false ${pspec_path})
+list(FILTER pspec_src EXCLUDE REGEX main\.)
+if(WIN32 AND NOT CONFIG_ENABLE_GUI)
+  list(FILTER pspec_src EXCLUDE REGEX \\.gui\\.c$)
 endif()
-add_library(platspec OBJECT ${source})
+add_library(platspec OBJECT ${pspec_src})
+add_dependencies(platspec genconfig feature)
 
-file(GLOB source LIST_DIRECTORIES false platfree/*.c commands/*.c)
-if(NOT HAVE_INTL)
-  list(FILTER source EXCLUDE REGEX gettext\.c)
+file(GLOB pfree_src LIST_DIRECTORIES false platfree/*.c)
+if(NOT Intl_FOUND)
+  list(FILTER pfree_src EXCLUDE REGEX gettext\.c)
 endif()
-add_library(platfree OBJECT ${source})
+add_library(platfree OBJECT ${pfree_src})
+add_dependencies(platfree genconfig feature)
 
-if(CONFIG_PROG_WITH_SANITIZER)
-  target_compile_options(platfree PRIVATE -fsanitize=address,undefined)
-  target_compile_options(platspec PRIVATE -fsanitize=address,undefined)
-  add_link_options(-fsanitize=address,undefined)
+file(GLOB cmd_src LIST_DIRECTORIES false commands/*.c)
+add_library(command OBJECT ${cmd_src})
+add_dependencies(command genconfig feature)
+
+if(CONFIG_ENABLE_SANITIZER)
+  target_compile_options(platfree PRIVATE ${SANFLAGS})
+  target_compile_options(platspec PRIVATE ${SANFLAGS})
+  target_compile_options(command  PRIVATE ${SANFLAGS})
 endif()
 
 if(UNIX)
   set(source unix/main.c)
 elseif(WIN32)
-  if(CONFIG_WIN32_GUI)
+  if(CONFIG_ENABLE_GUI)
     set(source WIN32)
     list(APPEND source win32/main.gui.c)
   else()
@@ -171,21 +173,23 @@ link_libraries(platfree platspec)
 
 if(WIN32)
   link_libraries(shlwapi userenv)
-  if(CONFIG_WIN32_GUI)
+  if(CONFIG_ENABLE_GUI)
     link_libraries(comctl32)
-  endif()
-  if(CONFIG_DEBUG_PROG AND CONFIG_REP_HOOK)
-    link_libraries(dbghelp)
   endif()
 endif()
 
 add_executable(${exec_name} ${source})
-target_link_libraries(${exec_name} PRIVATE SQLite::SQLite)
+add_dependencies(${exec_name} genconfig feature)
+target_link_libraries(${exec_name} PRIVATE SQLite::SQLite command)
 
 add_compile_definitions(_GNU_SOURCE)
 
-if(NOT CONFIG_DEBUG_PROG)
+if(NOT CONFIG_ENABLE_DEBUG)
   add_compile_definitions(NDEBUG)
+endif()
+
+if(CONFIG_ENABLE_WCHAR)
+  add_compile_definitions(UNICODE)
 endif()
 
 if(WIN32)
@@ -203,7 +207,7 @@ endif()
 
 install(TARGETS ${exec_name} DESTINATION .)
 
-if(CONFIG_I18N_SUPPORT)
+if(CONFIG_ENABLE_I18N)
   install(DIRECTORY locale DESTINATION locale
 	  FILES_MATCHING PATTERN *.mo PERMISSIONS OWNER_READ)
 endif()
@@ -213,6 +217,6 @@ if(WIN32)
   install(FILES ${dll} DESTINATION .)
 endif()
 
-if(CONFIG_ENABLE_TESTING)
+if(CONFIG_ENABLE_TEST)
   add_subdirectory(tests)
 endif()

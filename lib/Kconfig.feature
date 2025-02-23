@@ -1,42 +1,36 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-config CC_HAS_TOPLEVEL_REORDER
-	def_bool $(cc-option,-ftoplevel-reorder)
-
 menu "Core features"
 
-menuconfig I18N_SUPPORT
+menuconfig ENABLE_I18N
 	bool "Enable i18n support"
 
-if I18N_SUPPORT
+if ENABLE_I18N
 
 config TEXT_DOMAIN_NAME
 	string "Text domain name for gettext"
 	default $(pg-name)
 
-config CUSTOM_TEXT_LOCALE
-	bool "Enable custom program locale"
+menuconfig ENABLE_CUSTOM_TEXT_LOCALE
+	bool "Customize program locale"
 
-config TEXT_LOCALE
+config CUSTOM_TEXT_LOCALE
 	string "Specify program locale"
 	default "C.UTF-8"
-	depends on CUSTOM_TEXT_LOCALE
+	depends on ENABLE_CUSTOM_TEXT_LOCALE
 
-endif # I18N_SUPPORT
+endif # ENABLE_I18N
 
 menu "Formatting options"
 
-menuconfig SPEC_ALT_CNTRL
-	bool "Customize control character replacement"
+menuconfig ENABLE_UTF8_CNTRL_CHAR_REPL
+	bool "Customize control character replacement (utf-8)"
 	default y
 
-if SPEC_ALT_CNTRL
-
-config ALT_CNTRL
+config UTF8_CNTRL_CHAR_REPL
 	string "Control character replacement"
 	default "�"
-
-endif
+	depends on ENABLE_UTF8_CNTRL_CHAR_REPL
 
 config LINE_WRAP
 	int "Line wrap threshold"

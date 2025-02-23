@@ -31,7 +31,7 @@ typedef unsigned long ulong;
 typedef long long ssize_t;
 #endif
 
-#ifndef CONFIG_WIDE_CHAR
+#ifndef CONFIG_ENABLE_WCHAR
 typedef char xchar;
 #else
 typedef wchar_t xchar;

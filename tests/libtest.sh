@@ -30,7 +30,7 @@ run()
 		echo "$pid> $REPLY"
 	done < <(cat $err)
 
-	__pp=$(grep -P '^39\t' $out)
+	__pp=$(LC_CTYPE=en_US.UTF-8 grep -P '^39\t' $out)
 
 	if [[ -z $__pp ]]; then
 		return

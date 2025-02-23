@@ -10,9 +10,10 @@
 const char *usage[] = {
 	"run [--job=<N>]",
 	NULL,
+	NULL,
 };
 
-int __main(int argc, const char **argv)
+int __main(int argc, const xchar **argv)
 {
 	uint job = 0;
 
@@ -21,7 +22,7 @@ int __main(int argc, const char **argv)
 		OPT_END(),
 	};
 
-	parse_param(argc, argv, usage, opt, 0);
+	param_parse(argc, argv, usage, opt, 0);
 
 	pprint_uint(job);
 	return 0;

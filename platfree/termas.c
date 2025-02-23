@@ -26,16 +26,12 @@ struct tm_tag {
 	const char *colored;
 };
 
-#ifdef CONFIG_TERMAS_SMALL_BUFFER
-# define MAS_BUF_CAP SZ_1K
-#else
-# define MAS_BUF_CAP SZ_4K
-#endif
+#define MAS_BUF_CAP SZ_4K
 
-#ifdef CONFIG_SPEC_ALT_CNTRL
-# define ALT_CNTRL CONFIG_ALT_CNTRL
+#ifdef CONFIG_ENABLE_UTF8_CNTRL_CHAR_REPL
+# define CNTRL_CHAR_REPL CONFIG_UTF8_CNTRL_CHAR_REPL
 #else
-# define ALT_CNTRL "?"
+# define CNTRL_CHAR_REPL "?"
 #endif
 
 #define __test_add_buf_size(__nr, __size, __avail)	\
@@ -77,11 +73,11 @@ static size_t rm_bad_cntrl(char *buf, size_t size, size_t cap)
 	 * Minus 1 in here is because bad control characters have already
 	 * reserved 1 char for us.
 	 */
-	size_t len = strlen(ALT_CNTRL);
+	size_t len = strlen(CNTRL_CHAR_REPL);
 	size_t unit = len - 1;
 	int do_fast = len == 1;
 	int no_room = unit * cnt > cap - size;
-	char *alt = ALT_CNTRL;
+	char *alt = CNTRL_CHAR_REPL;
 
 	if (no_room)
 		alt = "?";

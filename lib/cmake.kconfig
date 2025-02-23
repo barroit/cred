@@ -1,11 +1,23 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-if(DEFINED ENV{KCONFIG_CONFIG})
-  set(file $ENV{KCONFIG_CONFIG})
-else()
-  set(file ${TREE}/.config)
+if(NOT EXISTS ${TREE}/$ENV{KCONFIG_CONFIG})
+  set(ENV{KCONFIG_CONFIG} ${TREE}/$ENV{KCONFIG_CONFIG}.def)
+  if(NOT EXISTS ${TREE}/$ENV{KCONFIG_CONFIG})
+    python3(scripts/kconfig.py alldefconfig)
+  endif()
 endif()
-file(STRINGS ${file} lines ENCODING UTF-8)
+
+# It's okay to have only a .config.xxx.def on disk with $KCONFIG_CONFIG set to
+# .config.xxx, as genconfig will look up .config.xxx.def.
+add_custom_command(OUTPUT ${GEN}/autoconf.h
+		   COMMAND ${Python3_EXECUTABLE} scripts/kconfig.py
+		   genconfig --header-path ${GEN}/autoconf.h
+		   DEPENDS ${TREE}/.last_build
+		   WORKING_DIRECTORY ${TREE})
+
+add_custom_target(genconfig DEPENDS ${GEN}/autoconf.h)
+
+file(STRINGS $ENV{KCONFIG_CONFIG} lines ENCODING UTF-8)
 
 foreach(line ${lines})
   if(line MATCHES "^(CONFIG_[^=]+)=(\"?)([^\"]*)(\"?)$")

@@ -81,7 +81,7 @@ static void show_prefix(void)
 	const xchar *__name = pth_prefix();
 	char *name = (char *)__name;
 
-	if (IS_ENABLED(CONFIG_WIDE_CHAR))
+	if (IS_ENABLED(CONFIG_ENABLE_WCHAR))
 		mb_wcstombs_fb(&name, (wchar_t *)__name, "���");
 
 	/*
@@ -91,7 +91,7 @@ static void show_prefix(void)
 	 */
 	print_line(_("  prefix    %s\n"), name);
 
-	if (IS_ENABLED(CONFIG_WIDE_CHAR))
+	if (IS_ENABLED(CONFIG_ENABLE_WCHAR))
 		free(name);
 }
 
@@ -116,7 +116,7 @@ static void show_libvar(void)
 
 int cmd_version(int argc, const xchar **argv)
 {
-	parse_param(argc, argv, usage, opts, PRM_NO_ARG);
+	param_parse(argc, argv, usage, opts, PRM_NO_ARG);
 
 	printf(_("%s version %s\n"), PROGRAM_NAME, PROGRAM_VERSION);
 

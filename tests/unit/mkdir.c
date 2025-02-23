@@ -10,7 +10,7 @@
 
 #include "path.h"
 
-#if defined(CONFIG_WIDE_CHAR)
+#if defined(CONFIG_ENABLE_WCHAR)
 # define rmdir _wrmdir
 #elif defined(_WIN32)
 # define rmdir _rmdir

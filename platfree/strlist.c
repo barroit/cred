@@ -396,7 +396,7 @@ static __maybe_unused void sl_read_line_wc(struct strlist *sl,
 	free(buf);
 }
 
-#ifdef CONFIG_WIDE_CHAR
+#ifdef CONFIG_ENABLE_WCHAR
 # define __sl_read_line sl_read_line_wc
 #else
 # define __sl_read_line sl_read_line_mb

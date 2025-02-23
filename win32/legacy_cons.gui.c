@@ -13,7 +13,7 @@
 #include "termas.h"
 #include "xc.h"
 
-#ifdef CONFIG_WIDE_CHAR
+#ifdef CONFIG_ENABLE_WCHAR
 # define freopen _wfreopen
 #endif
 

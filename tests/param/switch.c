@@ -10,9 +10,10 @@
 const char *usage[] = {
 	"run [-f | --[no-]force] [--[no-]enable]",
 	NULL,
+	NULL,
 };
 
-int __main(int argc, const char **argv)
+int __main(int argc, const xchar **argv)
 {
 	int force = 0;
 	int enable = 0;
@@ -23,7 +24,7 @@ int __main(int argc, const char **argv)
 		OPT_END(),
 	};
 
-	parse_param(argc, argv, usage, opt, 0);
+	param_parse(argc, argv, usage, opt, 0);
 
 	pprint_int(force);
 	pprint_int(enable);

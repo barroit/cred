@@ -8,7 +8,7 @@
 
 #include "corecmd.h"
 
-#ifdef CONFIG_WIDE_CHAR
+#ifdef CONFIG_ENABLE_WCHAR
 # pragma GCC diagnostic ignored "-Wmissing-prototypes" 
 # define main wmain
 #endif

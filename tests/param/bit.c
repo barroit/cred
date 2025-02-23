@@ -20,6 +20,7 @@
 const char *usage[] = {
 	"run [-a | --all] [<options...>]",
 	NULL,
+	NULL,
 };
 
 int all;
@@ -39,9 +40,9 @@ struct opt opt[] = {
 	OPT_END(),
 };
 
-int __main(int argc, const char **argv)
+int __main(int argc, const xchar **argv)
 {
-	parse_param(argc, argv, usage, opt, 0);
+	param_parse(argc, argv, usage, opt, 0);
 
 	if (!all)
 		show >>= 16;

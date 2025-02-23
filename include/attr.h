@@ -22,7 +22,7 @@
 # define __nonnull(...) __attr((__nonnull__ __VA_ARGS__))
 #endif
 
-#ifndef CONFIG_WIDE_CHAR
+#ifndef CONFIG_ENABLE_WCHAR
 # define __printf(m, n) __attr((__format__(__printf__, m, n))) __nonnull((m))
 #else
 # define __printf(m, n)

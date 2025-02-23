@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-find_package(Python3 3.6 REQUIRED)
+find_package(Python3 3.6 REQUIRED COMPONENTS Interpreter)
 
 # Not that SCP, scoped instead :)
 function(include_scp name)
@@ -23,4 +23,10 @@ function(python3 script)
 
   execute_process(COMMAND ${Python3_EXECUTABLE}
 		  ${script} ${ARGN} COMMAND_ERROR_IS_FATAL ANY)
+endfunction()
+
+function(fixup_runtime target)
+  add_custom_command(TARGET ${target} POST_BUILD
+		     COMMAND ${CMAKE_COMMAND} -E copy_if_different
+		     ${ARGN} $<TARGET_FILE_DIR:${target}>)
 endfunction()

@@ -16,11 +16,14 @@ param
 $tree = $PSScriptRoot
 Set-Alias error Write-Error
 
+$BUILD = 'build.win32'
+
 if ($tree -ne $PWD) {
 	error "you need to be inside the source tree ($tree)"
 }
 
-$env:TREE = $tree.Replace('\','/')
+$env:TREE           = $tree.Replace('\','/')
+$env:KCONFIG_CONFIG = '.config.win32'
 
 $targets = @('configure', 'build', 'all', 'test', 'clean', `
 	     'distclean', 'menuconfig', 'install', 'uninstall')
@@ -58,31 +61,41 @@ if ($target -eq 'configure' -or $target -eq 'all') {
 	} else {
 		$generator = 'Ninja'
 	}
-	cmake -G $generator -S . -B build
+
+	cmake -G $generator -S . -B $BUILD
 }
 
 if ($target -eq 'build' -or $target -eq 'all') {
-	cmake --build build --parallel
+	if (!(Test-Path .last_build)) {
+		echo win32 > .last_build
+	} elseif ((cat .last_build) -ne 'win32') {
+		echo win32 > .last_build
+	}
+
+	cmake --build $BUILD --parallel
 }
 
 if ($target -eq 'test') {
-	ctest --test-dir build/tests --parallel $env:NUMBER_OF_PROCESSORS
+	ctest --test-dir $BUILD/tests --parallel $env:NUMBER_OF_PROCESSORS
 } elseif ($target -eq 'clean') {
-	cmake --build build --target clean
+	cmake --build $BUILD --target clean
 } elseif ($target -eq 'distclean') {
 	Remove-Item -Recurse -Force -ErrorAction SilentlyContinue`
 		    -Path include/generated
 
 	Remove-Item -Force -ErrorAction SilentlyContinue `
-		    -Path .config, .config.def, .config.old
+		    -Path $env:KCONFIG_CONFIG*
+
+	Remove-Item -Force -ErrorAction SilentlyContinue `
+		    -Path .last_build
 
 	Remove-Item -Force -ErrorAction SilentlyContinue `
 		    -Path *.manifest
 
-	$f = git ls-files --directory -o build
+	$f = git ls-files --directory -o $BUILD
 	if ($f) {
 		Remove-Item -Recurse -Force -ErrorAction SilentlyContinue `
-			    -Path (git ls-files --directory -o build)
+			    -Path (git ls-files --directory -o $BUILD)
 	}
 } elseif ($target -eq 'menuconfig') {
 	python scripts/kconfig.py menuconfig

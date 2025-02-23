@@ -101,7 +101,7 @@ int __ussert_strequal(const char *file, int line,
 #define ____ussert_strequal(expr, s1, s2, t) \
 	__ussert_strequal(__FILE__, __LINE__, __func__, #expr, s1, s2, t)
 
-#ifdef CONFIG_WIDE_CHAR
+#ifdef CONFIG_ENABLE_WCHAR
 # define USSERT_STREQUAL USSERT_STREQUAL_WC
 #else
 # define USSERT_STREQUAL USSERT_STREQUAL_MB

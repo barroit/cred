@@ -11,12 +11,12 @@
 #include "proc.h"
 #include "udef.h"
 
-#ifdef CONFIG_WIDE_CHAR
+#ifdef CONFIG_ENABLE_WCHAR
 # define WinMain wWinMain
 #endif
 
 #define argc __argc
-#ifdef CONFIG_WIDE_CHAR
+#ifdef CONFIG_ENABLE_WCHAR
 # define argv __wargv
 #else
 # define argv __argv

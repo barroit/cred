@@ -4,7 +4,7 @@
 set -e
 
 git switch brukit
-git pull
+git pull brukit master
 
 git switch master
 set +e
@@ -34,7 +34,7 @@ else
 	done
 fi
 
-scripts/amend-license.sh "$lic_old" "$lic"
+scripts/fix-license.sh "$lic_old" "$lic"
 
 cp .git/MERGE_MSG.$$ .git/MERGE_MSG
 if [[ -z $(git diff --name-only --diff-filter=U) || $is_ff ]]; then
