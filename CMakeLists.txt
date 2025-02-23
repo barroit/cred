@@ -215,6 +215,6 @@ if(WIN32)
   install(FILES ${dll} DESTINATION .)
 endif()
 
-if(CONFIG_ENABLE_TESTING)
+if(CONFIG_ENABLE_TEST)
   add_subdirectory(tests)
 endif()

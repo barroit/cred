@@ -59,7 +59,7 @@ config WARN_HUGE_ALLOC
 
 endmenu # Memory allocation
 
-config ENABLE_TESTING
+config ENABLE_TEST
 	bool "Generate test suite"
 
 config IGNORE_ANNOT_LEAKS
