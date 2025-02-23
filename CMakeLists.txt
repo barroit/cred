@@ -12,6 +12,8 @@ elseif(WIN32)
   set(PLAT win32)
 endif()
 
+set(SANFLAGS -fsanitize=address,undefined)
+
 file(MAKE_DIRECTORY ${GEN})
 
 include(lib/cmake.include)
@@ -90,6 +92,10 @@ if(CONFIG_DEBUG_PROG)
   add_compile_options(-fno-omit-frame-pointer)
 endif()
 
+if(CONFIG_PROG_WITH_SANITIZER)
+  add_link_options(${SANFLAGS})
+endif()
+
 # ASAN library lacks certain C library functions.
 if(WIN32 AND CONFIG_PROG_WITH_SANITIZER)
   add_compile_options(-U_DLL)
@@ -156,9 +162,9 @@ add_library(command OBJECT ${cmd_src})
 target_link_libraries(command PUBLIC)
 
 if(CONFIG_PROG_WITH_SANITIZER)
-  target_compile_options(platfree PRIVATE -fsanitize=address,undefined)
-  target_compile_options(platspec PRIVATE -fsanitize=address,undefined)
-  add_link_options(-fsanitize=address,undefined)
+  target_compile_options(platfree PRIVATE ${SANFLAGS})
+  target_compile_options(platspec PRIVATE ${SANFLAGS})
+  target_compile_options(command  PRIVATE ${SANFLAGS})
 endif()
 
 if(UNIX)
