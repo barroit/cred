@@ -179,6 +179,10 @@ add_executable(${exec_name} ${source})
 add_dependencies(${exec_name} genconfig feature)
 target_link_libraries(${exec_name} PRIVATE command)
 
+if(CONFIG_ENABLE_SANITIZER)
+  target_compile_options(${exec_name} PRIVATE ${SANFLAGS})
+endif()
+
 add_compile_definitions(_GNU_SOURCE)
 
 if(NOT CONFIG_ENABLE_DEBUG)
