@@ -142,7 +142,7 @@ add_library(platspec OBJECT ${pspec_src})
 add_dependencies(platspec genconfig)
 
 file(GLOB pfree_src LIST_DIRECTORIES false platfree/*.c)
-if(NOT HAVE_INTL)
+if(NOT Intl_FOUND)
   list(FILTER pfree_src EXCLUDE REGEX gettext\.c)
 endif()
 add_library(platfree OBJECT ${pfree_src})
