@@ -104,7 +104,10 @@ if(CONFIG_ENABLE_I18N)
   include_scp(lib/cmake.gettext)
 endif()
 
-include_scp(lib/cmake.feature)
+add_custom_target(feature ${Python3_EXECUTABLE} scripts/cc-feature.py
+		  scripts/cc-feature.def ${GEN}/features.h
+		  DEPENDS ${TREE}/.last_build
+		  WORKING_DIRECTORY ${TREE})
 
 configure_file(include/program.h.in ${GEN}/program.h)
 
@@ -139,18 +142,18 @@ if(WIN32 AND NOT CONFIG_ENABLE_GUI)
   list(FILTER pspec_src EXCLUDE REGEX \\.gui\\.c$)
 endif()
 add_library(platspec OBJECT ${pspec_src})
-add_dependencies(platspec genconfig)
+add_dependencies(platspec genconfig feature)
 
 file(GLOB pfree_src LIST_DIRECTORIES false platfree/*.c)
 if(NOT Intl_FOUND)
   list(FILTER pfree_src EXCLUDE REGEX gettext\.c)
 endif()
 add_library(platfree OBJECT ${pfree_src})
-add_dependencies(platfree genconfig)
+add_dependencies(platfree genconfig feature)
 
 file(GLOB cmd_src LIST_DIRECTORIES false commands/*.c)
 add_library(command OBJECT ${cmd_src})
-add_dependencies(command genconfig)
+add_dependencies(command genconfig feature)
 
 if(CONFIG_ENABLE_SANITIZER)
   target_compile_options(platfree PRIVATE ${SANFLAGS})
@@ -181,13 +184,17 @@ if(WIN32)
 endif()
 
 add_executable(${exec_name} ${source})
-add_dependencies(${exec_name} genconfig)
+add_dependencies(${exec_name} genconfig feature)
 target_link_libraries(${exec_name} PRIVATE command)
 
 add_compile_definitions(_GNU_SOURCE)
 
 if(NOT CONFIG_ENABLE_DEBUG)
   add_compile_definitions(NDEBUG)
+endif()
+
+if(CONFIG_ENABLE_WCHAR)
+  add_compile_definitions(UNICODE)
 endif()
 
 if(WIN32)
