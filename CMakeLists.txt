@@ -30,7 +30,7 @@ else()
 endif()
 set(prog_version ${CONFIG_PROG_VERSION})
 
-if(CONFIG_ARCH_SPEC)
+if(CONFIG_ENABLE_ARCH_SPEC)
   include_scp(lib/cmake.arch)
   file(CREATE_LINK ../arch/${arch} include/arch SYMBOLIC)
 endif()
