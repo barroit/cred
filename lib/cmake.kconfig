@@ -1,11 +1,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later or MIT
 
-if(DEFINED ENV{KCONFIG_CONFIG})
-  set(file $ENV{KCONFIG_CONFIG})
-else()
-  set(file ${TREE}/.config)
-endif()
-file(STRINGS ${file} lines ENCODING UTF-8)
+file(STRINGS $ENV{KCONFIG_CONFIG} lines ENCODING UTF-8)
 
 foreach(line ${lines})
   if(line MATCHES "^(CONFIG_[^=]+)=(\"?)([^\"]*)(\"?)$")

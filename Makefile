@@ -7,7 +7,10 @@ endif
 MAKEFLAGS += -rR
 MAKEFLAGS += --no-print-directory
 
-export TREE := $(realpath $(dir $(lastword $(MAKEFILE_LIST))))
+BUILD := build.unix
+
+export TREE           := $(realpath $(dir $(lastword $(MAKEFILE_LIST))))
+export KCONFIG_CONFIG := .config.unix
 
 ifneq ($(LLVM),)
 CC := clang
@@ -22,41 +25,41 @@ export CC LD
 .PHONY: configure build all
 
 build:
-	@cmake --build build --parallel
+	@cmake --build $(BUILD) --parallel
 
 configure:
-	@cmake -S . -B build $(EXTOPT)
+	@cmake -S . -B $(BUILD) $(EXTOPT)
 
 all: configure build
 
 .PHONY: clean distclean
 
 clean:
-	@cmake --build build --target clean
+	@cmake --build $(BUILD) --target clean
 
 distclean:
 	@rm -rf include/generated
 	@rm -f include/arch
-	@rm -f .config .config.def .config.old
-	@git ls-files --directory -o build | xargs rm -rf
+	@rm -f $(KCONFIG_CONFIG)*
+	@git ls-files --directory -o $(BUILD) | xargs rm -rf
 
 .PHONY: menuconfig
 
 menuconfig:
 	@scripts/kconfig.py menuconfig
 
-__tests := $(wildcard build/t/*.t)
-tests   := $(patsubst build/%,%,$(__tests))
+__tests := $(wildcard $(BUILD)/t/*.t)
+tests   := $(patsubst $(BUILD)/%,%,$(__tests))
 
 .PHONY: $(tests)
 
 $(tests):
-	@./build/$@
+	@./$(BUILD)/$@
 
 .PHONY: t/all
 
 t/all:
-	@ctest --test-dir build/tests --parallel $(shell nproc)
+	@ctest --test-dir $(BUILD)/tests --parallel $(shell nproc)
 
 scripts := $(wildcard scripts/*.sh) $(wildcard scripts/*.py)
 args    := $(wordlist 2,$(words $(MAKECMDGOALS)),$(MAKECMDGOALS))

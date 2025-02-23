@@ -2,15 +2,14 @@
 
 .gdbinit
 
-.config
-.config.old
-.config.def
+.config.unix*
+.config.win32*
 *.manifest
 
-build/*
-!build/locale
-!build/scripts
-!build/t
+build.*/*
+!build.*/locale
+!build.*/scripts
+!build.*/t
 
 include/generated
 include/arch

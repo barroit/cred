@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later or MIT
 
-find_package(Python3 3.6 REQUIRED)
+find_package(Python3 3.6 REQUIRED COMPONENTS Interpreter)
 
 # Not that SCP, scoped instead :)
 function(include_scp name)

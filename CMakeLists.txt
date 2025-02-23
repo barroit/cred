@@ -18,9 +18,9 @@ file(MAKE_DIRECTORY ${GEN})
 
 include(lib/cmake.include)
 
-if(NOT EXISTS ${TREE}/.config)
-  set(ENV{KCONFIG_CONFIG} ${TREE}/.config.def)
-  if(NOT EXISTS ${TREE}/.config.def)
+if(NOT EXISTS ${TREE}/$ENV{KCONFIG_CONFIG})
+  set(ENV{KCONFIG_CONFIG} ${TREE}/$ENV{KCONFIG_CONFIG}.def)
+  if(NOT EXISTS ${TREE}/$ENV{KCONFIG_CONFIG})
     python3(scripts/kconfig.py alldefconfig)
   endif()
 endif()
