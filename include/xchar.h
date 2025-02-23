@@ -44,7 +44,7 @@
 #define __tolower_wc   towlower
 #define __mbsws_wc     wcsws
 
-#ifndef CONFIG_WIDE_CHAR
+#ifndef CONFIG_ENABLE_WCHAR
 # define __xchar_type _mb
 #else
 # define __xchar_type _wc

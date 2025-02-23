@@ -50,7 +50,7 @@ test_cc_builtin("
 ssize_t a = 0;
 " HAVE_SSIZE_T)
 
-if(CONFIG_WIDE_CHAR)
+if(CONFIG_ENABLE_WCHAR)
   set(UNICODE 1)
 endif()
 

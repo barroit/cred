@@ -5,7 +5,7 @@
 
 #include "partest.h"
 
-#if defined(_WIN32) && defined(CONFIG_WIDE_CHAR)
+#if defined(_WIN32) && defined(CONFIG_ENABLE_WCHAR)
 # pragma GCC diagnostic ignored "-Wmissing-prototypes"
 # define main wmain
 #endif

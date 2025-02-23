@@ -11,7 +11,7 @@
 #include "iter.h"
 #include "tercol.h"
 
-#ifdef CONFIG_WIDE_CHAR
+#ifdef CONFIG_ENABLE_WCHAR
 # include <unistd.h>
 # include <fcntl.h>
 #endif
@@ -22,7 +22,7 @@ int main(void)
 	uint n = __testdecl_end - __testdecl_begin - 1;
 	unitest_routine_t *func = (typeof(func))__testdecl_begin + 1;
 
-#ifdef CONFIG_WIDE_CHAR
+#ifdef CONFIG_ENABLE_WCHAR
 	/*
 	 * Debug output only.
 	 */

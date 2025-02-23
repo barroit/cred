@@ -181,7 +181,7 @@ static void sanitize_pth_sep(struct strbuf *sb)
 
 	char *path = (typeof(path))sb->buf;
 
-	if (IS_ENABLED(CONFIG_WIDE_CHAR)) {
+	if (IS_ENABLED(CONFIG_ENABLE_WCHAR)) {
 		size_t len = mb_wcstombs(&path, (wchar_t *)sb->buf);
 
 		if (len == maxof(len)) {
@@ -196,7 +196,7 @@ static void sanitize_pth_sep(struct strbuf *sb)
 	if (suffixed)
 		warn("path '%s' has trailing separator", path);
 
-	if (IS_ENABLED(CONFIG_WIDE_CHAR))
+	if (IS_ENABLED(CONFIG_ENABLE_WCHAR))
 		free(path);
 }
 
@@ -269,7 +269,7 @@ char *__sb_mb_str(struct strbuf *sb)
 {
 	char *ret = (char *)sb->buf;
 
-	if (IS_ENABLED(CONFIG_WIDE_CHAR)) {
+	if (IS_ENABLED(CONFIG_ENABLE_WCHAR)) {
 		size_t len = mb_wcstombs(&ret, (wchar_t *)sb->buf);
 
 		if (len == maxof(len))

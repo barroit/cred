@@ -99,7 +99,7 @@ static void cmdpath_append(const xchar *name)
 
 	sb_puts(&__cmdpath, name);
 
-	if (IS_ENABLED(CONFIG_WIDE_CHAR)) {
+	if (IS_ENABLED(CONFIG_ENABLE_WCHAR)) {
 		if (cmdpath)
 			free(cmdpath);
 		cmdpath = sb_mb_str_fb(&__cmdpath, "����");
@@ -138,7 +138,7 @@ static char *pretty_arg_name(const xchar *arg, const char *fb)
 {
 	char *ret = (char *)arg;
 
-	if (IS_ENABLED(CONFIG_WIDE_CHAR))
+	if (IS_ENABLED(CONFIG_ENABLE_WCHAR))
 		mb_wcstombs_fb(&ret, (wchar_t *)arg, fb);
 
 	return ret;

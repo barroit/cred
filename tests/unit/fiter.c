@@ -12,7 +12,7 @@
 #include "iter.h"
 #include "path.h"
 
-#if defined(_WIN32) && defined(CONFIG_WIDE_CHAR)
+#if defined(_WIN32) && defined(CONFIG_ENABLE_WCHAR)
 # define access _waccess
 #endif
 

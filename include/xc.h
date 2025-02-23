@@ -8,7 +8,7 @@
 
 #define XC(x) __XC(x)
 
-#ifdef CONFIG_WIDE_CHAR
+#ifdef CONFIG_ENABLE_WCHAR
 # define __XC(x) L##x
 #else
 # define __XC(x) x

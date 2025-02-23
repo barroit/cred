@@ -17,7 +17,7 @@ int __main(int argc, const xchar **argv);
 #define pprint_int(var)  printf("39\t%s\t%d\n", #var, var)
 #define pprint_uint(var) printf("39\t%s\t%u\n", #var, var)
 
-#ifndef CONFIG_WIDE_CHAR
+#ifndef CONFIG_ENABLE_WCHAR
 # define pprint_str(var) printf("39\t%s\t%s\n", #var, var)
 #else
 # define pprint_str(var) wprintf(L"39\t%ls\t%ls\n", L#var, var)

@@ -52,7 +52,7 @@ static int yield_file(struct __fiter *ctx, WIN32_FIND_DATA *ent)
 
 			warn(_("`%s' has unsupported file type `%lu', skipped"),
 		     	     path, ent->dwFileAttributes);
-			if (IS_ENABLED(CONFIG_WIDE_CHAR))
+			if (IS_ENABLED(CONFIG_ENABLE_WCHAR))
 				free(path);
 
 			return 0;
@@ -87,7 +87,7 @@ static int yield_file(struct __fiter *ctx, WIN32_FIND_DATA *ent)
 	if (ctx->flags & FI_USE_STAT) {
 		int err;
 
-		if (IS_ENABLED(CONFIG_WIDE_CHAR))
+		if (IS_ENABLED(CONFIG_ENABLE_WCHAR))
 			err = _wstat((wchar_t *)path, &f.st);
 		else
 			err = _stat((char *)path, &f.st);
@@ -96,7 +96,7 @@ static int yield_file(struct __fiter *ctx, WIN32_FIND_DATA *ent)
 			char *p = __sb_mb_str_fb(ctx->sb, "���");
 
 			warn_errno(_("failed to get status for `%s'"), p);
-			if (IS_ENABLED(CONFIG_WIDE_CHAR))
+			if (IS_ENABLED(CONFIG_ENABLE_WCHAR))
 				free(p);
 
 			return -1;
@@ -120,7 +120,7 @@ int __fiter_loop_dir(struct __fiter *ctx)
 
 		warn_winerr(_("failed to find first file from pattern `%s'"),
 			    p);
-		if (IS_ENABLED(CONFIG_WIDE_CHAR))
+		if (IS_ENABLED(CONFIG_ENABLE_WCHAR))
 			free(p);
 
 		return -1;
@@ -146,7 +146,7 @@ int __fiter_loop_dir(struct __fiter *ctx)
 
 			warn_winerr(_("failed to find next file after `%s'"),
 				    p);
-			if (IS_ENABLED(CONFIG_WIDE_CHAR))
+			if (IS_ENABLED(CONFIG_ENABLE_WCHAR))
 				free(p);
 
 			break;
