@@ -4,7 +4,7 @@ menu "Build options"
 
 choice
 	prompt "Compiler optimization level"
-	default CC_OPTIMIZE_NONE if DEBUG_PROG
+	default CC_OPTIMIZE_NONE if ENABLE_DEBUG
 	default CC_OPTIMIZE_PERF
 
 config CC_OPTIMIZE_NONE
@@ -47,7 +47,7 @@ menu "Memory allocation"
 
 config PANIC_NOMEM
 	bool "Abort execution when memory allocation fails"
-	default DEBUG_PROG
+	default ENABLE_DEBUG
 	help
 	  This is unlikely to happen on modern systems, as running out
 	  of memory is rare in most cases.

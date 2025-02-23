@@ -77,7 +77,7 @@ add_compile_options(-Wall
 
 add_compile_options(-funsigned-char -fno-common)
 
-if(CONFIG_DEBUG_PROG)
+if(CONFIG_ENABLE_DEBUG)
   add_compile_options(-fno-omit-frame-pointer)
 endif()
 
@@ -186,7 +186,7 @@ target_link_libraries(${exec_name} PRIVATE command)
 
 add_compile_definitions(_GNU_SOURCE)
 
-if(NOT CONFIG_DEBUG_PROG)
+if(NOT CONFIG_ENABLE_DEBUG)
   add_compile_definitions(NDEBUG)
 endif()
 
