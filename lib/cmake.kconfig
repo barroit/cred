@@ -7,6 +7,8 @@ if(NOT EXISTS ${TREE}/$ENV{KCONFIG_CONFIG})
   endif()
 endif()
 
+# It's okay to have only a .config.xxx.def on disk with $KCONFIG_CONFIG set to
+# .config.xxx, as genconfig will look up .config.xxx.def.
 add_custom_target(genconfig ${Python3_EXECUTABLE} scripts/kconfig.py
 		  genconfig --header-path ${GEN}/autoconf.h
 		  DEPENDS ${TREE}/.last_build
