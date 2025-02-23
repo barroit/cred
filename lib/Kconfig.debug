@@ -56,11 +56,6 @@ config DUMP_CPL_CMD
 	bool "Dump compile command"
 	default DEBUG_PROG
 
-config REP_HOOK
-	bool "Mount runtime report hook"
-	default DEBUG_PROG
-	depends on $(WIN32)
-
 config DEBUG_INTL
 	bool "Link with the non-inline function call version of intl"
 	depends on I18N_SUPPORT
