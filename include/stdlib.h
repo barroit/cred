@@ -14,7 +14,7 @@ void __exit_show_step(void);
 
 void __noreturn __exit(int status);
 
-#ifdef CONFIG_WIN32_GUI
+#ifdef CONFIG_ENABLE_GUI
 # define exit __exit
 # define EXIT_CONOUT 0x3939
 #else
