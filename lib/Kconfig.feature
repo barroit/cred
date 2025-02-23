@@ -23,17 +23,14 @@ endif # ENABLE_I18N
 
 menu "Formatting options"
 
-menuconfig SPEC_ALT_CNTRL
-	bool "Customize control character replacement"
+menuconfig ENABLE_UTF8_CNTRL_CHAR_REPL
+	bool "Customize control character replacement (utf-8)"
 	default y
-
-if SPEC_ALT_CNTRL
 
 config ALT_CNTRL
 	string "Control character replacement"
 	default "�"
-
-endif
+	depends on ENABLE_UTF8_CNTRL_CHAR_REPL
 
 config LINE_WRAP
 	int "Line wrap threshold"
