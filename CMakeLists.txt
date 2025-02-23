@@ -81,12 +81,12 @@ if(CONFIG_DEBUG_PROG)
   add_compile_options(-fno-omit-frame-pointer)
 endif()
 
-if(CONFIG_PROG_WITH_SANITIZER)
+if(CONFIG_ENABLE_SANITIZER)
   add_link_options(${SANFLAGS})
 endif()
 
 # ASAN library lacks certain C library functions.
-if(WIN32 AND CONFIG_PROG_WITH_SANITIZER)
+if(WIN32 AND CONFIG_ENABLE_SANITIZER)
   add_compile_options(-U_DLL)
 endif()
 
@@ -152,7 +152,7 @@ file(GLOB cmd_src LIST_DIRECTORIES false commands/*.c)
 add_library(command OBJECT ${cmd_src})
 add_dependencies(command genconfig)
 
-if(CONFIG_PROG_WITH_SANITIZER)
+if(CONFIG_ENABLE_SANITIZER)
   target_compile_options(platfree PRIVATE ${SANFLAGS})
   target_compile_options(platspec PRIVATE ${SANFLAGS})
   target_compile_options(command  PRIVATE ${SANFLAGS})
