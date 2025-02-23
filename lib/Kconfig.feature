@@ -14,7 +14,7 @@ config TEXT_DOMAIN_NAME
 menuconfig ENABLE_CUSTOM_TEXT_LOCALE
 	bool "Customize program locale"
 
-config TEXT_LOCALE
+config CUSTOM_TEXT_LOCALE
 	string "Specify program locale"
 	default "C.UTF-8"
 	depends on ENABLE_CUSTOM_TEXT_LOCALE
