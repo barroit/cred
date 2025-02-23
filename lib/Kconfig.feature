@@ -2,10 +2,10 @@
 
 menu "Core features"
 
-menuconfig I18N_SUPPORT
+menuconfig ENABLE_I18N
 	bool "Enable i18n support"
 
-if I18N_SUPPORT
+if ENABLE_I18N
 
 config TEXT_DOMAIN_NAME
 	string "Text domain name for gettext"
@@ -19,7 +19,7 @@ config TEXT_LOCALE
 	default "C.UTF-8"
 	depends on CUSTOM_TEXT_LOCALE
 
-endif # I18N_SUPPORT
+endif # ENABLE_I18N
 
 menu "Formatting options"
 

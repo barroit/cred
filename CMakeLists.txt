@@ -100,7 +100,7 @@ if(CONFIG_DUMP_COMPILE_COMMAND)
   set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 endif()
 
-if(CONFIG_I18N_SUPPORT)
+if(CONFIG_ENABLE_I18N)
   include_scp(lib/cmake.gettext)
 endif()
 
@@ -205,7 +205,7 @@ endif()
 
 install(TARGETS ${exec_name} DESTINATION .)
 
-if(CONFIG_I18N_SUPPORT)
+if(CONFIG_ENABLE_I18N)
   install(DIRECTORY locale DESTINATION locale
 	  FILES_MATCHING PATTERN *.mo PERMISSIONS OWNER_READ)
 endif()
