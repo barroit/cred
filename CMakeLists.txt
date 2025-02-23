@@ -159,7 +159,6 @@ add_library(platfree OBJECT ${pfree_src})
 
 file(GLOB cmd_src LIST_DIRECTORIES false commands/*.c)
 add_library(command OBJECT ${cmd_src})
-target_link_libraries(command PUBLIC)
 
 if(CONFIG_PROG_WITH_SANITIZER)
   target_compile_options(platfree PRIVATE ${SANFLAGS})
