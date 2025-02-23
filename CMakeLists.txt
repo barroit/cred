@@ -18,6 +18,7 @@ file(MAKE_DIRECTORY ${GEN})
 
 include(lib/cmake.include)
 include_scp(lib/cmake.kconfig)
+include_scp(lib/cmake.features)
 
 set(ENV{CC} ${CONFIG_CC_COMMAND})
 set(ENV{LD} ${CONFIG_LD_COMMAND})
@@ -99,11 +100,6 @@ endif()
 if(CONFIG_ENABLE_I18N)
   include_scp(lib/cmake.gettext)
 endif()
-
-add_custom_target(feature ${Python3_EXECUTABLE} scripts/cc-feature.py
-		  scripts/cc-feature.def ${GEN}/features.h
-		  DEPENDS ${TREE}/.last_build
-		  WORKING_DIRECTORY ${TREE})
 
 configure_file(include/program.h.in ${GEN}/program.h)
 

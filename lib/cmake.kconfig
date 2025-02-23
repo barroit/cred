@@ -9,10 +9,13 @@ endif()
 
 # It's okay to have only a .config.xxx.def on disk with $KCONFIG_CONFIG set to
 # .config.xxx, as genconfig will look up .config.xxx.def.
-add_custom_target(genconfig ${Python3_EXECUTABLE} scripts/kconfig.py
-		  genconfig --header-path ${GEN}/autoconf.h
-		  DEPENDS ${TREE}/.last_build
-		  WORKING_DIRECTORY ${TREE})
+add_custom_command(OUTPUT ${GEN}/autoconf.h
+		   COMMAND ${Python3_EXECUTABLE} scripts/kconfig.py
+		   genconfig --header-path ${GEN}/autoconf.h
+		   DEPENDS ${TREE}/.last_build
+		   WORKING_DIRECTORY ${TREE})
+
+add_custom_target(genconfig DEPENDS ${GEN}/autoconf.h)
 
 file(STRINGS $ENV{KCONFIG_CONFIG} lines ENCODING UTF-8)
 
