@@ -96,7 +96,7 @@ set(COMPILE_FLAGS ${cflags})
 string(REPLACE -rc . prog_version_cmake ${prog_version})
 project(${prog_name} VERSION ${prog_version_cmake} LANGUAGES C)
 
-if(CONFIG_DUMP_CPL_CMD)
+if(CONFIG_DUMP_COMPILE_COMMAND)
   set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 endif()
 

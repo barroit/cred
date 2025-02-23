@@ -52,7 +52,7 @@ config ENABLE_SANITIZER
 	select IGNORE_ANNOT_LEAKS
 	default DEBUG_PROG
 
-config DUMP_CPL_CMD
+config DUMP_COMPILE_COMMAND
 	bool "Dump compile command"
 	default DEBUG_PROG
 
