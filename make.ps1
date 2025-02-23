@@ -61,10 +61,17 @@ if ($target -eq 'configure' -or $target -eq 'all') {
 	} else {
 		$generator = 'Ninja'
 	}
+
 	cmake -G $generator -S . -B $BUILD
 }
 
 if ($target -eq 'build' -or $target -eq 'all') {
+	if (!(Test-Path .last_build)) {
+		echo win32 > .last_build
+	} elseif ((cat .last_build) -ne 'win32') {
+		echo win32 > .last_build
+	}
+
 	cmake --build $BUILD --parallel
 }
 
@@ -78,6 +85,9 @@ if ($target -eq 'test') {
 
 	Remove-Item -Force -ErrorAction SilentlyContinue `
 		    -Path $env:KCONFIG_CONFIG*
+
+	Remove-Item -Force -ErrorAction SilentlyContinue `
+		    -Path .last_build
 
 	Remove-Item -Force -ErrorAction SilentlyContinue `
 		    -Path *.manifest

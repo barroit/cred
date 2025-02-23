@@ -10,6 +10,7 @@ build.*/*
 !build.*/locale
 !build.*/scripts
 !build.*/t
+.last_build
 
 include/generated
 include/arch

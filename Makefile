@@ -22,9 +22,18 @@ endif
 
 export CC LD
 
-.PHONY: configure build all
-
 build:
+
+.PHONY: configure build all last_build
+
+last_build:
+	@if [ ! -f .last_build ]; then			\
+		echo unix > .last_build;		\
+	elif [ "$$(cat .last_build)" != unix ]; then	\
+		echo unix > .last_build;		\
+	fi
+
+build: last_build
 	@cmake --build $(BUILD) --parallel
 
 configure:
@@ -41,6 +50,7 @@ distclean:
 	@rm -rf include/generated
 	@rm -f include/arch
 	@rm -f $(KCONFIG_CONFIG)*
+	@rm -f .last_build
 	@git ls-files --directory -o $(BUILD) | xargs rm -rf
 
 .PHONY: menuconfig

@@ -17,21 +17,10 @@ set(SANFLAGS -fsanitize=address,undefined)
 file(MAKE_DIRECTORY ${GEN})
 
 include(lib/cmake.include)
-
-if(NOT EXISTS ${TREE}/$ENV{KCONFIG_CONFIG})
-  set(ENV{KCONFIG_CONFIG} ${TREE}/$ENV{KCONFIG_CONFIG}.def)
-  if(NOT EXISTS ${TREE}/$ENV{KCONFIG_CONFIG})
-    python3(scripts/kconfig.py alldefconfig)
-  endif()
-endif()
-
-python3(scripts/kconfig.py genconfig --header-path ${GEN}/autoconf.h)
 include_scp(lib/cmake.kconfig)
 
-if(EXISTS ${TREE}/.config)
-  set(ENV{CC} ${CONFIG_CC_COMMAND})
-  set(ENV{LD} ${CONFIG_LD_COMMAND})
-endif()
+set(ENV{CC} ${CONFIG_CC_COMMAND})
+set(ENV{LD} ${CONFIG_LD_COMMAND})
 
 set(prog_name ${CONFIG_PROG_NAME})
 if(CONFIG_SPEC_EXEC_NAME)
@@ -150,15 +139,18 @@ if(WIN32 AND NOT CONFIG_WIN32_GUI)
   list(FILTER pspec_src EXCLUDE REGEX \\.gui\\.c$)
 endif()
 add_library(platspec OBJECT ${pspec_src})
+add_dependencies(platspec genconfig)
 
 file(GLOB pfree_src LIST_DIRECTORIES false platfree/*.c)
 if(NOT HAVE_INTL)
   list(FILTER pfree_src EXCLUDE REGEX gettext\.c)
 endif()
 add_library(platfree OBJECT ${pfree_src})
+add_dependencies(platfree genconfig)
 
 file(GLOB cmd_src LIST_DIRECTORIES false commands/*.c)
 add_library(command OBJECT ${cmd_src})
+add_dependencies(command genconfig)
 
 if(CONFIG_PROG_WITH_SANITIZER)
   target_compile_options(platfree PRIVATE ${SANFLAGS})
@@ -192,6 +184,7 @@ if(WIN32)
 endif()
 
 add_executable(${exec_name} ${source})
+add_dependencies(${exec_name} genconfig)
 target_link_libraries(${exec_name} PRIVATE command)
 
 add_compile_definitions(_GNU_SOURCE)
