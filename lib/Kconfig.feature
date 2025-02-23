@@ -11,13 +11,13 @@ config TEXT_DOMAIN_NAME
 	string "Text domain name for gettext"
 	default $(pg-name)
 
-config CUSTOM_TEXT_LOCALE
-	bool "Enable custom program locale"
+menuconfig ENABLE_CUSTOM_TEXT_LOCALE
+	bool "Customize program locale"
 
 config TEXT_LOCALE
 	string "Specify program locale"
 	default "C.UTF-8"
-	depends on CUSTOM_TEXT_LOCALE
+	depends on ENABLE_CUSTOM_TEXT_LOCALE
 
 endif # ENABLE_I18N
 

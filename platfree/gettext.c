@@ -15,7 +15,7 @@
 #include "init.h"
 #include "path.h"
 
-#ifdef CONFIG_TEXT_LOCALE
+#ifdef CONFIG_ENABLE_CUSTOM_TEXT_LOCALE
 # define TEXT_LOCALE CONFIG_TEXT_LOCALE
 #else
 # define TEXT_LOCALE ""
