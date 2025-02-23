@@ -27,7 +27,7 @@ menuconfig ENABLE_UTF8_CNTRL_CHAR_REPL
 	bool "Customize control character replacement (utf-8)"
 	default y
 
-config ALT_CNTRL
+config UTF8_CNTRL_CHAR_REPL
 	string "Control character replacement"
 	default "�"
 	depends on ENABLE_UTF8_CNTRL_CHAR_REPL

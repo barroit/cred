@@ -29,7 +29,7 @@ struct tm_tag {
 #define MAS_BUF_CAP SZ_4K
 
 #ifdef CONFIG_ENABLE_UTF8_CNTRL_CHAR_REPL
-# define ALT_CNTRL CONFIG_ALT_CNTRL
+# define ALT_CNTRL CONFIG_UTF8_CNTRL_CHAR_REPL
 #else
 # define ALT_CNTRL "?"
 #endif
