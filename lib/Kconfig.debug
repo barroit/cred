@@ -70,7 +70,7 @@ endmenu # String Buffer options
 
 menu "List options"
 
-config LIST_SANITIZE_MOD
+config LIST_SANITIZE_MODIFICATION
 	bool "Validate list modification"
 	default ENABLE_DEBUG
 
