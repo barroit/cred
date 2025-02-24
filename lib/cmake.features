@@ -1,9 +1,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later or MIT
 
 add_custom_command(OUTPUT ${GEN}/features.h
-		   COMMAND ${Python3_EXECUTABLE} scripts/cc-feature.py
-		   scripts/cc-feature.def ${GEN}/features.h
-		   DEPENDS ${TOP}/.last_build
-		   WORKING_DIRECTORY ${TOP})
+		   COMMAND ${python3} scripts/cc-feature.py
+		   DEPENDS ${TOP}/.last_build WORKING_DIRECTORY ${TOP})
 
 add_custom_target(feature DEPENDS ${GEN}/features.h)

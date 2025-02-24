@@ -23,9 +23,17 @@ endif
 
 export CC LD
 
+FEATURES_CMAKE := $(BUILD)/features.cmake
+
 build:
 
 .PHONY: configure build all last_build
+
+$(GEN):
+	@mkdir $@
+
+$(FEATURES_CMAKE): $(GEN)
+	@scripts/cc-feature.py
 
 last_build:
 	@if [ ! -f .last_build ]; then			\
@@ -37,7 +45,7 @@ last_build:
 build: last_build
 	@cmake --build $(BUILD) --parallel
 
-configure:
+configure: $(FEATURES_CMAKE)
 	@cmake -S . -B $(BUILD) $(EXTOPT)
 
 all: configure build

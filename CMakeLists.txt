@@ -19,6 +19,7 @@ file(MAKE_DIRECTORY ${GEN})
 include(lib/cmake.include)
 include_scp(lib/cmake.kconfig)
 include_scp(lib/cmake.features)
+include(${BUILD}/features.cmake)
 
 set(ENV{CC} ${CONFIG_CC_COMMAND})
 set(ENV{LD} ${CONFIG_LD_COMMAND})
