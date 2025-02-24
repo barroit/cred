@@ -60,9 +60,6 @@ struct cmdmode {
 	struct list_head list;
 };
 
-static void __noreturn show_help(const char **usage,
-				 struct opt *opts, int is_err);
-
 static struct strbuf __cmdpath = SB_INIT;
 static char *cmdpath;
 
