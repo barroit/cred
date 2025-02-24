@@ -13,12 +13,16 @@ param
 	[string]$first
 )
 
-$tree = $PSScriptRoot
 Set-Alias error Write-Error
 
-$BUILD = 'build.win32'
+$TOP   = $PSScriptRoot.Replace('\','/')
+$GEN   = "$TOP/include/generated"
+$BUILD = "$TOP/build.win32"
 
-$env:TOP            = $tree.Replace('\','/')
+$env:TOP   = $TOP
+$env:GEN   = $GEN
+$env:BUILD = $BUILD
+
 $env:KCONFIG_CONFIG = '.config.win32'
 
 $targets = @('configure', 'build', 'all', 'test', 'clean', `

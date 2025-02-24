@@ -3,8 +3,8 @@
 cmake_minimum_required(VERSION 3.21)
 
 set(TOP   $ENV{TOP})
-set(GEN   ${TOP}/include/generated)
-set(BUILD ${CMAKE_BINARY_DIR})
+set(GEN   $ENV{GEN})
+set(BUILD $ENV{BUILD})
 
 if(UNIX)
   set(PLAT unix)

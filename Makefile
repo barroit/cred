@@ -8,7 +8,8 @@ MAKEFLAGS += -rR
 MAKEFLAGS += --no-print-directory
 
 export TOP   := $(realpath $(dir $(lastword $(MAKEFILE_LIST))))
-export BUILD := build.unix
+export GEN   := $(TOP)/include/generated
+export BUILD := $(TOP)/build.unix
 
 export KCONFIG_CONFIG := .config.unix
 
