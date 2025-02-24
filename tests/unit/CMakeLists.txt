@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later or MIT
 
-if(CONFIG_CC_HAS_TOPLEVEL_REORDER)
+if(HAVE_TOPLEVEL_REORDER)
   add_compile_options(-fno-toplevel-reorder)
 endif()
 

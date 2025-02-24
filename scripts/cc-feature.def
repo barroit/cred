@@ -41,3 +41,5 @@ HAVE_SSIZE_T = """
 
 ssize_t a = 0;
 """
+
+HAVE_TOPLEVEL_REORDER = '-ftoplevel-reorder'
