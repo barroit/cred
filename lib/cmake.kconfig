@@ -1,5 +1,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later or MIT
 
+set(KCONFIG_CONFIG $ENV{KCONFIG_CONFIG})
+
 if(NOT EXISTS ${TREE}/$ENV{KCONFIG_CONFIG})
   set(ENV{KCONFIG_CONFIG} ${TREE}/$ENV{KCONFIG_CONFIG}.def)
   if(NOT EXISTS ${TREE}/$ENV{KCONFIG_CONFIG})
@@ -13,6 +15,8 @@ add_custom_command(OUTPUT ${GEN}/autoconf.h
 		   COMMAND ${Python3_EXECUTABLE} scripts/kconfig.py
 		   genconfig --header-path ${GEN}/autoconf.h
 		   DEPENDS ${TREE}/.last_build
+			   ${KCONFIG_CONFIG}
+			   ${KCONFIG_CONFIG}.def
 		   WORKING_DIRECTORY ${TREE})
 
 add_custom_target(genconfig DEPENDS ${GEN}/autoconf.h)
