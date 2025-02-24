@@ -2,8 +2,8 @@
 
 cmake_minimum_required(VERSION 3.21)
 
-set(TREE $ENV{TREE})
-set(GEN   ${TREE}/include/generated)
+set(TOP   $ENV{TOP})
+set(GEN   ${TOP}/include/generated)
 set(BUILD ${CMAKE_BINARY_DIR})
 
 if(UNIX)

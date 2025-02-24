@@ -7,9 +7,9 @@ endif
 MAKEFLAGS += -rR
 MAKEFLAGS += --no-print-directory
 
-BUILD := build.unix
+export TOP   := $(realpath $(dir $(lastword $(MAKEFILE_LIST))))
+export BUILD := build.unix
 
-export TREE           := $(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 export KCONFIG_CONFIG := .config.unix
 
 ifneq ($(LLVM),)

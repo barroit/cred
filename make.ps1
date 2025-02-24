@@ -22,7 +22,7 @@ if ($tree -ne $PWD) {
 	error "you need to be inside the source tree ($tree)"
 }
 
-$env:TREE           = $tree.Replace('\','/')
+$env:TOP            = $tree.Replace('\','/')
 $env:KCONFIG_CONFIG = '.config.win32'
 
 $targets = @('configure', 'build', 'all', 'test', 'clean', `

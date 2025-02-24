@@ -30,8 +30,8 @@ ld = env['LD']
 if not ld:
 	die('no ld provided (export LD in environment)')
 
-tree = env['TREE']
-if not tree:
+top = env['TOP']
+if not top:
 	die('no tree path specified (export BSTREE in env)')
 
 def word(kconf, name, val, pos):
@@ -80,7 +80,7 @@ def greater(kconf, name, v1, v2):
 	return if_less(v1, v2, 'n', 'y')
 
 def pg_info(kconf, name):
-	dotprog = path.join(tree, '.program')
+	dotprog = path.join(top, '.program')
 	info = {}
 
 	# Do not use with as it makes readability worse

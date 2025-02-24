@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later or MIT
 
 # Start menuconfig/alldefconfig in a portable manner.
-# You must provide TREE, CC, and LD in the process that starts this script.
+# You must provide TOP, CC, and LD in the process that starts this script.
 
 from sys import argv, exit
 from os import environ as env, getcwd, path, pathsep, chdir
@@ -12,9 +12,9 @@ if len(argv) < 2:
 	exit(128)
 
 cmd = argv[1]
-ws  = env['TREE']
+top = env['TOP']
 cwd = getcwd()
-lib = path.join(ws, 'lib')
+lib = path.join(top, 'lib')
 pyp = env.get('PYTHONPATH')
 
 env['PYTHONPATH'] = (pyp + pathsep if pyp else '') + lib
@@ -30,8 +30,8 @@ elif cmd == 'genconfig':
 else:
 	exit(128)
 
-if cwd != ws:
-	chdir(ws)
+if cwd != top:
+	chdir(top)
 
 res = run(argv[1:])
 exit(res.returncode)

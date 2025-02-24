@@ -2,9 +2,9 @@
 
 set(KCONFIG_CONFIG $ENV{KCONFIG_CONFIG})
 
-if(NOT EXISTS ${TREE}/$ENV{KCONFIG_CONFIG})
-  set(ENV{KCONFIG_CONFIG} ${TREE}/$ENV{KCONFIG_CONFIG}.def)
-  if(NOT EXISTS ${TREE}/$ENV{KCONFIG_CONFIG})
+if(NOT EXISTS ${TOP}/$ENV{KCONFIG_CONFIG})
+  set(ENV{KCONFIG_CONFIG} ${TOP}/$ENV{KCONFIG_CONFIG}.def)
+  if(NOT EXISTS ${TOP}/$ENV{KCONFIG_CONFIG})
     python3(scripts/kconfig.py alldefconfig)
   endif()
 endif()
@@ -14,10 +14,10 @@ endif()
 add_custom_command(OUTPUT ${GEN}/autoconf.h
 		   COMMAND ${Python3_EXECUTABLE} scripts/kconfig.py
 		   genconfig --header-path ${GEN}/autoconf.h
-		   DEPENDS ${TREE}/.last_build
+		   DEPENDS ${TOP}/.last_build
 			   ${KCONFIG_CONFIG}
 			   ${KCONFIG_CONFIG}.def
-		   WORKING_DIRECTORY ${TREE})
+		   WORKING_DIRECTORY ${TOP})
 
 add_custom_target(genconfig DEPENDS ${GEN}/autoconf.h)
 
@@ -29,4 +29,4 @@ foreach(line ${lines})
   endif()
 endforeach()
 
-set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${TREE}/.config)
+set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${TOP}/.config)
