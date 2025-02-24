@@ -81,13 +81,15 @@ struct opt {
  * PRM_LIM_ARG
  *	Abort if the number of arguments exceeds the limit specified in ex[].
  */
+#define PRM_EX_MASK  (-1U << 16)
+#define PRM_EX_BEGIN (1 << 16)
 #define PRM_LIM_ARG  (1 << 16)
 
 #define opt_for_each(pos, opts) \
 	for (pos = opts; (pos)->mode != OPTION__END; (pos)++)
 
 int param_parse(int argc, const xchar **argv,
-		const char **usage, struct opt *opts, u32 flags);
+		const char **usage, struct opt *opts, u32 flags, ...);
 
 void __noreturn param_show_help(const char **usage,
 				struct opt *opts, int is_err);
