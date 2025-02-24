@@ -1,7 +1,7 @@
 # SPDX-License-Identifier: GPL-3.0-or-later or MIT
 
-ifneq ($(filter check-symlink,$(.FEATURES)),check-symlink)
-$(error GNU Make >= 4.0 is required. Your Make version is $(MAKE_VERSION))
+ifneq ($(filter extra-prereqs,$(.FEATURES)),extra-prereqs)
+$(error GNU Make >= 4.3 is required. Your Make version is $(MAKE_VERSION))
 endif
 
 MAKEFLAGS += -rR
