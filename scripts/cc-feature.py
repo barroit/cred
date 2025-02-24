@@ -6,7 +6,7 @@
 import multiprocessing as mp
 import sys
 
-from os import devnull, environ as env, SEEK_END
+from os import devnull, environ as env, SEEK_END, path, unlink, getpid
 from subprocess import run
 from sys import argv
 
@@ -14,10 +14,11 @@ if len(argv) < 3:
 	exit(128)
 
 data = open(argv[1], 'r')
-dest = open(argv[2], 'w+', newline='\n')
+dest = open(argv[2], 'w', newline='\n')
 
 cc  = env['CC']
-cmd = [ cc, '-Werror', '-S', '-x', 'c', '-o', devnull, '-' ]
+pid = getpid()
+tmp = f'.tmp_{pid}.o'
 
 sys.stdout = dest
 
@@ -28,8 +29,13 @@ print("""\
 """)
 
 def test_feature(name, prog):
-	prog = prog.strip()
-	res  = run(cmd, text=True, input=prog, capture_output=True)
+	if prog[0] == '\n':
+		cmd = [ cc, '-Werror', '-S', '-x', 'c', '-o', devnull, '-' ]
+	else:
+		cmd  = [ cc, '-Werror', '-c', '-x', 'c', '-o', tmp, devnull ]
+		cmd[1:1] = prog.split()
+
+	res = run(cmd, text=True, input=prog, capture_output=True)
 
 	return (name, res.returncode)
 
@@ -59,3 +65,6 @@ if __name__ == '__main__':
 
 	pool.close()
 	pool.join()
+
+	if path.isfile(tmp):
+		unlink(tmp)
