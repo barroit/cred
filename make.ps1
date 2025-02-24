@@ -18,10 +18,6 @@ Set-Alias error Write-Error
 
 $BUILD = 'build.win32'
 
-if ($tree -ne $PWD) {
-	error "you need to be inside the source tree ($tree)"
-}
-
 $env:TOP            = $tree.Replace('\','/')
 $env:KCONFIG_CONFIG = '.config.win32'
 
