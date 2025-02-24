@@ -41,8 +41,6 @@
 
 #define popcount __builtin_popcount
 
-#define ctz __builtin_ctz
-
 #define alignof __alignof__
 
 #ifdef HAVE_BUILTIN_ALIGN_DOWN
