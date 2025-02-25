@@ -33,7 +33,7 @@ $(GEN):
 	@mkdir $@
 
 $(FEATURES_CMAKE): $(GEN)
-	@scripts/cc-feature.py
+	@scripts/cc-feature.py cmake
 
 last_build:
 	@if [ ! -f .last_build ]; then			\

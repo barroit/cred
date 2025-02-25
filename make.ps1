@@ -73,7 +73,7 @@ if ($target -band $__configure) {
 			mkdir $GEN
 		}
 
-		scripts/cc-feature.py
+		scripts/cc-feature.py cmake
 	}
 
 	cmake -G Ninja -S . -B $BUILD
