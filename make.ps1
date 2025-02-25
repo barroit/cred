@@ -17,6 +17,8 @@ $ErrorActionPreference = 'Stop'
 Set-Alias error Write-Error
 Set-Alias rm_f  Remove-Item -Force -ErrorAction SilentlyContinue
 
+$0 = $MyInvocation.MyCommand.Path
+
 function export
 {
 	param([string]$str)
@@ -31,11 +33,33 @@ function export
 
 $BUILD_NAME = 'build.win32'
 
-export TOP="$($PSScriptRoot.Replace('\','/'))"
-export GEN="$TOP/include/generated"
-export BUILD="$TOP/$BUILD_NAME"
+export TOP=$($PSScriptRoot.Replace('\','/'))
+# $TOP = $TOP.TrimEnd('/')
 
-export KCONFIG_CONFIG=".config.win32"
+export GEN=$TOP/include/generated
+export BUILD=$TOP/$BUILD_NAME
+
+export CC=clang.exe
+export LD=ld.lld.exe
+
+export LASTPLAT=$TOP/.lastplat
+
+export DOTCONFIG=$TOP/.config.win32
+export DEFCONFIG=$DOTCONFIG.def
+
+if (Test-Path $DOTCONFIG) {
+	$RELCONFIG = $DOTCONFIG
+} else {
+	$RELCONFIG = $DEFCONFIG
+}
+
+export RELCONFIG=$RELCONFIG
+export KCONFIG_CONFIG=$RELCONFIG
+
+if ((Test-Path $DOTCONFIG) -and (Test-Path $DEFCONFIG)) {
+	$RECONFIGURE  = 1
+	$RM_DEFCONFIG = 1
+}
 
 $__menuconfig = 1 -shl 0
 $__configure  = 1 -shl 1
@@ -68,9 +92,6 @@ if (!$target) {
 	}
 }
 
-export CC='clang.exe'
-export LD='ld.lld.exe'
-
 if ($target -band $__menuconfig) {
 	python scripts/kconfig.py menuconfig
 }
@@ -84,12 +105,26 @@ if ($target -band $__configure) {
 		scripts/cc-feature.py cmake
 	}
 
+	if (!(Test-Path $RELCONFIG)) {
+		scripts/kconfig.py alldefconfig
+	}
+
+	if ($RM_DEFCONFIG) {
+		rm $DEFCONFIG
+		Remove-Variable RM_DEFCONFIG
+	}
+
 	cmake -G Ninja -S . -B $BUILD
 }
 
 if ($target -band $__build) {
-	if (!(Test-Path .last_build) -or (cat .last_build) -ne 'win32') {
-		echo win32 > .last_build
+	if (!(Test-Path $LASTPLAT) -or (cat $LASTPLAT) -ne 'win32') {
+		echo win32 > $LASTPLAT
+	}
+
+	if ($RECONFIGURE) {
+		& $0 configure
+		Remove-Variable RECONFIGURE
 	}
 
 	cmake --build $BUILD --parallel
@@ -109,8 +144,8 @@ if ($target -band $__distclean) {
 	if ($dotconfig) {
 		Remove-Item $dotconfig
 	}
-	if (Test-Path .last_build) {
-		Remove-Item .last_build
+	if (Test-Path $LASTPLAT) {
+		Remove-Item $LASTPLAT
 	}
 	if (Test-Path *.manifest) {
 		Remove-Item *.manifest

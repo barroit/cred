@@ -11,8 +11,6 @@ export TOP   := $(realpath $(dir $(lastword $(MAKEFILE_LIST))))
 export GEN   := $(TOP)/include/generated
 export BUILD := $(TOP)/build.unix
 
-export KCONFIG_CONFIG := .config.unix
-
 ifneq ($(LLVM),)
 CC := clang
 LD := ld.lld
@@ -23,30 +21,58 @@ endif
 
 export CC LD
 
-FEATURES_CMAKE := $(BUILD)/features.cmake
+export LASTPLAT := $(TOP)/.lastplat
+
+export DOTCONFIG := $(TOP)/.config.unix
+export DEFCONFIG := $(DOTCONFIG).def
+
+ifneq ($(wildcard $(DOTCONFIG)),)
+RELCONFIG := $(DOTCONFIG)
+else
+RELCONFIG := $(DEFCONFIG)
+endif
+
+export RELCONFIG
+export KCONFIG_CONFIG := $(RELCONFIG)
+
+ifneq ($(wildcard $(DOTCONFIG)),)
+ifneq ($(wildcard $(DEFCONFIG)),)
+RECONFIGURE  := configure
+RM_DEFCONFIG := rm_defconifg
+endif
+endif
 
 build:
 
-.PHONY: configure build all last_build
+.PHONY: menuconfig rm_defconifg configure lastplat build all
+
+menuconfig:
+	@scripts/kconfig.py menuconfig
 
 $(GEN):
 	@mkdir $@
 
-$(FEATURES_CMAKE): $(GEN)
+$(BUILD)/features.cmake: $(GEN)
 	@scripts/cc-feature.py cmake
 
-last_build:
-	@if [ ! -f .last_build ]; then			\
-		echo unix > .last_build;		\
-	elif [ "$$(cat .last_build)" != unix ]; then	\
-		echo unix > .last_build;		\
+$(RELCONFIG):
+	@scripts/kconfig.py alldefconfig
+
+rm_defconifg:
+	@rm $(DEFCONFIG)
+
+configure: $(BUILD)/features.cmake $(RELCONFIG) $(RM_DEFCONFIG)
+	@$(REMCONFIG)
+	@cmake -S . -B $(BUILD) $(EXTOPT)
+
+lastplat:
+	@if [ -f $(BUILD)/CMakeCache.txt ] &&			\
+	    [ "$$(cat $(LASTPLAT) 2>&1 )" != unix ]; then	\
+		echo unix > $(LASTPLAT);			\
 	fi
 
-build: last_build
+build: lastplat $(RECONFIGURE)
 	@cmake --build $(BUILD) --parallel
-
-configure: $(FEATURES_CMAKE)
-	@cmake -S . -B $(BUILD) $(EXTOPT)
 
 all: configure build
 
@@ -58,14 +84,9 @@ clean:
 distclean:
 	@rm -rf include/generated
 	@rm -f include/arch
-	@rm -f $(KCONFIG_CONFIG)*
-	@rm -f .last_build
+	@rm -f $(DOTCONFIG)*
+	@rm -f $(LASTPLAT)
 	@git ls-files --directory -o $(BUILD) | xargs rm -rf
-
-.PHONY: menuconfig
-
-menuconfig:
-	@scripts/kconfig.py menuconfig
 
 __tests := $(wildcard $(BUILD)/t/*.t)
 tests   := $(patsubst $(BUILD)/%,%,$(__tests))

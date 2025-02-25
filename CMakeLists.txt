@@ -17,7 +17,9 @@ set(SANFLAGS -fsanitize=address,undefined)
 file(MAKE_DIRECTORY ${GEN})
 
 include(lib/cmake.include)
+
 include_scp(lib/cmake.kconfig)
+
 include_scp(lib/cmake.features)
 include(${BUILD}/features.cmake)
 

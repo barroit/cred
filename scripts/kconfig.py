@@ -23,6 +23,7 @@ env['KCONFIG_FUNCTIONS'] = 'Kinclude'
 
 if cmd == 'menuconfig':
 	env['MENUCONFIG_STYLE'] = 'aquatic'
+	env['KCONFIG_CONFIG'] = env['DOTCONFIG']
 elif cmd == 'alldefconfig':
 	pass
 elif cmd == 'genconfig':

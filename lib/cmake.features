@@ -2,6 +2,6 @@
 
 add_custom_command(OUTPUT ${GEN}/features.h
 		   COMMAND ${python3} scripts/cc-feature.py header
-		   DEPENDS ${TOP}/.last_build WORKING_DIRECTORY ${TOP})
+		   DEPENDS $ENV{LASTPLAT} WORKING_DIRECTORY ${TOP})
 
 add_custom_target(feature DEPENDS ${GEN}/features.h)
