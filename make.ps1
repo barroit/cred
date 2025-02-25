@@ -17,17 +17,25 @@ $ErrorActionPreference = 'Stop'
 Set-Alias error Write-Error
 Set-Alias rm_f  Remove-Item -Force -ErrorAction SilentlyContinue
 
+function export
+{
+	param([string]$str)
+
+	$pair  = $str -split '=', 2
+	$name  = $pair[0]
+	$value = $pair[1]
+
+	[System.Environment]::SetEnvironmentVariable($name, $value, 'Process')
+	Set-Variable -Scope Script $name $value
+}
+
 $BUILD_NAME = 'build.win32'
 
-$TOP   = $PSScriptRoot.Replace('\','/')
-$GEN   = "$TOP/include/generated"
-$BUILD = "$TOP/$BUILD_NAME"
+export TOP="$($PSScriptRoot.Replace('\','/'))"
+export GEN="$TOP/include/generated"
+export BUILD="$TOP/$BUILD_NAME"
 
-$env:TOP   = $TOP
-$env:GEN   = $GEN
-$env:BUILD = $BUILD
-
-$env:KCONFIG_CONFIG = '.config.win32'
+export KCONFIG_CONFIG=".config.win32"
 
 $__menuconfig = 1 -shl 0
 $__configure  = 1 -shl 1
@@ -60,8 +68,8 @@ if (!$target) {
 	}
 }
 
-$env:CC = 'clang.exe'
-$env:LD = 'ld.lld.exe'
+export CC='clang.exe'
+export LD='ld.lld.exe'
 
 if ($target -band $__menuconfig) {
 	python scripts/kconfig.py menuconfig
