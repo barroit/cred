@@ -39,7 +39,7 @@ export KCONFIG_CONFIG := $(RELCONFIG)
 ifneq ($(wildcard $(DOTCONFIG)),)
 ifneq ($(wildcard $(DEFCONFIG)),)
 RECONFIGURE  := configure
-RM_DEFCONFIG := rm_defconifg
+RM_DEFCONFIG := rm_defconfig
 endif
 endif
 
@@ -47,7 +47,7 @@ CMAKE_CC_FEATURE := $(BUILD)/features.cmake
 
 build:
 
-.PHONY: menuconfig mk_defconfig rm_defconifg configure lastplat build all
+.PHONY: menuconfig mk_defconfig rm_defconfig configure lastplat build all
 
 menuconfig:
 	@scripts/kconfig.py menuconfig
@@ -61,7 +61,7 @@ $(CMAKE_CC_FEATURE): $(GEN)
 mk_defconfig:
 	@scripts/kconfig.py alldefconfig
 
-rm_defconifg:
+rm_defconfig:
 	@rm $(DEFCONFIG)
 
 configure: $(CMAKE_CC_FEATURE) $(MK_DEFCONFIG) $(RM_DEFCONFIG)
