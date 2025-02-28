@@ -192,10 +192,6 @@ if(NOT CONFIG_ENABLE_DEBUG)
   add_compile_definitions(NDEBUG)
 endif()
 
-if(CONFIG_ENABLE_WCHAR)
-  add_compile_definitions(UNICODE)
-endif()
-
 if(WIN32)
   add_compile_definitions(NTDDI_WIN7
 			  WINVER=_WIN32_WINNT_WIN7
