@@ -29,7 +29,8 @@ export DEFCONFIG := $(DOTCONFIG).def
 ifneq ($(wildcard $(DOTCONFIG)),)
 RELCONFIG := $(DOTCONFIG)
 else
-RELCONFIG := $(DEFCONFIG)
+RELCONFIG    := $(DEFCONFIG)
+MK_DEFCONFIG := mk_defconfig
 endif
 
 export RELCONFIG
@@ -42,9 +43,11 @@ RM_DEFCONFIG := rm_defconifg
 endif
 endif
 
+CMAKE_CC_FEATURE := $(BUILD)/features.cmake
+
 build:
 
-.PHONY: menuconfig rm_defconifg configure lastplat build all
+.PHONY: menuconfig mk_defconfig rm_defconifg configure lastplat build all
 
 menuconfig:
 	@scripts/kconfig.py menuconfig
@@ -52,17 +55,16 @@ menuconfig:
 $(GEN):
 	@mkdir $@
 
-$(BUILD)/features.cmake: $(GEN)
+$(CMAKE_CC_FEATURE): $(GEN)
 	@scripts/cc-feature.py cmake
 
-$(RELCONFIG):
+mk_defconfig:
 	@scripts/kconfig.py alldefconfig
 
 rm_defconifg:
 	@rm $(DEFCONFIG)
 
-configure: $(BUILD)/features.cmake $(RELCONFIG) $(RM_DEFCONFIG)
-	@$(REMCONFIG)
+configure: $(CMAKE_CC_FEATURE) $(MK_DEFCONFIG) $(RM_DEFCONFIG)
 	@cmake -S . -B $(BUILD) $(EXTOPT)
 
 lastplat:
