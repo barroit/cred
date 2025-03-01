@@ -5,6 +5,8 @@
 
 #include "termas.h"
 
+#include <fcntl.h>
+#include <unistd.h>
 #include <windows.h>
 
 #include "calc.h"
@@ -63,4 +65,21 @@ int winerrno(void)
 	default:
 		return -1;
 	}
+}
+
+void __termas_output_mode(int mode)
+{
+	switch (mode) {
+	case TM_O_CHAR:
+		mode = _O_TEXT;
+		break;
+	case TM_O_WCHAR:
+		mode = _O_U16TEXT;
+	}
+
+	fflush(stdout);
+	fflush(stderr);
+
+	_setmode(STDOUT_FILENO, mode);
+	_setmode(STDERR_FILENO, mode);
 }

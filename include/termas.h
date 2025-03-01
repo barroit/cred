@@ -110,4 +110,15 @@ int winerrno(void);
 
 #endif /* _WIN32 */
 
+void __termas_output_mode(int mode);
+
+#define TM_O_CHAR  1
+#define TM_O_WCHAR 2
+
+#ifdef CONFIG_ENABLE_WCHAR
+# define termas_output_mode __termas_output_mode
+#else
+# define termas_output_mode NOOP
+#endif
+
 #endif /* NG39_TERMAS_H */
