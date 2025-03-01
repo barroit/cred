@@ -22,8 +22,6 @@
 # define argv __argv
 #endif
 
-static int udef_no_console;
-
 int WinMain(HINSTANCE app, HINSTANCE prev_app, xchar *cmd, int wd_cntl)
 {
 	MSG message;
