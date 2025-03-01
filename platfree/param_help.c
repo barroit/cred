@@ -11,6 +11,7 @@
 #include <string.h>
 
 #include "strlist.h"
+#include "termas.h"
 
 static void show_cmd_usage(FILE *stream, const char **usage)
 {
@@ -151,6 +152,8 @@ static void show_cmd_ext_usage(FILE *stream, const char **usage)
 void param_show_help(const char **usage, struct opt *opts, int is_err)
 {
 	FILE *stream = is_err ? stderr : stdout;
+
+	termas_output_mode(TM_O_CHAR);
 
 	show_cmd_usage(stream, usage);
 
