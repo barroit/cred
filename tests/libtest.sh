@@ -1,10 +1,10 @@
 # SPDX-License-Identifier: GPL-3.0-or-later or MIT
 
-declare -A pp
+declare -A pp # param pair
 
-__u=$1
-__t=$2
-__e=$3
+libutil=$1
+script=$2
+program=$3
 
 out=$$.stdout
 err=$$.stderr
@@ -14,14 +14,14 @@ ret=0
 touch $out $err
 trap 'rm $out $err' EXIT
 
-source $__u
+source $libutil
 
 run()
 {
 	pp=()
 
 	>$err >$out
-	$__e "$@" 2>$err >$out &
+	$program "$@" 2>$err >$out &
 
 	pid=$!
 
@@ -84,7 +84,7 @@ PSSERT_OUTLIKE()
 	fi
 }
 
-source $__t
+source $script
 
 if [[ $ret -eq 0 ]]; then
 	exit 0
