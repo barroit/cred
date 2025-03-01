@@ -41,83 +41,6 @@ msgstr  "不支持`%s'的文件类型`%d'，已跳过"
 msgid   "failed to open directory `%s'"
 msgstr  "打开目录`%s'失败"
 
-#, c-format
-msgid   "options %s and %s cannot be used together"
-msgstr  "选项 %s 和 %s 不能同时使用"
-
-#, c-format
-msgid   "unknown command `%s', see '%s -h'"
-msgstr  "未知命令`%s'，请参见'%s -h'"
-
-#, c-format
-msgid   "option %s has an invalid integer value `%s'"
-msgstr  "选项 %s 的整数值`%s'无效"
-
-#, c-format
-msgid   "option -%c requires a value"
-msgstr  "选项 -%c 需要一个值"
-
-#, c-format
-msgid   "unknown option -%c"
-msgstr  "未知选项 -%c"
-
-#, c-format
-msgid   "option `%s%s' takes no value"
-msgstr  "选项`%s%s'不接受值"
-
-#, c-format
-msgid   "option `%s%s' requires a value"
-msgstr  "选项`%s%s'需要一个值"
-
-#, c-format
-msgid   "ambiguous option --%s, could be %s or %s"
-msgstr  "模糊的选项 --%s，可能是 %s 或 %s"
-
-#, c-format
-msgid   "unknown option --%s"
-msgstr  "未知选项 --%s"
-
-#, c-format
-msgid   "'%s' takes no arguments, but got `%s'"
-msgstr  "'%s'不接受参数，但收到了`%s'"
-
-msgid   "unknown option -"
-msgstr  "未知选项 -"
-
-#, c-format
-msgid   "'%s' requires a subcommand\n"
-msgstr  "'%s'需要一个子命令\n"
-
-msgid   "hint:"
-msgstr  "提示:"
-
-msgid   "[1;33mhint:[0m"
-msgstr  "[1;33m提示:[0m"
-
-msgid   "warn:"
-msgstr  "警告:"
-
-msgid   "[1;35mwarn:[0m"
-msgstr  "[1;35m警告:[0m"
-
-msgid   "error:"
-msgstr  "错误:"
-
-msgid   "[1;31merror:[0m"
-msgstr  "[1;31m错误:[0m"
-
-msgid   "fatal:"
-msgstr  "致命的:"
-
-msgid   "[1;31mfatal:[0m"
-msgstr  "[1;31m致命的:[0m"
-
-msgid   "BUG:"
-msgstr  "BUG:"
-
-msgid   "[1;31;40mBUG:[0m"
-msgstr  "[1;31;40mBUG:[0m"
-
 msgid   "specify output destination"
 msgstr  "指定输出到的文件"
 
@@ -173,3 +96,92 @@ msgstr  "  库"
 #, c-format
 msgid   "%s version %s\n"
 msgstr  "%s 版本 %s\n"
+
+#, c-format
+msgid   "options %s and %s cannot be used together"
+msgstr  "选项 %s 和 %s 不能同时使用"
+
+#, c-format
+msgid   "unknown command `%s', see '%s -h'"
+msgstr  "未知命令`%s'，请参见'%s -h'"
+
+#, c-format
+msgid   "option %s has an invalid integer value `%s'"
+msgstr  "选项 %s 的整数值`%s'无效"
+
+#, c-format
+msgid   "option -%c requires a value"
+msgstr  "选项 -%c 需要一个值"
+
+#, c-format
+msgid   "unknown option -%c"
+msgstr  "未知选项 -%c"
+
+#, c-format
+msgid   "option `%s%s' takes no value"
+msgstr  "选项`%s%s'不接受值"
+
+#, c-format
+msgid   "option `%s%s' requires a value"
+msgstr  "选项`%s%s'需要一个值"
+
+#, c-format
+msgid   "ambiguous option --%s, could be %s or %s"
+msgstr  "模糊的选项 --%s，可能是 %s 或 %s"
+
+#, c-format
+msgid   "unknown option --%s"
+msgstr  "未知选项 --%s"
+
+#, c-format
+msgid   "'%s' takes no arguments, but got `%s'"
+msgstr  "'%s'不接受参数，但收到了`%s'"
+
+msgid   "unknown option -"
+msgstr  "未知选项 -"
+
+#, c-format
+msgid   "'%s' takes no extra arguments:\n"
+        "%s\n"
+msgstr  "'%s'不接受额外参数：\n"
+        "%s\n"
+
+#, c-format
+msgid   "'%s' takes no extra argument:\n"
+        "%s\n"
+msgstr  "'%s'不接受额外参数：\n"
+        "%s\n"
+
+#, c-format
+msgid   "'%s' requires a subcommand\n"
+msgstr  "'%s'需要一个子命令\n"
+
+msgid   "hint:"
+msgstr  "提示:"
+
+msgid   "[1;33mhint:[0m"
+msgstr  "[1;33m提示:[0m"
+
+msgid   "warn:"
+msgstr  "警告:"
+
+msgid   "[1;35mwarn:[0m"
+msgstr  "[1;35m警告:[0m"
+
+msgid   "error:"
+msgstr  "错误:"
+
+msgid   "[1;31merror:[0m"
+msgstr  "[1;31m错误:[0m"
+
+msgid   "fatal:"
+msgstr  "致命的:"
+
+msgid   "[1;31mfatal:[0m"
+msgstr  "[1;31m致命的:[0m"
+
+msgid   "BUG:"
+msgstr  "BUG:"
+
+msgid   "[1;31;40mBUG:[0m"
+msgstr  "[1;31;40mBUG:[0m"
