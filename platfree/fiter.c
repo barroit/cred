@@ -5,6 +5,8 @@
 
 #include "fiter.h"
 
+#include <string.h>
+
 #include "path.h"
 #include "strbuf.h"
 #include "strlist.h"

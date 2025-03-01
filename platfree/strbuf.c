@@ -5,7 +5,10 @@
 
 #include "strbuf.h"
 
+#include <ctype.h>
+#include <wctype.h>
 #include <stdarg.h>
+#include <stdio.h>
 
 #include "strconv.h"
 #include "path.h"

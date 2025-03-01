@@ -5,6 +5,8 @@
 
 #include "unitest.h"
 
+#include <string.h>
+
 #include "strbuf.h"
 #include "xcf.h"
 

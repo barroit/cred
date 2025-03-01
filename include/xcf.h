@@ -3,16 +3,13 @@
  * Copyright 2024, 2025 Jiamu Sun <barroit@linux.com>
  */
 
+/*
+ * This file provides only mapping functions that redirect calls to wchar/char
+ * function variants but does not define them.
+ */
+
 #ifndef NG39_XCF_H
 #define NG39_XCF_H
-
-#include <ctype.h>
-#include <stdio.h>
-#include <string.h>
-#include <wchar.h>
-#include <wctype.h>
-
-#include "xalloc.h"
 
 #define __mbslen_mb    __mbslen
 #define __strchrnul_mb __strchrnul
