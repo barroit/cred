@@ -8,7 +8,7 @@
 #include "path.h"
 #include "strbuf.h"
 #include "strlist.h"
-#include "xchar.h"
+#include "xcf.h"
 
 static int yield_dir(struct __fiter *ctx)
 {

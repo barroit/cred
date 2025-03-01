@@ -12,7 +12,7 @@
 
 #include "strbuf.h"
 #include "termas.h"
-#include "xchar.h"
+#include "xcf.h"
 #include "xc.h"
 
 int proc_redir_std(const xchar *name, u32 flags)

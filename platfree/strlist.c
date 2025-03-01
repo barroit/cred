@@ -16,7 +16,7 @@
 #include "unicode.h"
 #include "wcctype.h"
 #include "xalloc.h"
-#include "xchar.h"
+#include "xcf.h"
 
 #define __sl_mode_mask (-1U << 28)
 #define __sl_mode(f)   ((f) & __sl_mode_mask)

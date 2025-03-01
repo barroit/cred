@@ -10,7 +10,7 @@
 
 #include "calc.h"
 #include "iter.h"
-#include "xchar.h"
+#include "xcf.h"
 
 uint levenshtein(const xchar *s1, const xchar *s2, const struct lev_weight *wt)
 {

@@ -14,7 +14,7 @@
 
 #include "path.h"
 #include "termas.h"
-#include "xchar.h"
+#include "xcf.h"
 
 int __mkdirp(xchar *buf)
 {

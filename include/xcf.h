@@ -3,8 +3,8 @@
  * Copyright 2024, 2025 Jiamu Sun <barroit@linux.com>
  */
 
-#ifndef NG39_XCHAR_H
-#define NG39_XCHAR_H
+#ifndef NG39_XCF_H
+#define NG39_XCF_H
 
 #include <ctype.h>
 #include <stdio.h>
@@ -74,4 +74,4 @@
 #define xc_tolower   __XCHAR_ALIAS(__tolower)
 #define xc_mbsws     __XCHAR_ALIAS(__mbsws)
 
-#endif /* NG39_XCHAR_H */
+#endif /* NG39_XCF_H */

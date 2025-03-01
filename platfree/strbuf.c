@@ -11,7 +11,7 @@
 #include "path.h"
 #include "termas.h"
 #include "xalloc.h"
-#include "xchar.h"
+#include "xcf.h"
 
 #define __DO_SB_PRINTF(sb, off, fmt)	\
 ({					\
