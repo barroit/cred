@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-set(PARAM ${TREE}/tests/param)
+set(PARAM ${TOP}/tests/param)
 
 file(GLOB param_src *.c)
 list(FILTER param_src EXCLUDE REGEX "(main)\\.c")
@@ -14,7 +14,7 @@ foreach(name ${param_src})
   add_executable(${name}.p ${name}.c main.c)
   add_dependencies(${name}.p genconfig feature)
 
-  add_test(NAME prm_${name} COMMAND ${cmd} ${PARAM}/${name}.sh ./${name}.p)
+  add_test(NAME prm_${name} COMMAND ${TC} ${PARAM}/${name}.sh ./${name}.p)
 endforeach()
 
 if(WIN32)

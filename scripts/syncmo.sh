@@ -6,7 +6,7 @@ set -e
 echo 'preparing...'
 make configure EXTOPT='-DCMAKE_C_FLAGS="-C -DINTL_PREP_MO"' >/dev/null
 
-cd build
+cd build.unix
 
 i=$(make help | grep '\.i$' | cut -d' ' -f2)
 
@@ -18,7 +18,7 @@ domain=$(grep name .program | cut -f2)
 
 cd locale
 
-src=$(find ../build/CMakeFiles -type f -name '*.i')
+src=$(find ../build.unix/CMakeFiles -type f -name '*.i')
 lang=(zh_CN ja_JP)
 
 xgettext --add-comments=TRANSLATORS --omit-header --no-location \

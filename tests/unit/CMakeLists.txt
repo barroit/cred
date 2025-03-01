@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-if(CONFIG_CC_HAS_TOPLEVEL_REORDER)
+if(HAVE_TOPLEVEL_REORDER)
   add_compile_options(-fno-toplevel-reorder)
 endif()
 
@@ -17,5 +17,5 @@ foreach(name ${unit_tests})
   add_executable(${name}.t ${name}.c ussert.c main.c)
   add_dependencies(${name}.t genconfig feature)
 
-  add_test(NAME api_${name} COMMAND ${name}.t WORKING_DIRECTORY ${BIN})
+  add_test(NAME api_${name} COMMAND ${name}.t WORKING_DIRECTORY ${BUILD})
 endforeach()

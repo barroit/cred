@@ -42,83 +42,6 @@ msgstr  "`%s'はサポートされてないファイルタイプ`%d'のため、
 msgid   "failed to open directory `%s'"
 msgstr  "ディレクトリ`%s'のオープンに失敗しました"
 
-#, c-format
-msgid   "options %s and %s cannot be used together"
-msgstr  "オプション %s と %s は同時に使用できません"
-
-#, c-format
-msgid   "unknown command `%s', see '%s -h'"
-msgstr  "不明なコマンド`%s'、`%s -h'を参照してください"
-
-#, c-format
-msgid   "option %s has an invalid integer value `%s'"
-msgstr  "オプション %s は無効な整数値`%s'を持っています"
-
-#, c-format
-msgid   "option -%c requires a value"
-msgstr  "オプション -%c には値が必要です"
-
-#, c-format
-msgid   "unknown option -%c"
-msgstr  "不明なオプション -%c"
-
-#, c-format
-msgid   "option `%s%s' takes no value"
-msgstr  "オプション`%s%s'は値を取りません"
-
-#, c-format
-msgid   "option `%s%s' requires a value"
-msgstr  "オプション`%s%s'には値が必要です"
-
-#, c-format
-msgid   "ambiguous option --%s, could be %s or %s"
-msgstr  "曖昧なオプション --%s、 %s または %s の可能性があります"
-
-#, c-format
-msgid   "unknown option --%s"
-msgstr  "不明なオプション --%s"
-
-#, c-format
-msgid   "'%s' takes no arguments, but got `%s'"
-msgstr  "'%s'は引数を取りませんが、`%s'が渡されました"
-
-msgid   "unknown option -"
-msgstr  "不明なオプション -"
-
-#, c-format
-msgid   "'%s' requires a subcommand\n"
-msgstr  "`%s'にはサブコマンドが必要です\n"
-
-msgid   "hint:"
-msgstr  "ヒント:"
-
-msgid   "[1;33mhint:[0m"
-msgstr  "[1;33mヒント:[0m"
-
-msgid   "warn:"
-msgstr  "警告:"
-
-msgid   "[1;35mwarn:[0m"
-msgstr  "[1;35m警告:[0m"
-
-msgid   "error:"
-msgstr  "エラー:"
-
-msgid   "[1;31merror:[0m"
-msgstr  "[1;31mエラー:[0m"
-
-msgid   "fatal:"
-msgstr  "致命的な:"
-
-msgid   "[1;31mfatal:[0m"
-msgstr  "[1;31m致命的な:[0m"
-
-msgid   "BUG:"
-msgstr  "バグ:"
-
-msgid   "[1;31;40mBUG:[0m"
-msgstr  "[1;31;40mバグ:[0m"
-
 msgid   "These are common cred commands:"
 msgstr  "よく使われる cred コマンド一覧:"
 
@@ -184,3 +107,92 @@ msgstr  "  ライブラリ"
 #, c-format
 msgid   "%s version %s\n"
 msgstr  "%s バージョン %s\n"
+
+#, c-format
+msgid   "options %s and %s cannot be used together"
+msgstr  "オプション %s と %s は同時に使用できません"
+
+#, c-format
+msgid   "unknown command `%s', see '%s -h'"
+msgstr  "不明なコマンド`%s'、`%s -h'を参照してください"
+
+#, c-format
+msgid   "option %s has an invalid integer value `%s'"
+msgstr  "オプション %s は無効な整数値`%s'を持っています"
+
+#, c-format
+msgid   "option -%c requires a value"
+msgstr  "オプション -%c には値が必要です"
+
+#, c-format
+msgid   "unknown option -%c"
+msgstr  "不明なオプション -%c"
+
+#, c-format
+msgid   "option `%s%s' takes no value"
+msgstr  "オプション`%s%s'は値を取りません"
+
+#, c-format
+msgid   "option `%s%s' requires a value"
+msgstr  "オプション`%s%s'には値が必要です"
+
+#, c-format
+msgid   "ambiguous option --%s, could be %s or %s"
+msgstr  "曖昧なオプション --%s、 %s または %s の可能性があります"
+
+#, c-format
+msgid   "unknown option --%s"
+msgstr  "不明なオプション --%s"
+
+#, c-format
+msgid   "'%s' takes no arguments, but got `%s'"
+msgstr  "'%s'は引数を取りませんが、`%s'が渡されました"
+
+msgid   "unknown option -"
+msgstr  "不明なオプション -"
+
+#, c-format
+msgid   "'%s' takes no extra arguments:\n"
+        "%s\n"
+msgstr  "'%s'は追加の引数を取りません:\n"
+        "%s\n"
+
+#, c-format
+msgid   "'%s' takes no extra argument:\n"
+        "%s\n"
+msgstr  "'%s'は追加の引数を取りません:\n"
+        "%s\n"
+
+#, c-format
+msgid   "'%s' requires a subcommand\n"
+msgstr  "`%s'にはサブコマンドが必要です\n"
+
+msgid   "hint:"
+msgstr  "ヒント:"
+
+msgid   "[1;33mhint:[0m"
+msgstr  "[1;33mヒント:[0m"
+
+msgid   "warn:"
+msgstr  "警告:"
+
+msgid   "[1;35mwarn:[0m"
+msgstr  "[1;35m警告:[0m"
+
+msgid   "error:"
+msgstr  "エラー:"
+
+msgid   "[1;31merror:[0m"
+msgstr  "[1;31mエラー:[0m"
+
+msgid   "fatal:"
+msgstr  "致命的な:"
+
+msgid   "[1;31mfatal:[0m"
+msgstr  "[1;31m致命的な:[0m"
+
+msgid   "BUG:"
+msgstr  "バグ:"
+
+msgid   "[1;31;40mBUG:[0m"
+msgstr  "[1;31;40mバグ:[0m"

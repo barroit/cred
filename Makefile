@@ -1,16 +1,15 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-ifneq ($(filter check-symlink,$(.FEATURES)),check-symlink)
-$(error GNU Make >= 4.0 is required. Your Make version is $(MAKE_VERSION))
+ifneq ($(filter extra-prereqs,$(.FEATURES)),extra-prereqs)
+$(error GNU Make >= 4.3 is required. Your Make version is $(MAKE_VERSION))
 endif
 
 MAKEFLAGS += -rR
 MAKEFLAGS += --no-print-directory
 
-BUILD := build.unix
-
-export TREE           := $(realpath $(dir $(lastword $(MAKEFILE_LIST))))
-export KCONFIG_CONFIG := .config.unix
+export TOP   := $(realpath $(dir $(lastword $(MAKEFILE_LIST))))
+export GEN   := $(TOP)/include/generated
+export BUILD := $(TOP)/build.unix
 
 ifneq ($(LLVM),)
 CC := clang
@@ -22,22 +21,68 @@ endif
 
 export CC LD
 
+export LASTPLAT := $(TOP)/.lastplat
+
+export DOTCONFIG := $(TOP)/.config.unix
+export DEFCONFIG := $(DOTCONFIG).def
+
+ifneq ($(wildcard $(DOTCONFIG)),)
+RELCONFIG := $(DOTCONFIG)
+else
+RELCONFIG    := $(DEFCONFIG)
+MK_DEFCONFIG := mk_defconfig
+endif
+
+export RELCONFIG
+export KCONFIG_CONFIG := $(RELCONFIG)
+
+ifneq ($(wildcard $(DOTCONFIG)),)
+ifneq ($(wildcard $(DEFCONFIG)),)
+RECONFIGURE  := configure
+RM_DEFCONFIG := rm_defconfig
+else
+RERECONFDEP  := reconfdep
+endif
+endif
+
+export RECONFDEP := $(BUILD)/reconfdep
+
+CMAKE_CC_FEATURE := $(BUILD)/features.cmake
+
 build:
 
-.PHONY: configure build all last_build
+.PHONY: menuconfig mk_defconfig rm_defconfig \
+	reconfdep configure lastplat build all
 
-last_build:
-	@if [ ! -f .last_build ]; then			\
-		echo unix > .last_build;		\
-	elif [ "$$(cat .last_build)" != unix ]; then	\
-		echo unix > .last_build;		\
+menuconfig:
+	@scripts/kconfig.py menuconfig
+
+$(GEN):
+	@mkdir $@
+
+$(CMAKE_CC_FEATURE): $(GEN)
+	@scripts/cc-feature.py cmake
+
+mk_defconfig:
+	@scripts/kconfig.py alldefconfig
+
+rm_defconfig:
+	@rm $(DEFCONFIG)
+
+reconfdep: $(MK_DEFCONFIG) $(RM_DEFCONFIG)
+	@scripts/reconfdep.py $(RELCONFIG) $(RECONFDEP)
+
+configure: $(CMAKE_CC_FEATURE) reconfdep
+	@cmake -S . -B $(BUILD) $(EXTOPT)
+
+lastplat:
+	@if [ -f $(BUILD)/CMakeCache.txt ] &&			\
+	    [ "$$(cat $(LASTPLAT) 2>&1 )" != unix ]; then	\
+		echo unix > $(LASTPLAT);			\
 	fi
 
-build: last_build
+build: lastplat $(RECONFIGURE) $(RERECONFDEP)
 	@cmake --build $(BUILD) --parallel
-
-configure:
-	@cmake -S . -B $(BUILD) $(EXTOPT)
 
 all: configure build
 
@@ -49,14 +94,9 @@ clean:
 distclean:
 	@rm -rf include/generated
 	@rm -f include/arch
-	@rm -f $(KCONFIG_CONFIG)*
-	@rm -f .last_build
+	@rm -f $(DOTCONFIG)*
+	@rm -f $(LASTPLAT)
 	@git ls-files --directory -o $(BUILD) | xargs rm -rf
-
-.PHONY: menuconfig
-
-menuconfig:
-	@scripts/kconfig.py menuconfig
 
 __tests := $(wildcard $(BUILD)/t/*.t)
 tests   := $(patsubst $(BUILD)/%,%,$(__tests))

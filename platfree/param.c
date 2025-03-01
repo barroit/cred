@@ -5,6 +5,7 @@
 
 #include "param.h"
 
+#include <stdarg.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -60,20 +61,23 @@ struct cmdmode {
 	struct list_head list;
 };
 
-static const void *ex[32];
+static intptr_t ex[32];
 
-void *param_set_ex(u32 flag, const void *val)
+static void ex_init(u32 flags, va_list ap)
 {
-	BUG_ON(!flag);
+	u32 flag;
 
-	uint i = ctz(flag);
-
-	if (!val)
-		return (void *)ex[i];
-
-	ex[i] = val;
-	return NULL;
+	for (flag = PRM_EX_BEGIN; flag != 0; flag <<= 1) {
+		if (flags & flag)
+			ex[ctz(flag)] = va_arg(ap, intptr_t);
+	}
 }
+
+static intptr_t __ex_get(u32 flag)
+{
+	return ex[ctz(flag)];
+}
+#define ex_get(flag, type) ((type)__ex_get(flag))
 
 static struct strbuf __cmdpath = SB_INIT;
 static char *cmdpath;
@@ -470,13 +474,21 @@ static void err_huge_arg(int argc, const xchar **argv)
 }
 
 int param_parse(int argc, const xchar **argv,
-		const char **usage, struct opt *opts, u32 flags)
+		const char **usage, struct opt *opts, u32 flags, ...)
 {
 	int __argc = argc - 1;
 
 	if (has_command(opts)) {
 		BUG_ON(flags & PRM_RET_ARG);
 		flags |= PRM_PAR_CMD;
+	}
+
+	if (flags & PRM_EX_MASK) {
+		va_list ap;
+
+		va_start(ap, flags);
+		ex_init(flags, ap);
+		va_end(ap);
 	}
 
 	struct param ctx = {
@@ -516,8 +528,7 @@ int param_parse(int argc, const xchar **argv,
 	int ret = ctx.outc + ctx.argc;
 
 	if (ctx.flags & PRM_LIM_ARG) {
-		uint *__limit = param_set_ex(PRM_LIM_ARG, NULL);
-		uint limit = *__limit;
+		uint limit = ex_get(PRM_LIM_ARG, uint);
 
 		if (ret > limit) {
 			err_huge_arg(ret - limit, &ctx.outv[limit]);

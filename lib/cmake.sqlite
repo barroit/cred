@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-set(prefix ${TREE}/sqlite/${PLAT}.install)
+set(prefix ${TOP}/sqlite/${PLAT}.install)
 set(bindir ${prefix}/bin)
 set(libdir ${prefix}/lib)
 set(incdir ${prefix}/include)

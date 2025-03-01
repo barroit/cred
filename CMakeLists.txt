@@ -2,9 +2,9 @@
 
 cmake_minimum_required(VERSION 3.21)
 
-set(TREE $ENV{TREE})
-set(GEN  ${TREE}/include/generated)
-set(BIN  ${CMAKE_BINARY_DIR})
+set(TOP   $ENV{TOP})
+set(GEN   $ENV{GEN})
+set(BUILD $ENV{BUILD})
 
 if(UNIX)
   set(PLAT unix)
@@ -17,8 +17,11 @@ set(SANFLAGS -fsanitize=address,undefined)
 file(MAKE_DIRECTORY ${GEN})
 
 include(lib/cmake.include)
+
 include_scp(lib/cmake.kconfig)
+
 include_scp(lib/cmake.features)
+include(${BUILD}/features.cmake)
 
 set(ENV{CC} ${CONFIG_CC_COMMAND})
 set(ENV{LD} ${CONFIG_LD_COMMAND})
@@ -188,14 +191,14 @@ if(NOT OPENSSL_USE_STATIC_LIBS)
   fixup_runtime(${exec_name} ${OPENSSL_RUNTIME_LIB})
 endif()
 
+if(CONFIG_ENABLE_SANITIZER)
+  target_compile_options(${exec_name} PRIVATE ${SANFLAGS})
+endif()
+
 add_compile_definitions(_GNU_SOURCE)
 
 if(NOT CONFIG_ENABLE_DEBUG)
   add_compile_definitions(NDEBUG)
-endif()
-
-if(CONFIG_ENABLE_WCHAR)
-  add_compile_definitions(UNICODE)
 endif()
 
 if(WIN32)

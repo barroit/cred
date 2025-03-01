@@ -1,23 +1,15 @@
 # SPDX-License-Identifier: GPL-3.0-or-later
 
-if(NOT EXISTS ${TREE}/$ENV{KCONFIG_CONFIG})
-  set(ENV{KCONFIG_CONFIG} ${TREE}/$ENV{KCONFIG_CONFIG}.def)
-  if(NOT EXISTS ${TREE}/$ENV{KCONFIG_CONFIG})
-    python3(scripts/kconfig.py alldefconfig)
-  endif()
-endif()
-
-# It's okay to have only a .config.xxx.def on disk with $KCONFIG_CONFIG set to
-# .config.xxx, as genconfig will look up .config.xxx.def.
 add_custom_command(OUTPUT ${GEN}/autoconf.h
-		   COMMAND ${Python3_EXECUTABLE} scripts/kconfig.py
+		   COMMAND ${python3} scripts/kconfig.py
 		   genconfig --header-path ${GEN}/autoconf.h
-		   DEPENDS ${TREE}/.last_build
-		   WORKING_DIRECTORY ${TREE})
+		   COMMAND ${CMAKE_COMMAND} -E touch ${GEN}/autoconf.h
+		   DEPENDS $ENV{LASTPLAT} $ENV{RELCONFIG}
+		   WORKING_DIRECTORY ${TOP})
 
 add_custom_target(genconfig DEPENDS ${GEN}/autoconf.h)
 
-file(STRINGS $ENV{KCONFIG_CONFIG} lines ENCODING UTF-8)
+file(STRINGS $ENV{RELCONFIG} lines ENCODING UTF-8)
 
 foreach(line ${lines})
   if(line MATCHES "^(CONFIG_[^=]+)=(\"?)([^\"]*)(\"?)$")
@@ -25,4 +17,4 @@ foreach(line ${lines})
   endif()
 endforeach()
 
-set_property(DIRECTORY APPEND PROPERTY CMAKE_CONFIGURE_DEPENDS ${TREE}/.config)
+set_directory_properties(PROPERTIES CMAKE_CONFIGURE_DEPENDS $ENV{RECONFDEP})

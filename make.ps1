@@ -7,96 +7,182 @@
 
 param
 (
-	[ArgumentCompletions('configure', 'build', `
-			     'all', 'test', 'clean', 'distclean', `
-			     'menuconfig', 'install', 'uninstall')]
-	[string]$first
+	[ArgumentCompletions('menuconfig', 'configure', 'build', 'all',`
+			     'clean', 'distclean', 'install', 'uninstall')]
+	[string]$__target = 'build'
 )
 
-$tree = $PSScriptRoot
+$ErrorActionPreference = 'Stop'
+
 Set-Alias error Write-Error
+Set-Alias rm_f  Remove-Item -Force -ErrorAction SilentlyContinue
 
-$BUILD = 'build.win32'
+$0 = $MyInvocation.MyCommand.Path
 
-if ($tree -ne $PWD) {
-	error "you need to be inside the source tree ($tree)"
+function export
+{
+	param([string]$str)
+
+	$pair  = $str -split '=', 2
+	$name  = $pair[0]
+	$value = $pair[1]
+
+	[System.Environment]::SetEnvironmentVariable($name, $value, 'Process')
+	Set-Variable -Scope Script $name $value
 }
 
-$env:TREE           = $tree.Replace('\','/')
-$env:KCONFIG_CONFIG = '.config.win32'
+$BUILD_NAME = 'build.win32'
 
-$targets = @('configure', 'build', 'all', 'test', 'clean', `
-	     'distclean', 'menuconfig', 'install', 'uninstall')
+export TOP=$($PSScriptRoot.Replace('\','/'))
+# $TOP = $TOP.TrimEnd('/')
 
-if (! $first) {
-	# make
-	$target = 'build'
-} elseif ($first -in $targets) {
-	# make all
-	$target = $first
+export GEN=$TOP/include/generated
+export BUILD=$TOP/$BUILD_NAME
+
+export CC=clang.exe
+export LD=ld.lld.exe
+
+export LASTPLAT=$TOP/.lastplat
+
+export DOTCONFIG=$TOP/.config.win32
+export DEFCONFIG=$DOTCONFIG.def
+
+if (Test-Path $DOTCONFIG) {
+	$RELCONFIG    = $DOTCONFIG
 } else {
-	# make LLVM=1
-	# or
-	# make LLVM=1 configure
-	# or
-	# make xxxx
-	$args = @($first) + $args
-	$target = 'build'
-	if ($args[-1] -in $targets) {
-		$target = $args[-1]
-	}
+	$RELCONFIG    = $DEFCONFIG
+	$MK_DEFCONFIG = 1
 }
 
-if ($args | Where-Object { $_ -like 'GMAKE=*' }) {
-	$GMAKE = 1
-}
+export RELCONFIG=$RELCONFIG
+export KCONFIG_CONFIG=$RELCONFIG
 
-$env:CC = 'clang'
-# Append an extension to make python correctly find that executable
-$env:LD = 'ld.lld.exe'
-
-if ($target -eq 'configure' -or $target -eq 'all') {
-	if ($GMAKE) {
-		$generator = 'Unix Makefiles'
+if (Test-Path $DOTCONFIG) {
+	if (Test-Path $DEFCONFIG) {
+		$RECONFIGURE  = 1
+		$RM_DEFCONFIG = 1
 	} else {
-		$generator = 'Ninja'
+		$RERECONFDEP  = 1
 	}
-
-	cmake -G $generator -S . -B $BUILD
 }
 
-if ($target -eq 'build' -or $target -eq 'all') {
-	if (!(Test-Path .last_build)) {
-		echo win32 > .last_build
-	} elseif ((cat .last_build) -ne 'win32') {
-		echo win32 > .last_build
+export RECONFDEP=$BUILD/reconfdep
+
+$__menuconfig = 1 -shl 0
+$__configure  = 1 -shl 1
+$__build      = 1 -shl 2
+$__all	      = $__configure -bor $__build
+$__clean      = 1 -shl 3
+$__distclean  = 1 -shl 4
+$__install    = 1 -shl 5
+$__uninstall  = 1 -shl 6
+$__test       = 1 -shl 7
+$__reconfdep  = 1 -shl 8
+
+switch -CaseSensitive ($__target) {
+'menuconfig' { $target = $__menuconfig; break }
+'reconfdep'  { $target = $__reconfdep;  break }
+'configure'  { $target = $__configure;  break }
+'build'	     { $target = $__build;      break }
+'all'	     { $target = $__all;        break }
+'clean'	     { $target = $__clean;      break }
+'distclean'  { $target = $__distclean;  break }
+'install'    { $target = $__install;    break }
+'uninstall'  { $target = $__uninstall;  break }
+}
+
+if (!$target) {
+	switch -Wildcard ($__target) {
+	't/*'       { $target = $__test; break}
+	}
+
+	if (!$target) {
+		error "unknown target '$__target'"
+	}
+}
+
+if ($target -band $__menuconfig) {
+	python scripts/kconfig.py menuconfig
+}
+
+if ($target -band $__reconfdep) {
+	if ($MK_DEFCONFIG) {
+		python scripts/kconfig.py alldefconfig
+	}
+
+	if ($RM_DEFCONFIG) {
+		rm $DEFCONFIG
+	}
+
+	python scripts/reconfdep.py $RELCONFIG $RECONFDEP
+}
+
+if ($target -band $__configure) {
+	if (!(Test-Path $BUILD/features.cmake)) {
+		if (!(Test-Path $GEN)) {
+			mkdir $GEN
+		}
+
+		python scripts/cc-feature.py cmake
+	}
+
+	& $0 reconfdep
+	cmake -G Ninja -S . -B $BUILD
+}
+
+if ($target -band $__build) {
+	if (!(Test-Path $LASTPLAT) -or (cat $LASTPLAT) -ne 'win32') {
+		echo win32 > $LASTPLAT
+	}
+
+	if ($RECONFIGURE) {
+		& $0 configure
+	}
+
+	if ($RERECONFDEP) {
+		& $0 reconfdep
 	}
 
 	cmake --build $BUILD --parallel
 }
 
-if ($target -eq 'test') {
-	ctest --test-dir $BUILD/tests --parallel $env:NUMBER_OF_PROCESSORS
-} elseif ($target -eq 'clean') {
+if ($target -band $__clean) {
 	cmake --build $BUILD --target clean
-} elseif ($target -eq 'distclean') {
-	Remove-Item -Recurse -Force -ErrorAction SilentlyContinue`
-		    -Path include/generated
+}
 
-	Remove-Item -Force -ErrorAction SilentlyContinue `
-		    -Path $env:KCONFIG_CONFIG*
+if ($target -band $__distclean) {
+	$dotconfig = Get-ChildItem -Force $env:KCONFIG_CONFIG*
+	$buildgens = git ls-files --directory -o $BUILD_NAME
 
-	Remove-Item -Force -ErrorAction SilentlyContinue `
-		    -Path .last_build
-
-	Remove-Item -Force -ErrorAction SilentlyContinue `
-		    -Path *.manifest
-
-	$f = git ls-files --directory -o $BUILD
-	if ($f) {
-		Remove-Item -Recurse -Force -ErrorAction SilentlyContinue `
-			    -Path (git ls-files --directory -o $BUILD)
+	if (Test-Path include/generated) {
+		Remove-Item -Recurse include/generated
 	}
-} elseif ($target -eq 'menuconfig') {
-	python scripts/kconfig.py menuconfig
+	if ($dotconfig) {
+		Remove-Item $dotconfig
+	}
+	if (Test-Path $LASTPLAT) {
+		Remove-Item $LASTPLAT
+	}
+	if (Test-Path *.manifest) {
+		Remove-Item *.manifest
+	}
+	if ($buildgens) {
+		Remove-Item -Recurse $buildgens
+	}
+}
+
+$cpus = $env:NUMBER_OF_PROCESSORS
+
+if ($target -band $__test) {
+	if ($__target -eq 't/all') {
+		ctest --test-dir $BUILD/tests --parallel $cpus
+	} else {
+		$t = "$BUILD/$__target.exe"
+
+		if (!(Test-Path $t)) {
+			error "not a test '$t'"
+		}
+
+		& $t
+	}
 }
