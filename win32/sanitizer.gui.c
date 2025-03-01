@@ -3,7 +3,12 @@
  * Copyright 2025 Jiamu Sun <barroit@linux.com>
  */
 
-#include <sanitizer/asan_interface.h>
+#ifdef CONFIG_ENABLE_SANITIZER
+# include <sanitizer/asan_interface.h>
+#else
+# include "compiler.h"
+# define __sanitizer_set_death_callback NOOP
+#endif
 
 #include <stdlib.h>
 
