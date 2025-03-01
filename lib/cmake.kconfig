@@ -16,3 +16,5 @@ foreach(line ${lines})
     set(${CMAKE_MATCH_1} ${CMAKE_MATCH_3} PARENT_SCOPE)
   endif()
 endforeach()
+
+set_directory_properties(PROPERTIES CMAKE_CONFIGURE_DEPENDS $ENV{RECONFDEP})

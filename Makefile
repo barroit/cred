@@ -40,14 +40,19 @@ ifneq ($(wildcard $(DOTCONFIG)),)
 ifneq ($(wildcard $(DEFCONFIG)),)
 RECONFIGURE  := configure
 RM_DEFCONFIG := rm_defconfig
+else
+RERECONFDEP  := reconfdep
 endif
 endif
+
+export RECONFDEP := $(BUILD)/reconfdep
 
 CMAKE_CC_FEATURE := $(BUILD)/features.cmake
 
 build:
 
-.PHONY: menuconfig mk_defconfig rm_defconfig configure lastplat build all
+.PHONY: menuconfig mk_defconfig rm_defconfig \
+	reconfdep configure lastplat build all
 
 menuconfig:
 	@scripts/kconfig.py menuconfig
@@ -64,7 +69,10 @@ mk_defconfig:
 rm_defconfig:
 	@rm $(DEFCONFIG)
 
-configure: $(CMAKE_CC_FEATURE) $(MK_DEFCONFIG) $(RM_DEFCONFIG)
+reconfdep: $(MK_DEFCONFIG) $(RM_DEFCONFIG)
+	@scripts/reconfdep.py $(RELCONFIG) $(RECONFDEP)
+
+configure: $(CMAKE_CC_FEATURE) reconfdep
 	@cmake -S . -B $(BUILD) $(EXTOPT)
 
 lastplat:
@@ -73,7 +81,7 @@ lastplat:
 		echo unix > $(LASTPLAT);			\
 	fi
 
-build: lastplat $(RECONFIGURE)
+build: lastplat $(RECONFIGURE) $(RERECONFDEP)
 	@cmake --build $(BUILD) --parallel
 
 all: configure build

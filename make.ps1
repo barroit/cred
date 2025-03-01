@@ -48,18 +48,25 @@ export DOTCONFIG=$TOP/.config.win32
 export DEFCONFIG=$DOTCONFIG.def
 
 if (Test-Path $DOTCONFIG) {
-	$RELCONFIG = $DOTCONFIG
+	$RELCONFIG    = $DOTCONFIG
 } else {
-	$RELCONFIG = $DEFCONFIG
+	$RELCONFIG    = $DEFCONFIG
+	$MK_DEFCONFIG = 1
 }
 
 export RELCONFIG=$RELCONFIG
 export KCONFIG_CONFIG=$RELCONFIG
 
-if ((Test-Path $DOTCONFIG) -and (Test-Path $DEFCONFIG)) {
-	$RECONFIGURE  = 1
-	$RM_DEFCONFIG = 1
+if (Test-Path $DOTCONFIG) {
+	if (Test-Path $DEFCONFIG) {
+		$RECONFIGURE  = 1
+		$RM_DEFCONFIG = 1
+	} else {
+		$RERECONFDEP  = 1
+	}
 }
+
+export RECONFDEP=$BUILD/reconfdep
 
 $__menuconfig = 1 -shl 0
 $__configure  = 1 -shl 1
@@ -70,9 +77,11 @@ $__distclean  = 1 -shl 4
 $__install    = 1 -shl 5
 $__uninstall  = 1 -shl 6
 $__test       = 1 -shl 7
+$__reconfdep  = 1 -shl 8
 
 switch -CaseSensitive ($__target) {
 'menuconfig' { $target = $__menuconfig; break }
+'reconfdep'  { $target = $__reconfdep;  break }
 'configure'  { $target = $__configure;  break }
 'build'	     { $target = $__build;      break }
 'all'	     { $target = $__all;        break }
@@ -96,24 +105,28 @@ if ($target -band $__menuconfig) {
 	python scripts/kconfig.py menuconfig
 }
 
+if ($target -band $__reconfdep) {
+	if ($MK_DEFCONFIG) {
+		python scripts/kconfig.py alldefconfig
+	}
+
+	if ($RM_DEFCONFIG) {
+		rm $DEFCONFIG
+	}
+
+	python scripts/reconfdep.py $RELCONFIG $RECONFDEP
+}
+
 if ($target -band $__configure) {
 	if (!(Test-Path $BUILD/features.cmake)) {
 		if (!(Test-Path $GEN)) {
 			mkdir $GEN
 		}
 
-		scripts/cc-feature.py cmake
+		python scripts/cc-feature.py cmake
 	}
 
-	if (!(Test-Path $RELCONFIG)) {
-		scripts/kconfig.py alldefconfig
-	}
-
-	if ($RM_DEFCONFIG) {
-		rm $DEFCONFIG
-		Remove-Variable RM_DEFCONFIG
-	}
-
+	& $0 reconfdep
 	cmake -G Ninja -S . -B $BUILD
 }
 
@@ -124,7 +137,10 @@ if ($target -band $__build) {
 
 	if ($RECONFIGURE) {
 		& $0 configure
-		Remove-Variable RECONFIGURE
+	}
+
+	if ($RERECONFDEP) {
+		& $0 reconfdep
 	}
 
 	cmake --build $BUILD --parallel
