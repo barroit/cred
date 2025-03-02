@@ -20,6 +20,8 @@ run()
 {
 	pp=()
 
+	export TEST3939=$program
+
 	>$err >$out
 	$program "$@" 2>$err >$out &
 
