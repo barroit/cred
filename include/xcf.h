@@ -11,35 +11,35 @@
 #ifndef NG39_XCF_H
 #define NG39_XCF_H
 
-#define __mbslen_mb    __mbslen
-#define __strchrnul_mb __strchrnul
-#define __strcmp_mb    strcmp
-#define __strdup_mb    xstrdup
-#define __strlen_mb    strlen
-#define __stpncpy_mb   strncpy
-#define __strncmp_mb   strncmp
-#define __strrchr_mb   strrchr
-#define __vsnprintf_mb vsnprintf
-#define __ispunct_mb   ispunct
-#define __isspace_mb   isspace
-#define __isxdigit_mb  isxdigit
-#define __tolower_mb   tolower
-#define __mbsws_mb     mbsws
+#define __39_mbslen_mb    __mbslen
+#define __39_strchrnul_mb __strchrnul
+#define __39_strcmp_mb    strcmp
+#define __39_strdup_mb    xstrdup
+#define __39_strlen_mb    strlen
+#define __39_stpncpy_mb   strncpy
+#define __39_strncmp_mb   strncmp
+#define __39_strrchr_mb   strrchr
+#define __39_vsnprintf_mb vsnprintf
+#define __39_ispunct_mb   ispunct
+#define __39_isspace_mb   isspace
+#define __39_isxdigit_mb  isxdigit
+#define __39_tolower_mb   tolower
+#define __39_mbsws_mb     mbsws
 
-#define __mbslen_wc    wcslen
-#define __strchrnul_wc __strchrnul
-#define __strcmp_wc    wcscmp
-#define __strdup_wc    xwcsdup
-#define __strlen_wc    wcslen
-#define __stpncpy_wc   wcsncpy
-#define __strncmp_wc   wcsncmp
-#define __strrchr_wc   wcsrchr
-#define __vsnprintf_wc vswprintf
-#define __ispunct_wc   iswpunct
-#define __isspace_wc   iswspace
-#define __isxdigit_wc  iswxdigit
-#define __tolower_wc   towlower
-#define __mbsws_wc     wcsws
+#define __39_mbslen_wc    wcslen
+#define __39_strchrnul_wc __strchrnul
+#define __39_strcmp_wc    wcscmp
+#define __39_strdup_wc    xwcsdup
+#define __39_strlen_wc    wcslen
+#define __39_stpncpy_wc   wcsncpy
+#define __39_strncmp_wc   wcsncmp
+#define __39_strrchr_wc   wcsrchr
+#define __39_vsnprintf_wc vswprintf
+#define __39_ispunct_wc   iswpunct
+#define __39_isspace_wc   iswspace
+#define __39_isxdigit_wc  iswxdigit
+#define __39_tolower_wc   towlower
+#define __39_mbsws_wc     wcsws
 
 #ifndef CONFIG_ENABLE_WCHAR
 # define __xchar_type _mb
@@ -57,18 +57,18 @@
  */
 #define xc_mbslen    __XCHAR_ALIAS(__mbslen)
 
-#define xc_strchrnul __XCHAR_ALIAS(__strchrnul)
-#define xc_strcmp    __XCHAR_ALIAS(__strcmp)
-#define xc_strdup    __XCHAR_ALIAS(__strdup)
-#define xc_strlen    __XCHAR_ALIAS(__strlen)
-#define xc_strncpy   __XCHAR_ALIAS(__strncpy)
-#define xc_strncmp   __XCHAR_ALIAS(__strncmp)
-#define xc_strrchr   __XCHAR_ALIAS(__strrchr)
-#define xc_vsnprintf __XCHAR_ALIAS(__vsnprintf)
-#define xc_ispunct   __XCHAR_ALIAS(__ispunct)
-#define xc_isspace   __XCHAR_ALIAS(__isspace)
-#define xc_isxdigit  __XCHAR_ALIAS(__isxdigit)
-#define xc_tolower   __XCHAR_ALIAS(__tolower)
-#define xc_mbsws     __XCHAR_ALIAS(__mbsws)
+#define xc_strchrnul __XCHAR_ALIAS(__39_strchrnul)
+#define xc_strcmp    __XCHAR_ALIAS(__39_strcmp)
+#define xc_strdup    __XCHAR_ALIAS(__39_strdup)
+#define xc_strlen    __XCHAR_ALIAS(__39_strlen)
+#define xc_strncpy   __XCHAR_ALIAS(__39_strncpy)
+#define xc_strncmp   __XCHAR_ALIAS(__39_strncmp)
+#define xc_strrchr   __XCHAR_ALIAS(__39_strrchr)
+#define xc_vsnprintf __XCHAR_ALIAS(__39_vsnprintf)
+#define xc_ispunct   __XCHAR_ALIAS(__39_ispunct)
+#define xc_isspace   __XCHAR_ALIAS(__39_isspace)
+#define xc_isxdigit  __XCHAR_ALIAS(__39_isxdigit)
+#define xc_tolower   __XCHAR_ALIAS(__39_tolower)
+#define xc_mbsws     __XCHAR_ALIAS(__39_mbsws)
 
 #endif /* NG39_XCF_H */
