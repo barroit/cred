@@ -25,6 +25,7 @@
 #define __39_isxdigit_mb  isxdigit
 #define __39_tolower_mb   tolower
 #define __39_mbsws_mb     mbsws
+#define __39_stat_mb      stat
 
 #define __39_mbslen_wc    wcslen
 #define __39_strchrnul_wc __strchrnul
@@ -40,6 +41,7 @@
 #define __39_isxdigit_wc  iswxdigit
 #define __39_tolower_wc   towlower
 #define __39_mbsws_wc     wcsws
+#define __39_stat_wc      wstat
 
 #ifndef CONFIG_ENABLE_WCHAR
 # define __xchar_type _mb
@@ -70,5 +72,6 @@
 #define xc_isxdigit  __XCHAR_ALIAS(__39_isxdigit)
 #define xc_tolower   __XCHAR_ALIAS(__39_tolower)
 #define xc_mbsws     __XCHAR_ALIAS(__39_mbsws)
+#define xc_stat      __XCHAR_ALIAS(__39_stat)
 
 #endif /* NG39_XCF_H */
