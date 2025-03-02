@@ -8,7 +8,7 @@
 #include <stdlib.h>
 
 #include "compiler.h"
-#include "legacy_cons.h"
+#include "console.h"
 #include "gettext.h"
 #include "udef.h"
 
@@ -25,7 +25,7 @@ void __exit_show_step(void)
 void __exit(int status)
 {
 	if (!udef_no_console && status) {
-		leg_cons_show();
+		console_show();
 		__exit_show_step();
 	}
 
