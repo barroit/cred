@@ -110,6 +110,17 @@ int winerrno(void);
 
 #endif /* _WIN32 */
 
+const char *sqlite3_errstr(int rc);
+
+#define warn_sqlite(rc, fmt, ...) \
+	__tm_warn(sqlite3_errstr(rc), 0, fmt, ##__VA_ARGS__)
+
+#define error_sqlite(rc, fmt, ...) \
+	__tm_error(sqlite3_errstr(rc), 0, fmt, ##__VA_ARGS__)
+
+#define die_sqlite(rc, fmt, ...) \
+	__tm_die(sqlite3_errstr(rc), 0, fmt, ##__VA_ARGS__)
+
 void __termas_output_mode(int mode);
 
 #define TM_O_CHAR  1
