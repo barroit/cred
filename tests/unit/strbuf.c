@@ -5,8 +5,10 @@
 
 #include "unitest.h"
 
+#include <string.h>
+
 #include "strbuf.h"
-#include "xchar.h"
+#include "xcf.h"
 
 TESTDECL_BEGIN();
 

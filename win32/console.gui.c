@@ -3,7 +3,7 @@
  * Copyright 2025 Jiamu Sun <barroit@linux.com>
  */
 
-#include "legacy_cons.h"
+#include "console.h"
 
 #include <windows.h>
 #include <stdio.h>
@@ -58,7 +58,7 @@ err_out:
 	return -1;
 }
 
-void leg_cons_attach(void)
+void console_attach(void)
 {
 	int err;
 	FILE *stream;
@@ -86,7 +86,7 @@ void leg_cons_attach(void)
 	conwin = GetConsoleWindow();
 	BUG_ON(!conwin);
 
-	leg_cons_hide();
+	console_hide();
 
 	err = !SetConsoleOutputCP(CP_UTF8);
 	BUG_ON(err);
@@ -101,12 +101,12 @@ void leg_cons_attach(void)
 	BUG_ON(err);
 }
 
-void leg_cons_show(void)
+void console_show(void)
 {
 	ShowWindow(conwin, SW_SHOW);
 }
 
-void leg_cons_hide(void)
+void console_hide(void)
 {
 	ShowWindow(conwin, SW_HIDE);
 }

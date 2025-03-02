@@ -17,7 +17,7 @@
 #include "strtox.h"
 #include "termas.h"
 #include "xalloc.h"
-#include "xchar.h"
+#include "xcf.h"
 
 /*
  * Windows SDK sucks!

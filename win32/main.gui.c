@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <windows.h>
 
-#include "legacy_cons.h"
+#include "console.h"
 #include "corecmd.h"
 #include "proc.h"
 #include "udef.h"
@@ -22,15 +22,13 @@
 # define argv __argv
 #endif
 
-static int udef_no_console;
-
 int WinMain(HINSTANCE app, HINSTANCE prev_app, xchar *cmd, int wd_cntl)
 {
 	MSG message;
 
 	udef_no_console = proc_no_console('?');
 	if (!udef_no_console)
-		leg_cons_attach();
+		console_attach();
 
 	cmd_main(argc, (const xchar **)argv);
 

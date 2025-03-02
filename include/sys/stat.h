@@ -9,6 +9,8 @@
 #include_next <sys/stat.h>
 
 #ifdef _WIN32
+# define stat  _stat
+# define wstat _wstat
 # define S_IFLNK 0xa000
 # if (S_IFLNK & S_IFMT) != S_IFLNK
 #  error (S_IFLNK & S_IFMT) != S_IFLNK

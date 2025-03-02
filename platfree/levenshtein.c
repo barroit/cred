@@ -5,12 +5,14 @@
 
 #include "levenshtein.h"
 
+#include <stdlib.h>
 #include <string.h>
 #include <wchar.h>
 
 #include "calc.h"
 #include "iter.h"
-#include "xchar.h"
+#include "xalloc.h"
+#include "xcf.h"
 
 uint levenshtein(const xchar *s1, const xchar *s2, const struct lev_weight *wt)
 {

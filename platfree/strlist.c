@@ -5,9 +5,12 @@
 
 #include "strlist.h"
 
+#include <ctype.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
+#include <wchar.h>
+#include <wctype.h>
 
 #include "bitopt.h"
 #include "compiler.h"
@@ -16,7 +19,7 @@
 #include "unicode.h"
 #include "wcctype.h"
 #include "xalloc.h"
-#include "xchar.h"
+#include "xcf.h"
 
 #define __sl_mode_mask (-1U << 28)
 #define __sl_mode(f)   ((f) & __sl_mode_mask)

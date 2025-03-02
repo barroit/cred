@@ -5,13 +5,16 @@
 
 #include "strbuf.h"
 
+#include <ctype.h>
+#include <wctype.h>
 #include <stdarg.h>
+#include <stdio.h>
 
 #include "strconv.h"
 #include "path.h"
 #include "termas.h"
 #include "xalloc.h"
-#include "xchar.h"
+#include "xcf.h"
 
 #define __DO_SB_PRINTF(sb, off, fmt)	\
 ({					\
