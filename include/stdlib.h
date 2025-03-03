@@ -9,6 +9,12 @@
 #ifndef NG39_STDLIB_PATCH_H
 #define NG39_STDLIB_PATCH_H
 
+#ifdef CONFIG_ENABLE_GUI
+# define EXIT_CONOUT 0x3939
+#else
+# define EXIT_CONOUT 0
+#endif
+
 #ifdef _WIN32
 
 #include "attr.h"
@@ -16,13 +22,6 @@
 void __exit_show_confirm(void);
 
 void __noreturn __exit(int status);
-
-#ifdef CONFIG_ENABLE_GUI
-# define exit __exit
-# define EXIT_CONOUT 0x3939
-#else
-# define EXIT_CONOUT 0
-#endif
 
 #define wgetenv _wgetenv
 
