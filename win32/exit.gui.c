@@ -1,4 +1,4 @@
-/* SPDX-License-Identifier: GPL-3.0-or-later or MIT */
+// SPDX-License-Identifier: GPL-3.0-or-later or MIT
 /*
  * Copyright 2025 Jiamu Sun <barroit@linux.com>
  */
