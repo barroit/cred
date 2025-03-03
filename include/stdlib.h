@@ -24,6 +24,8 @@ void __noreturn __exit(int status);
 # define EXIT_CONOUT 0
 #endif
 
+#define wgetenv _wgetenv
+
 int setenv(const char *name, const char *value, int overwrite);
 
 #endif /* _WIN32 */
