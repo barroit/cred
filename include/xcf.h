@@ -28,6 +28,7 @@
 #define __39_stat_mb      stat
 #define __39_getenv_mb    getenv
 #define __39_setenv_mb    setenv
+#define __39_freopen_mb   freopen
 
 #define __39_mbslen_wc    wcslen
 #define __39_strchrnul_wc __strchrnul
@@ -46,6 +47,7 @@
 #define __39_stat_wc      wstat
 #define __39_getenv_wc    wgetenv
 #define __39_setenv_wc    wsetenv
+#define __39_freopen_wc   _wfreopen
 
 #ifndef CONFIG_ENABLE_WCHAR
 # define __xchar_type _mb
@@ -79,5 +81,6 @@
 #define xc_stat      __XCHAR_ALIAS(__39_stat)
 #define xc_getenv    __XCHAR_ALIAS(__39_getenv)
 #define xc_setenv    __XCHAR_ALIAS(__39_setenv)
+#define xc_freopen   __XCHAR_ALIAS(__39_freopen)
 
 #endif /* NG39_XCF_H */
