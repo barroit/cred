@@ -3,10 +3,13 @@
  * Copyright 2025 Jiamu Sun <barroit@linux.com>
  */
 
-#ifndef NG39_STDLIB_H
-#define NG39_STDLIB_H
 #include_next <stdlib.h>
+
 #ifndef NG39_NO_STD_HDR_PATCH
+#ifndef NG39_STDLIB_PATCH_H
+#define NG39_STDLIB_PATCH_H
+
+#ifdef _WIN32
 
 #include "attr.h"
 
@@ -21,9 +24,9 @@ void __noreturn __exit(int status);
 # define EXIT_CONOUT 0
 #endif
 
-#ifdef _WIN32
 int setenv(const char *name, const char *value, int overwrite);
-#endif
 
+#endif /* _WIN32 */
+
+#endif /* NG39_STDLIB_PATCH_H */
 #endif /* NG39_NO_STD_HDR_PATCH */
-#endif /* NG39_STDLIB_H */
