@@ -27,6 +27,7 @@
 #define __39_mbsws_mb     mbsws
 #define __39_stat_mb      stat
 #define __39_getenv_mb    getenv
+#define __39_setenv_mb    setenv
 
 #define __39_mbslen_wc    wcslen
 #define __39_strchrnul_wc __strchrnul
@@ -44,6 +45,7 @@
 #define __39_mbsws_wc     wcsws
 #define __39_stat_wc      wstat
 #define __39_getenv_wc    wgetenv
+#define __39_setenv_wc    wsetenv
 
 #ifndef CONFIG_ENABLE_WCHAR
 # define __xchar_type _mb
@@ -76,5 +78,6 @@
 #define xc_mbsws     __XCHAR_ALIAS(__39_mbsws)
 #define xc_stat      __XCHAR_ALIAS(__39_stat)
 #define xc_getenv    __XCHAR_ALIAS(__39_getenv)
+#define xc_setenv    __XCHAR_ALIAS(__39_setenv)
 
 #endif /* NG39_XCF_H */

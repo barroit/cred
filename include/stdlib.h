@@ -27,6 +27,7 @@ void __noreturn __exit(int status);
 #define wgetenv _wgetenv
 
 int setenv(const char *name, const char *value, int overwrite);
+int wsetenv(const wchar_t *name, const wchar_t *value, int overwrite);
 
 #endif /* _WIN32 */
 

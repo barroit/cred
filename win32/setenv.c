@@ -46,3 +46,39 @@ int setenv(const char *name, const char *value, int overwrite)
 	return 0;
 }
 
+int wsetenv(const wchar_t *name, const wchar_t *value, int overwrite)
+{
+	if (!name || *name == 0 || wcschr(name, L'=')) {
+		errno = EINVAL;
+		return -1;
+	}
+
+	if (!overwrite && wgetenv(name))
+		return 0;
+
+	size_t nl = wcslen(name);
+	size_t vl = wcslen(value);
+	size_t len = nl + 1 + vl;
+	size_t size = (len + 1) * sizeof(wchar_t);
+
+	wchar_t *str = malloc(size);
+
+	if (!str) {
+		errno = ENOMEM;
+		return -1;
+	}
+
+	memcpy(str, name, nl * sizeof(wchar_t));
+	str[nl] = L'=';
+	memcpy(&str[nl + 1], value, vl * sizeof(wchar_t));
+	str[len] = 0;
+
+	int err = _wputenv(str);
+
+	if (err) {
+		free(str);
+		return -1;
+	}
+
+	return 0;
+}
