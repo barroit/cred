@@ -13,7 +13,7 @@
 
 #include "attr.h"
 
-void __exit_show_step(void);
+void __exit_show_confirm(void);
 
 void __noreturn __exit(int status);
 

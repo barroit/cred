@@ -16,5 +16,5 @@
 
 INIT_ROUTINE(death_cb)
 {
-	__sanitizer_set_death_callback(__exit_show_step);
+	__sanitizer_set_death_callback(__exit_show_confirm);
 }

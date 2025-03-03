@@ -54,7 +54,7 @@ static int is_testing(void)
 	return in_test;
 }
 
-void __exit_show_step(void)
+void __exit_show_confirm(void)
 {
 	if (is_testing())
 		return;
@@ -67,7 +67,7 @@ void __exit(int status)
 {
 	if (!udef_no_console && status) {
 		console_show();
-		__exit_show_step();
+		__exit_show_confirm();
 	}
 
 	if (status == EXIT_CONOUT)
