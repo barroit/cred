@@ -100,8 +100,6 @@ extern char *strerror(int errnum);
 
 const char *strwinerr(void);
 
-int winerrno(void);
-
 #define warn_winerr(fmt, ...) __tm_warn(strwinerr(), 0, fmt, ##__VA_ARGS__)
 
 #define error_winerr(fmt, ...) __tm_error(strwinerr(), 0, fmt, ##__VA_ARGS__)

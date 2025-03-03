@@ -171,21 +171,27 @@ void sb_trim(struct strbuf *sb)
 	sb->buf[sb->len] = 0;
 }
 
+static inline int is_tail_sep(const xchar *sep, const xchar *base)
+{
+	return sep && sep != base && sep[1] == 0;
+}
+
 static void sanitize_pth_sep(struct strbuf *sb)
 {
-	const xchar *usep = xc_strrchr(sb->buf, PTH_SEP_UNI);
+	const xchar *base = sb->buf;
+	const xchar *usep = xc_strrchr(base, PTH_SEP_UNI);
 	const xchar *wsep = xc_strrchr(sb->buf, PTH_SEP_WIN);
 
 	int mixed = usep && wsep;
-	int suffixed = (usep && usep[1] == 0) || (wsep && wsep[1] == 0);
+	int suffixed = is_tail_sep(usep, base) && is_tail_sep(wsep, base);
 
 	if (likely(!mixed && !suffixed))
 		return;
 
-	char *path = (typeof(path))sb->buf;
+	char *path = (char *)base;
 
 	if (IS_ENABLED(CONFIG_ENABLE_WCHAR)) {
-		size_t len = mb_wcstombs(&path, (wchar_t *)sb->buf);
+		size_t len = mb_wcstombs(&path, (wchar_t *)base);
 
 		if (len == maxof(len)) {
 			__tm_warn(NULL, MAS_SHOW_FUNC,

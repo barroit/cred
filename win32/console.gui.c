@@ -12,10 +12,7 @@
 #include "gettext.h"
 #include "termas.h"
 #include "xc.h"
-
-#ifdef CONFIG_ENABLE_WCHAR
-# define freopen _wfreopen
-#endif
+#include "xcf.h"
 
 static HWND conwin;
 static HANDLE conout;
@@ -66,13 +63,13 @@ void console_attach(void)
 	err = !AllocConsole();
 	BUG_ON(err);
 
-	stream = freopen(XC("CONIN$"), XC("r"), stdin);
+	stream = xc_freopen(XC("CONIN$"), XC("r"), stdin);
 	BUG_ON(!stream);
 
-	stream = freopen(XC("CONOUT$"), XC("w"), stdout);
+	stream = xc_freopen(XC("CONOUT$"), XC("w"), stdout);
 	BUG_ON(!stream);
 
-	stream = freopen(XC("CONOUT$"), XC("w"), stderr);
+	stream = xc_freopen(XC("CONOUT$"), XC("w"), stderr);
 	BUG_ON(!stream);
 
 	conout = CreateFile(XC("CONOUT$"), GENERIC_READ | GENERIC_WRITE, 0,
