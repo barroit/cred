@@ -300,6 +300,9 @@ static __maybe_unused void sl_read_line_mb(struct strlist *sl,
 			next = next_word_mb(prev);
 		}
 
+		while (isspace(*next))
+			next++;
+
 		size_t n = next - str;
 
 		memcpy(buf, str, n);
@@ -383,6 +386,9 @@ static __maybe_unused void sl_read_line_wc(struct strlist *sl,
 			prev = rewind_word_wc(prev, str, WORD_AVG_LEN);
 			next = next_word_wc(prev);
 		}
+
+		while (!iswcsp(*next) && iswspace(*next))
+			next++;
 
 		size_t n = next - str;
 
