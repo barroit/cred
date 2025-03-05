@@ -72,7 +72,8 @@ static void show_opt_usage(FILE *stream, struct opt *opts)
 	opt_for_each(opt, opts) {
 		switch (opt->mode) {
 		case OPTION__GROUP:
-			putc('\n', stream);
+			if (opt != opts)
+				putc('\n', stream);
 			fputs(opt->__lnam, stream);
 			putc('\n', stream);
 		case OPTION__COMMAND:
