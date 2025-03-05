@@ -64,7 +64,7 @@ next:
 
 static void show_opt_usage(FILE *stream, struct opt *opts)
 {
-	int cnt = 0;
+	uint lines = 0;
 	struct opt *opt;
 
 	STRLIST(sl, SL__STORE_CHR);
@@ -124,11 +124,11 @@ static void show_opt_usage(FILE *stream, struct opt *opts)
 			free(str);
 		}
 
-		cnt++;
+		lines++;
 	}
 
 	sl_destroy(&sl);
-	if (cnt)
+	if (lines)
 		putc('\n', stream);
 }
 
