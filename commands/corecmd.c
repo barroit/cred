@@ -11,8 +11,9 @@
 #include "udef.h"
 
 static const char *usage[] = {
-	PROGRAM_NAME " [--termas <dest> | --no-termas] [--no-tercol]"
-		     " [--show-ts] [--show-pid] <command> [<args>]",
+	PROGRAM_NAME " [--termas=<path> | --no-termas] [--no-tercol]"
+		     " [--show-ts] [--show-pid] [--cred=<path>]"
+		     " <command> [<args>]",
 	NULL,
 N_(
 "These are common " PROGRAM_NAME " commands:"
@@ -30,14 +31,19 @@ N_(
 static cmd_cb subcmd;
 
 static struct opt opts[] = {
-	__OPT_STRING(0, "termas", &udef_termas_dest,
-		     N_("specify output destination"), 0),
+	OPT_GROUP("Format options:"),
 	OPT_SWITCH(0, "tercol", &udef_use_tercol,
 		   N_("enable colorized terminal output")),
 	__OPT_SWITCH(0, "show-ts", &udef_termas_ts,
 		     N_("prefix messages with timestamp"), OPT_NO_NEG),
 	__OPT_SWITCH(0, "show-pid", &udef_termas_pid,
 		     N_("prefix messages with current PID"), OPT_NO_NEG),
+
+	OPT_GROUP("Crucial file options:"),
+	__OPT_FILENAME(0, "termas", &udef_termas_dest,
+		       N_("specify output destination"), 0),
+	OPT_FILENAME(0, "cred", &udef_cred, N_("specify cred file")),
+
 	OPT_COMMAND("version", &subcmd, cmd_version),
 	OPT_END(),
 };
