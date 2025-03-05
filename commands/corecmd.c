@@ -13,7 +13,7 @@
 static const char *usage[] = {
 	PROGRAM_NAME " [--termas=<path> | --no-termas] [--no-tercol]"
 		     " [--show-ts] [--show-pid] [--cred=<path>]"
-		     " <command> [<args>]",
+		     " [--key=<path>] <command> [<args>]",
 	NULL,
 N_(
 "These are common " PROGRAM_NAME " commands:"
@@ -43,6 +43,7 @@ static struct opt opts[] = {
 	__OPT_FILENAME(0, "termas", &udef_termas_dest,
 		       N_("specify output destination"), 0),
 	OPT_FILENAME(0, "cred", &udef_cred, N_("specify cred file")),
+	OPT_FILENAME(0, "key", &udef_key, N_("specify key file")),
 
 	OPT_COMMAND("version", &subcmd, cmd_version),
 	OPT_END(),

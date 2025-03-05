@@ -22,6 +22,8 @@ extern int udef_termas_pid;	/* prefix message with process id */
 
 extern const xchar *udef_cred;	/* cred file path */
 
+extern const xchar *udef_key;	/* key file path */
+
 #ifdef CONFIG_ENABLE_GUI
 extern int udef_no_console;	/* do not allocate console */
 #endif
