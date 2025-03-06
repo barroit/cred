@@ -201,7 +201,7 @@ static int parse_command(struct param *ctx, const xchar *cmd)
 		return PARSE_CMD;
 	}
 
-	if (ctx->flags & PRM_KEEP_UNKNOWN)
+	if (ctx->flags & PRM_STOP_AT_UNKNOWN)
 		return PARSE_DONE;
 
 	char *name = pretty_arg_name(cmd, "����");
@@ -312,7 +312,7 @@ static int parse_shrt_opt(struct param *ctx, const xchar **__args)
 		return 0;
 	}
 
-	if (ctx->flags & PRM_KEEP_UNKNOWN)
+	if (ctx->flags & PRM_STOP_AT_UNKNOWN)
 		return PARSE_DONE;
 
 	die(_("unknown option -%c"), (char)snam);
@@ -429,7 +429,7 @@ static int parse_long_opt(struct param *ctx, const xchar *arg)
 		BUG_ON(err);
 		return 0;
 	} else {
-		if (ctx->flags & PRM_KEEP_UNKNOWN)
+		if (ctx->flags & PRM_STOP_AT_UNKNOWN)
 			return PARSE_DONE;
 
 		char *nam = pretty_arg_name(arg, "���");
@@ -520,7 +520,7 @@ int param_parse(int argc, const xchar **argv,
 		const char **usage, struct opt *opts, u32 flags, ...)
 {
 	if (flags & PRM_OPT_CMD)
-		flags |= PRM_KEEP_UNKNOWN;
+		flags |= PRM_STOP_AT_UNKNOWN;
 
 	if (has_command(opts))
 		flags |= PRM_PARSE_CMD;

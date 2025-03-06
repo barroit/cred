@@ -72,16 +72,16 @@ struct opt {
  * PRM_KEEP_ARG0
  *	Keep the first argument.
  *
- * PRM_KEEP_UNKNOWN
- *	Keep unknown options.
+ * PRM_STOP_AT_UNKNOWN
+ *	Stop parsing on encountering an unknown option.
  */
-#define PRM_STOP_AT_ARG  (1 << 0)
-#define PRM_PARSE_CMD    (1 << 1)
-#define PRM_NO_DEF_HELP  (1 << 2)
-#define PRM_OPT_CMD      (1 << 3)
-#define PRM_NO_ARG       (1 << 4)
-#define PRM_KEEP_ARG0    (1 << 5)
-#define PRM_KEEP_UNKNOWN (1 << 6)
+#define PRM_STOP_AT_ARG     (1 << 0)
+#define PRM_PARSE_CMD       (1 << 1)
+#define PRM_NO_DEF_HELP     (1 << 2)
+#define PRM_OPT_CMD         (1 << 3)
+#define PRM_NO_ARG          (1 << 4)
+#define PRM_KEEP_ARG0       (1 << 5)
+#define PRM_STOP_AT_UNKNOWN (1 << 6)
 
 /*
  * Flags that use ex[]:
