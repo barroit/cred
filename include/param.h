@@ -120,7 +120,7 @@ void __noreturn param_show_help(const char **usage,
 	.lnam   = __opt_lnam(l),	\
 	.__lnam = l,			\
 	.ptr    = __opt_ptr(p, u32),	\
-	.val    = v,			\
+	.val    = (intptr_t)v,		\
 	.usage  = h,			\
 	.flags  = OPT_NO_ARG | (f),	\
 }
@@ -157,7 +157,7 @@ void __noreturn param_show_help(const char **usage,
 	.lnam   = __opt_lnam(l),		\
 	.__lnam = l,				\
 	.ptr    = __opt_ptr(p, const xchar *),	\
-	.val    = v,				\
+	.val    = (intptr_t)v,			\
 	.argh   = a,				\
 	.usage  = h,				\
 	.flags  = f,				\
@@ -171,7 +171,7 @@ void __noreturn param_show_help(const char **usage,
 	.mode   = OPTION__COMMAND,			\
 	.lnam   = __opt_lnam(l),			\
 	.__lnam = l,					\
-	.ptr    = __opt_ptr(p, cmd_cb),	\
+	.ptr    = __opt_ptr(p, cmd_cb),			\
 	.cmd    = c,					\
 	.flags  = f,					\
 }
@@ -183,7 +183,7 @@ void __noreturn param_show_help(const char **usage,
 	.lnam   = __opt_lnam(l),		\
 	.__lnam = l,				\
 	.ptr    = p,				\
-	.val    = v,				\
+	.val    = (intptr_t)v,			\
 	.usage  = h,				\
 	.flags  = OPT_NO_ARG | (f),		\
 }
