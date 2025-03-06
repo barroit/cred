@@ -122,9 +122,10 @@ const xchar *cmdpath(void)
 
 	list_for_each_entry(cn, &cnames, list) {
 		sb_puts(&sb, cn->name);
-		sb_putc(&sb, ' ');
+		sb_putc(&sb, XC(' '));
 	}
 
+	sb_trunc(&sb, 1);
 	return sb.buf;
 }
 
