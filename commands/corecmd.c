@@ -34,7 +34,7 @@ static struct opt opts[] = {
 
 int cmd_main(int argc, const xchar **argv)
 {
-	argc = param_parse(argc, argv, usage, opts, PRM_PAR_CMD);
+	argc = param_parse(argc, argv, usage, opts, PRM_PARSE_CMD);
 
 	if (udef_termas_dest != UDEF_DEF_PTR) {
 		const xchar *out = udef_termas_dest ? : XC(CONFIG_NULL_DEVICE);

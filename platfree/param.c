@@ -444,9 +444,9 @@ static int parse_cmd_arg(struct param *ctx)
 	const xchar *str = ctx->argv[0];
 
 	if (str[0] != '-') {
-		if (ctx->flags & PRM_RET_ARG)
+		if (ctx->flags & PRM_STOP_AT_ARG)
 			return PARSE_DONE;
-		else if (ctx->flags & PRM_PAR_CMD)
+		else if (ctx->flags & PRM_PARSE_CMD)
 			return parse_command(ctx, str);
 		else if (ctx->flags & PRM_NO_ARG)
 			die(_("'%s' takes no arguments, but got `%s'"),
@@ -457,7 +457,7 @@ static int parse_cmd_arg(struct param *ctx)
 	} else if (str[1] != '-') {
 		str += 1;
 
-		if (!(ctx->flags & PRM_NO_HELP) &&
+		if (!(ctx->flags & PRM_NO_DEF_HELP) &&
 		    str[0] == 'h' && str[1] == 0)
 			param_show_help(ctx->usage, ctx->opts, 0);
 		else if (str[0] == 0)
@@ -475,7 +475,7 @@ static int parse_cmd_arg(struct param *ctx)
 			return PARSE_DONE;
 		}
 
-		if (!(ctx->flags & PRM_NO_HELP) &&
+		if (!(ctx->flags & PRM_NO_DEF_HELP) &&
 		    xc_strcmp(str, XC("help")) == 0)
 			param_show_help(ctx->usage, ctx->opts, 0);
 
@@ -526,8 +526,8 @@ int param_parse(int argc, const xchar **argv,
 		flags |= PRM_KEEP_UNKNOWN;
 
 	if (has_command(opts)) {
-		BUG_ON(flags & PRM_RET_ARG);
-		flags |= PRM_PAR_CMD;
+		BUG_ON(flags & PRM_STOP_AT_ARG);
+		flags |= PRM_PARSE_CMD;
 	}
 
 	if (flags & PRM_EX_MASK) {
@@ -590,7 +590,7 @@ out:
 
 	int ret = ctx.outc + ctx.argc;
 
-	if (flags & PRM_PAR_CMD && !(flags & PRM_OPT_CMD) && ret == 0) {
+	if (flags & PRM_PARSE_CMD && !(flags & PRM_OPT_CMD) && ret == 0) {
 		int err = argc - 1;
 
 		if (err)

@@ -54,13 +54,13 @@ struct opt {
 /*
  * Flags that do not use ex[]:
  * +++++++++++
- * PRM_RET_ARG
+ * PRM_STOP_AT_ARG
  *	Stop parsing on encountering a non-option argument.
  *
- * PRM_PAR_CMD
+ * PRM_PARSE_CMD
  *	Stop parsing on encountering a command.
  *
- * PRM_NO_HELP
+ * PRM_NO_DEF_HELP
  *	Disable built-in help (-h and --help).
  *
  * PRM_OPT_CMD
@@ -75,9 +75,9 @@ struct opt {
  * PRM_KEEP_UNKNOWN
  *	Keep unknown options.
  */
-#define PRM_RET_ARG      (1 << 0)
-#define PRM_PAR_CMD      (1 << 1)
-#define PRM_NO_HELP      (1 << 2)
+#define PRM_STOP_AT_ARG  (1 << 0)
+#define PRM_PARSE_CMD    (1 << 1)
+#define PRM_NO_DEF_HELP  (1 << 2)
 #define PRM_OPT_CMD      (1 << 3)
 #define PRM_NO_ARG       (1 << 4)
 #define PRM_KEEP_ARG0    (1 << 5)
