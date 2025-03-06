@@ -24,8 +24,6 @@ extern const xchar *udef_cred;	/* cred file path */
 
 extern const xchar *udef_key;	/* key file path */
 
-#ifdef CONFIG_ENABLE_GUI
 extern int udef_no_console;	/* do not allocate console */
-#endif
 
 #endif /* NG39_UDEF_H */

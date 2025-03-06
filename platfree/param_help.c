@@ -64,7 +64,7 @@ next:
 
 static void show_opt_usage(FILE *stream, struct opt *opts)
 {
-	int cnt = 0;
+	uint lines = 0;
 	struct opt *opt;
 
 	STRLIST(sl, SL__STORE_CHR);
@@ -72,7 +72,8 @@ static void show_opt_usage(FILE *stream, struct opt *opts)
 	opt_for_each(opt, opts) {
 		switch (opt->mode) {
 		case OPTION__GROUP:
-			putc('\n', stream);
+			if (opt != opts)
+				putc('\n', stream);
 			fputs(opt->__lnam, stream);
 			putc('\n', stream);
 		case OPTION__COMMAND:
@@ -124,18 +125,16 @@ static void show_opt_usage(FILE *stream, struct opt *opts)
 			free(str);
 		}
 
-		cnt++;
+		lines++;
 	}
 
 	sl_destroy(&sl);
-	if (cnt)
+	if (lines)
 		putc('\n', stream);
 }
 
 static void show_cmd_ext_usage(FILE *stream, const char **usage)
 {
-	while (*usage++);
-
 	uint lines = 0;
 
 	while (*usage) {
@@ -159,6 +158,7 @@ void param_show_help(const char **usage, struct opt *opts, int is_err)
 
 	show_opt_usage(stream, opts);
 
+	while (*usage++);
 	show_cmd_ext_usage(stream, usage);
 
 	exit(EXIT_CONOUT);

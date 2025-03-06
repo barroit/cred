@@ -19,20 +19,21 @@
 #include "xalloc.h"
 #include "xcf.h"
 
-/*
- * Windows SDK sucks!
- */
-#ifdef __argc
-# undef __argc
-#endif
+#define PARSE_DONE 39
+#define PARSE_CMD  -39
 
 #define OPT_SHORT_OPT (1 << 0)
 #define OPT_LONG_OPT  (1 << 1)
-#define OPT_UNSET (1 << 2)
+#define OPT_UNSET     (1 << 2)
 
 #define __setopt(name) opt_set_ ## name
 
 #define NO_NO_ARG (-1U << 31)
+
+struct cname {
+	const xchar *name;
+	struct list_head list;
+};
 
 struct param {
 	int argc;
@@ -79,9 +80,6 @@ static intptr_t __ex_get(u32 flag)
 }
 #define ex_get(flag, type) ((type)__ex_get(flag))
 
-static struct strbuf __cmdpath = SB_INIT;
-static char *cmdpath;
-
 static int has_command(struct opt *opts)
 {
 	struct opt *opt;
@@ -94,21 +92,53 @@ static int has_command(struct opt *opts)
 	return 0;
 }
 
-static void cmdpath_append(const xchar *name)
+static LIST_HEAD(cnames);
+
+static int cmdpath_is_prev(const xchar *name)
 {
-	if (__cmdpath.len)
-		sb_putc(&__cmdpath, XC(' '));
-	else
-		name = XC(PROGRAM_NAME);
+	if (list_is_empty(&cnames))
+		return 0;
 
-	sb_puts(&__cmdpath, name);
+	struct cname *cn = list_last_entry(&cnames, typeof(*cn), list);
 
-	if (IS_ENABLED(CONFIG_ENABLE_WCHAR)) {
-		if (cmdpath)
-			free(cmdpath);
-		cmdpath = sb_mb_str_fb(&__cmdpath, "����");
-	} else {
-		cmdpath = (char *)__cmdpath.buf;
+	return cn->name == name;
+}
+
+static void cmdpath_add(const xchar *name)
+{
+	struct cname *cn = xmalloc(sizeof(*cn));
+
+	cn->name = name;
+	list_add_tail(&cn->list, &cnames);
+}
+
+const xchar *cmdpath(void)
+{
+	static struct strbuf sb = SB_INIT;
+	struct cname *cn;
+
+	if (sb.len)
+		sb_trunc(&sb, sb.len);
+
+	list_for_each_entry(cn, &cnames, list) {
+		sb_puts(&sb, cn->name);
+		sb_putc(&sb, ' ');
+	}
+
+	return sb.buf;
+}
+
+void __cmdpath_reset(void)
+{
+	if (list_is_empty(&cnames))
+		return;
+
+	struct cname *cn;
+	struct cname *tmp;
+
+	list_for_each_entry_safe(cn, tmp, &cnames, list) {
+		list_del(&cn->list);
+		free(cn);
 	}
 }
 
@@ -170,11 +200,11 @@ static void cmdmode_record(struct list_head *mode,
 	cm->flags = flags;
 }
 
-static int parse_command(struct opt *opts, const xchar *cmd)
+static int parse_command(struct param *ctx, const xchar *cmd)
 {
 	struct opt *opt;
 
-	opt_for_each(opt, opts) {
+	opt_for_each(opt, ctx->opts) {
 		if (opt->mode != OPTION__COMMAND)
 			continue;
 
@@ -182,12 +212,15 @@ static int parse_command(struct opt *opts, const xchar *cmd)
 			continue;
 
 		*(cmd_cb *)opt->ptr = opt->cmd;
-		return 39;
+		return PARSE_CMD;
 	}
+
+	if (ctx->flags & PRM_STOP_AT_UNKNOWN)
+		return PARSE_DONE;
 
 	char *name = pretty_arg_name(cmd, "����");
 
-	die(_("unknown command `%s', see '%s -h'"), name, cmdpath);
+	die(_("unknown command `%s', see '%s -h'"), name, cmdpath());
 }
 
 static void __setopt(bit)(struct opt *opt, const xchar *arg, u32 flags)
@@ -262,10 +295,11 @@ static void set_opt_val(struct param *ctx,
 		cmdmode_record(&ctx->mode, opt, flags);
 }
 
-static const xchar *parse_shrt_opt(struct param *ctx, const xchar *args)
+static int parse_shrt_opt(struct param *ctx, const xchar **__args)
 {
 	struct opt *opt;
 	const xchar *arg = NULL;
+	const xchar *args = *__args;
 
 	xchar snam = args[0];
 	const xchar *ret = &args[1];
@@ -288,8 +322,12 @@ static const xchar *parse_shrt_opt(struct param *ctx, const xchar *args)
 		}
 
 		set_opt_val(ctx, opt, arg, OPT_SHORT_OPT);
-		return ret;
+		*__args = ret;
+		return 0;
 	}
+
+	if (ctx->flags & PRM_STOP_AT_UNKNOWN)
+		return PARSE_DONE;
 
 	die(_("unknown option -%c"), (char)snam);
 }
@@ -333,7 +371,7 @@ static int __parse_long_opt(struct param *ctx, struct opt *opt,
 	return 0;
 }
 
-static void parse_long_opt(struct param *ctx, const xchar *arg)
+static int parse_long_opt(struct param *ctx, const xchar *arg)
 {
 	int err;
 	struct opt *opt;
@@ -378,7 +416,7 @@ static void parse_long_opt(struct param *ctx, const xchar *arg)
 			err = __parse_long_opt(ctx, opt, rest, aflg, oflg);
 			if (err)
 				continue;
-			return;
+			return 0;
 		}
 
 		if (xc_strncmp(onam, anam, asep - anam) == 0)
@@ -403,7 +441,11 @@ static void parse_long_opt(struct param *ctx, const xchar *arg)
 		err = __parse_long_opt(ctx, abbrev.opt,
 				       arg, aflg, abbrev.flags);
 		BUG_ON(err);
+		return 0;
 	} else {
+		if (ctx->flags & PRM_STOP_AT_UNKNOWN)
+			return PARSE_DONE;
+
 		char *nam = pretty_arg_name(arg, "���");
 
 		die(_("unknown option --%s"), nam);
@@ -412,30 +454,31 @@ static void parse_long_opt(struct param *ctx, const xchar *arg)
 
 static int parse_cmd_arg(struct param *ctx)
 {
+	int ret = 0;
 	const xchar *str = ctx->argv[0];
 
 	if (str[0] != '-') {
-		if (ctx->flags & PRM_RET_ARG)
-			return 39;
-		else if (ctx->flags & PRM_PAR_CMD)
-			return parse_command(ctx->opts, str);
+		if (ctx->flags & PRM_STOP_AT_ARG)
+			return PARSE_DONE;
+		else if (ctx->flags & PRM_PARSE_CMD)
+			return parse_command(ctx, str);
 		else if (ctx->flags & PRM_NO_ARG)
 			die(_("'%s' takes no arguments, but got `%s'"),
-			    cmdpath, str);
+			    cmdpath(), str);
 
 		ctx->outv[ctx->outc] = str;
 		ctx->outc += 1;
 	} else if (str[1] != '-') {
 		str += 1;
 
-		if (!(ctx->flags & PRM_NO_HELP) &&
+		if (!(ctx->flags & PRM_NO_DEF_HELP) &&
 		    str[0] == 'h' && str[1] == 0)
 			param_show_help(ctx->usage, ctx->opts, 0);
 		else if (str[0] == 0)
 			die(_("unknown option -"));
 
-		while (*str)
-			str = parse_shrt_opt(ctx, str);
+		while (*str && ret == 0)
+			ret = parse_shrt_opt(ctx, &str);
 	} else {
 		str += 2;
 
@@ -443,17 +486,17 @@ static int parse_cmd_arg(struct param *ctx)
 		if (str[0] == 0) {
 			ctx->argc--;
 			ctx->argv++;
-			return 39;
+			return PARSE_DONE;
 		}
 
-		if (!(ctx->flags & PRM_NO_HELP) &&
+		if (!(ctx->flags & PRM_NO_DEF_HELP) &&
 		    xc_strcmp(str, XC("help")) == 0)
 			param_show_help(ctx->usage, ctx->opts, 0);
 
-		parse_long_opt(ctx, str);
+		ret = parse_long_opt(ctx, str);
 	}
 
-	return 0;
+	return ret;
 }
 
 static void err_huge_arg(int argc, const xchar **argv)
@@ -469,19 +512,36 @@ static void err_huge_arg(int argc, const xchar **argv)
 	if (argc == 1)
 		fmt = N_("'%s' takes no extra argument:\n%s\n");
 
-	error(_(fmt), cmdpath, sb.buf);
+	error(_(fmt), cmdpath(), sb.buf);
 	noleak(sb);
+}
+
+static const xchar *def_cmd_name(struct opt *opts)
+{
+	struct opt *opt;
+
+	opt_for_each(opt, opts) {
+		if (opt->mode != OPTION__COMMAND)
+			continue;
+		if (*(cmd_cb *)opt->ptr == opt->cmd)
+			return opt->lnam;
+	}
+
+	trap();
 }
 
 int param_parse(int argc, const xchar **argv,
 		const char **usage, struct opt *opts, u32 flags, ...)
 {
-	int __argc = argc - 1;
+	if (flags & PRM_OPT_CMD)
+		flags |= PRM_STOP_AT_UNKNOWN;
 
-	if (has_command(opts)) {
-		BUG_ON(flags & PRM_RET_ARG);
-		flags |= PRM_PAR_CMD;
-	}
+	if (has_command(opts))
+		flags |= PRM_PARSE_CMD;
+
+	BUG_ON(argc < 1);
+	BUG_ON(flags & PRM_PARSE_CMD && flags & PRM_STOP_AT_ARG);
+	BUG_ON(flags & PRM_OPT_CMD && flags & PRM_KEEP_ARG0);
 
 	if (flags & PRM_EX_MASK) {
 		va_list ap;
@@ -491,8 +551,11 @@ int param_parse(int argc, const xchar **argv,
 		va_end(ap);
 	}
 
+	if (!cmdpath_is_prev(argv[0]))
+		cmdpath_add(argv[0]);
+
 	struct param ctx = {
-		.argc  = __argc,
+		.argc  = argc - 1,
 		.argv  = argv + 1,
 
 		.outc  = 0,
@@ -505,27 +568,47 @@ int param_parse(int argc, const xchar **argv,
 
 		.mode  = LIST_HEAD_INIT(ctx.mode),
 	};
+	int argv_has_cmd = 0;
 
-	cmdpath_append(argv[0]);
+	if (flags & PRM_KEEP_ARG0)
+		ctx.outc = 1;
 
 	while (ctx.argc) {
 		int ret = parse_cmd_arg(&ctx);
 
-		if (unlikely(ret == 39))
-			break;
+		switch (ret) {
+		case PARSE_CMD:
+			argv_has_cmd = 1;
+		case PARSE_DONE:
+			goto out;
+		}
 
 		ctx.argc--;
 		ctx.argv++;
 	}
 
+out:
 	if (!list_is_empty(&ctx.mode))
 		cmdmode_destroy(&ctx.mode);
+
+	if (flags & PRM_OPT_CMD && !argv_has_cmd) {
+		ctx.outv[0] = def_cmd_name(opts);
+		ctx.outc += 1;
+	}
+
+	int ret = ctx.outc + ctx.argc;
+
+	if (flags & PRM_PARSE_CMD && !(flags & PRM_OPT_CMD) && ret == 0) {
+		int err = argc - 1;
+
+		if (err)
+			error(_("'%s' requires a subcommand\n"), cmdpath());
+		param_show_help(ctx.usage, ctx.opts, err);
+	}
 
 	if (ctx.argc)
 		memmove(&ctx.outv[ctx.outc],
 			ctx.argv, ctx.argc * sizeof(*ctx.argv));
-
-	int ret = ctx.outc + ctx.argc;
 
 	if (ctx.flags & PRM_LIM_ARG) {
 		uint limit = ex_get(PRM_LIM_ARG, uint);
@@ -536,18 +619,6 @@ int param_parse(int argc, const xchar **argv,
 		}
 	}
 
-	if (flags & PRM_PAR_CMD && ret == 0) {
-		int err = 1;
-
-		if (!(flags & PRM_OPT_CMD) && __argc)
-			error(_("'%s' requires a subcommand\n"), cmdpath);
-		else
-			err = 0;
-
-		param_show_help(ctx.usage, ctx.opts, err);
-	}
-
-	argc = ctx.outc + ctx.argc;
-	ctx.outv[argc] = 0;
-	return argc;
+	ctx.outv[ret] = NULL;
+	return ret;
 }
