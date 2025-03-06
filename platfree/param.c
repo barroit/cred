@@ -30,6 +30,11 @@
 
 #define NO_NO_ARG (-1U << 31)
 
+struct cname {
+	const xchar *name;
+	struct list_head list;
+};
+
 struct param {
 	int argc;
 	const xchar **argv;
@@ -75,9 +80,6 @@ static intptr_t __ex_get(u32 flag)
 }
 #define ex_get(flag, type) ((type)__ex_get(flag))
 
-static struct strbuf __cmdpath = SB_INIT;
-static char *cmdpath;
-
 static int has_command(struct opt *opts)
 {
 	struct opt *opt;
@@ -90,22 +92,40 @@ static int has_command(struct opt *opts)
 	return 0;
 }
 
-static void cmdpath_append(const xchar *name)
+LIST_HEAD(cnames);
+
+static int cmdpath_is_prev(const xchar *name)
 {
-	if (__cmdpath.len)
-		sb_putc(&__cmdpath, XC(' '));
-	else
-		name = XC(PROGRAM_NAME);
+	if (list_is_empty(&cnames))
+		return 0;
 
-	sb_puts(&__cmdpath, name);
+	struct cname *cn = list_last_entry(&cnames, typeof(*cn), list);
 
-	if (IS_ENABLED(CONFIG_ENABLE_WCHAR)) {
-		if (cmdpath)
-			free(cmdpath);
-		cmdpath = sb_mb_str_fb(&__cmdpath, "����");
-	} else {
-		cmdpath = (char *)__cmdpath.buf;
+	return cn->name == name;
+}
+
+static void cmdpath_add(const xchar *name)
+{
+	struct cname *cn = xmalloc(sizeof(*cn));
+
+	cn->name = name;
+	list_add_tail(&cn->list, &cnames);
+}
+
+static const xchar *cmdpath(void)
+{
+	static struct strbuf sb = SB_INIT;
+	struct cname *cn;
+
+	if (sb.len)
+		sb_trunc(&sb, sb.len);
+
+	list_for_each_entry(cn, &cnames, list) {
+		sb_puts(&sb, cn->name);
+		sb_putc(&sb, ' ');
 	}
+
+	return sb.buf;
 }
 
 static void cmdmode_destroy(struct list_head *mode)
@@ -183,7 +203,7 @@ static int parse_command(struct opt *opts, const xchar *cmd)
 
 	char *name = pretty_arg_name(cmd, "����");
 
-	die(_("unknown command `%s', see '%s -h'"), name, cmdpath);
+	die(_("unknown command `%s', see '%s -h'"), name, cmdpath());
 }
 
 static void __setopt(bit)(struct opt *opt, const xchar *arg, u32 flags)
@@ -417,7 +437,7 @@ static int parse_cmd_arg(struct param *ctx)
 			return parse_command(ctx->opts, str);
 		else if (ctx->flags & PRM_NO_ARG)
 			die(_("'%s' takes no arguments, but got `%s'"),
-			    cmdpath, str);
+			    cmdpath(), str);
 
 		ctx->outv[ctx->outc] = str;
 		ctx->outc += 1;
@@ -465,7 +485,7 @@ static void err_huge_arg(int argc, const xchar **argv)
 	if (argc == 1)
 		fmt = N_("'%s' takes no extra argument:\n%s\n");
 
-	error(_(fmt), cmdpath, sb.buf);
+	error(_(fmt), cmdpath(), sb.buf);
 	noleak(sb);
 }
 
@@ -486,6 +506,7 @@ static const xchar *def_cmd_name(struct opt *opts)
 int param_parse(int argc, const xchar **argv,
 		const char **usage, struct opt *opts, u32 flags, ...)
 {
+	BUG_ON(flags & PRM_OPT_CMD && flags & PRM_KEEP_ARG0);
 	BUG_ON(argc < 1);
 
 	if (has_command(opts)) {
@@ -501,14 +522,23 @@ int param_parse(int argc, const xchar **argv,
 		va_end(ap);
 	}
 
-	cmdpath_append(argv[0]);
+	if (!cmdpath_is_prev(argv[0]))
+		cmdpath_add(argv[0]);
+
+	int outc = 0;
+	const xchar **outv = argv;
+
+	if (flags & PRM_KEEP_ARG0) {
+		outc = 1;
+		outv += 1;
+	}
 
 	struct param ctx = {
 		.argc  = argc - 1,
 		.argv  = argv + 1,
 
-		.outc  = 0,
-		.outv  = argv,
+		.outc  = outc,
+		.outv  = outv,
 
 		.opts  = opts,
 		.usage = usage,
@@ -548,7 +578,7 @@ out:
 		int err = argc - 1;
 
 		if (err)
-			error(_("'%s' requires a subcommand\n"), cmdpath);
+			error(_("'%s' requires a subcommand\n"), cmdpath());
 		param_show_help(ctx.usage, ctx.opts, err);
 	}
 

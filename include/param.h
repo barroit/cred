@@ -68,12 +68,16 @@ struct opt {
  *
  * PRM_NO_ARG
  *	Abort on encountering an argument.
+ *
+ * PRM_KEEP_ARG0
+ *	Keep the first argument.
  */
-#define PRM_RET_ARG  (1 << 0)
-#define PRM_PAR_CMD  (1 << 1)
-#define PRM_NO_HELP  (1 << 2)
-#define PRM_OPT_CMD  (1 << 3)
-#define PRM_NO_ARG   (1 << 4)
+#define PRM_RET_ARG   (1 << 0)
+#define PRM_PAR_CMD   (1 << 1)
+#define PRM_NO_HELP   (1 << 2)
+#define PRM_OPT_CMD   (1 << 3)
+#define PRM_NO_ARG    (1 << 4)
+#define PRM_KEEP_ARG0 (1 << 5)
 
 /*
  * Flags that use ex[]:
