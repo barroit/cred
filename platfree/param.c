@@ -128,6 +128,20 @@ const xchar *cmdpath(void)
 	return sb.buf;
 }
 
+void __cmdpath_reset(void)
+{
+	if (list_is_empty(&cnames))
+		return;
+
+	struct cname *cn;
+	struct cname *tmp;
+
+	list_for_each_entry_safe(cn, tmp, &cnames, list) {
+		list_del(&cn->list);
+		free(cn);
+	}
+}
+
 static void cmdmode_destroy(struct list_head *mode)
 {
 	struct cmdmode *cm, *tmp;

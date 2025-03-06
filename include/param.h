@@ -98,6 +98,8 @@ struct opt {
 
 const xchar *cmdpath(void);
 
+void __cmdpath_reset(void);
+
 int param_parse(int argc, const xchar **argv,
 		const char **usage, struct opt *opts, u32 flags, ...);
 
