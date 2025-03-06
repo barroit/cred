@@ -112,7 +112,7 @@ static void cmdpath_add(const xchar *name)
 	list_add_tail(&cn->list, &cnames);
 }
 
-static const xchar *cmdpath(void)
+const xchar *cmdpath(void)
 {
 	static struct strbuf sb = SB_INIT;
 	struct cname *cn;
