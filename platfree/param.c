@@ -19,16 +19,12 @@
 #include "xalloc.h"
 #include "xcf.h"
 
-/*
- * Windows SDK sucks!
- */
-#ifdef __argc
-# undef __argc
-#endif
+#define PARSE_DONE 39
+#define PARSE_CMD  -39
 
 #define OPT_SHORT_OPT (1 << 0)
 #define OPT_LONG_OPT  (1 << 1)
-#define OPT_UNSET (1 << 2)
+#define OPT_UNSET     (1 << 2)
 
 #define __setopt(name) opt_set_ ## name
 
@@ -182,7 +178,7 @@ static int parse_command(struct opt *opts, const xchar *cmd)
 			continue;
 
 		*(cmd_cb *)opt->ptr = opt->cmd;
-		return 39;
+		return PARSE_CMD;
 	}
 
 	char *name = pretty_arg_name(cmd, "����");
@@ -416,7 +412,7 @@ static int parse_cmd_arg(struct param *ctx)
 
 	if (str[0] != '-') {
 		if (ctx->flags & PRM_RET_ARG)
-			return 39;
+			return PARSE_DONE;
 		else if (ctx->flags & PRM_PAR_CMD)
 			return parse_command(ctx->opts, str);
 		else if (ctx->flags & PRM_NO_ARG)
@@ -443,7 +439,7 @@ static int parse_cmd_arg(struct param *ctx)
 		if (str[0] == 0) {
 			ctx->argc--;
 			ctx->argv++;
-			return 39;
+			return PARSE_DONE;
 		}
 
 		if (!(ctx->flags & PRM_NO_HELP) &&
@@ -473,10 +469,24 @@ static void err_huge_arg(int argc, const xchar **argv)
 	noleak(sb);
 }
 
+static const xchar *def_cmd_name(struct opt *opts)
+{
+	struct opt *opt;
+
+	opt_for_each(opt, opts) {
+		if (opt->mode != OPTION__COMMAND)
+			continue;
+		if (*(cmd_cb *)opt->ptr == opt->cmd)
+			return opt->lnam;
+	}
+
+	trap();
+}
+
 int param_parse(int argc, const xchar **argv,
 		const char **usage, struct opt *opts, u32 flags, ...)
 {
-	int __argc = argc - 1;
+	BUG_ON(argc < 1);
 
 	if (has_command(opts)) {
 		BUG_ON(flags & PRM_RET_ARG);
@@ -491,8 +501,10 @@ int param_parse(int argc, const xchar **argv,
 		va_end(ap);
 	}
 
+	cmdpath_append(argv[0]);
+
 	struct param ctx = {
-		.argc  = __argc,
+		.argc  = argc - 1,
 		.argv  = argv + 1,
 
 		.outc  = 0,
@@ -505,27 +517,44 @@ int param_parse(int argc, const xchar **argv,
 
 		.mode  = LIST_HEAD_INIT(ctx.mode),
 	};
-
-	cmdpath_append(argv[0]);
+	int argv_has_cmd = 0;
 
 	while (ctx.argc) {
 		int ret = parse_cmd_arg(&ctx);
 
-		if (unlikely(ret == 39))
-			break;
+		switch (ret) {
+		case PARSE_CMD:
+			argv_has_cmd = 1;
+		case PARSE_DONE:
+			goto out;
+		}
 
 		ctx.argc--;
 		ctx.argv++;
 	}
 
+out:
 	if (!list_is_empty(&ctx.mode))
 		cmdmode_destroy(&ctx.mode);
+
+	if (flags & PRM_OPT_CMD && !argv_has_cmd) {
+		ctx.outv[0] = def_cmd_name(opts);
+		ctx.outc += 1;
+	}
+
+	int ret = ctx.outc + ctx.argc;
+
+	if (flags & PRM_PAR_CMD && !(flags & PRM_OPT_CMD) && ret == 0) {
+		int err = argc - 1;
+
+		if (err)
+			error(_("'%s' requires a subcommand\n"), cmdpath);
+		param_show_help(ctx.usage, ctx.opts, err);
+	}
 
 	if (ctx.argc)
 		memmove(&ctx.outv[ctx.outc],
 			ctx.argv, ctx.argc * sizeof(*ctx.argv));
-
-	int ret = ctx.outc + ctx.argc;
 
 	if (ctx.flags & PRM_LIM_ARG) {
 		uint limit = ex_get(PRM_LIM_ARG, uint);
@@ -536,18 +565,6 @@ int param_parse(int argc, const xchar **argv,
 		}
 	}
 
-	if (flags & PRM_PAR_CMD && ret == 0) {
-		int err = 1;
-
-		if (!(flags & PRM_OPT_CMD) && __argc)
-			error(_("'%s' requires a subcommand\n"), cmdpath);
-		else
-			err = 0;
-
-		param_show_help(ctx.usage, ctx.opts, err);
-	}
-
-	argc = ctx.outc + ctx.argc;
-	ctx.outv[argc] = 0;
-	return argc;
+	ctx.outv[ret] = NULL;
+	return ret;
 }
