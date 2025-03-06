@@ -15,7 +15,7 @@ struct atexit_chain {
 	struct list_head list;
 };
 
-LIST_HEAD(chain);
+static LIST_HEAD(chain);
 
 void atexit_push(atexit_callback_t func)
 {
