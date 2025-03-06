@@ -554,20 +554,12 @@ int param_parse(int argc, const xchar **argv,
 	if (!cmdpath_is_prev(argv[0]))
 		cmdpath_add(argv[0]);
 
-	int outc = 0;
-	const xchar **outv = argv;
-
-	if (flags & PRM_KEEP_ARG0) {
-		outc = 1;
-		outv += 1;
-	}
-
 	struct param ctx = {
 		.argc  = argc - 1,
 		.argv  = argv + 1,
 
-		.outc  = outc,
-		.outv  = outv,
+		.outc  = 0,
+		.outv  = argv,
 
 		.opts  = opts,
 		.usage = usage,
@@ -577,6 +569,9 @@ int param_parse(int argc, const xchar **argv,
 		.mode  = LIST_HEAD_INIT(ctx.mode),
 	};
 	int argv_has_cmd = 0;
+
+	if (flags & PRM_KEEP_ARG0)
+		ctx.outc = 1;
 
 	while (ctx.argc) {
 		int ret = parse_cmd_arg(&ctx);
