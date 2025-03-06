@@ -104,7 +104,7 @@ tests   := $(patsubst $(BUILD)/%,%,$(__tests))
 .PHONY: $(tests)
 
 $(tests):
-	@./$(BUILD)/$@
+	@$(BUILD)/$@
 
 .PHONY: t/all
 
