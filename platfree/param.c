@@ -519,16 +519,15 @@ static const xchar *def_cmd_name(struct opt *opts)
 int param_parse(int argc, const xchar **argv,
 		const char **usage, struct opt *opts, u32 flags, ...)
 {
-	BUG_ON(flags & PRM_OPT_CMD && flags & PRM_KEEP_ARG0);
-	BUG_ON(argc < 1);
-
 	if (flags & PRM_OPT_CMD)
 		flags |= PRM_KEEP_UNKNOWN;
 
-	if (has_command(opts)) {
-		BUG_ON(flags & PRM_STOP_AT_ARG);
+	if (has_command(opts))
 		flags |= PRM_PARSE_CMD;
-	}
+
+	BUG_ON(argc < 1);
+	BUG_ON(flags & PRM_PARSE_CMD && flags & PRM_STOP_AT_ARG);
+	BUG_ON(flags & PRM_OPT_CMD && flags & PRM_KEEP_ARG0);
 
 	if (flags & PRM_EX_MASK) {
 		va_list ap;
