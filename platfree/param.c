@@ -279,6 +279,36 @@ static void __setopt(cmdmode)(struct opt *opt, const xchar *arg, u32 flags)
 	*p = opt->val;
 }
 
+static void __setopt(choice)(struct opt *opt, const xchar *arg, u32 flags)
+{
+	const xchar **p = opt->ptr;
+
+	if (flags & OPT_UNSET)
+		*p = NULL;
+	else
+		*p = arg;
+
+	const xchar *str = *p;
+	const xchar **choice = (const xchar **)opt->val;
+
+	if (!str)
+		return;
+
+	while (*choice) {
+		if (xc_strcmp(str, *choice++) == 0)
+			return;
+	}
+
+	struct strbuf sb = SB_INIT;
+
+	choice = (const xchar **)opt->val;
+	while (*choice)
+		sb_printf(&sb, XC("  %s\n"), *choice++);
+
+	sb_trunc(&sb, 1);
+	die(_("unknown choice `%s', valid choices are:\n%s"), str, sb.buf);
+}
+
 static void set_opt_val(struct param *ctx,
 			struct opt *opt, const xchar *arg, u32 flags)
 {
@@ -288,6 +318,7 @@ static void set_opt_val(struct param *ctx,
 		[OPTION_NUMBER]  = __setopt(number),
 		[OPTION_STRING]  = __setopt(string),
 		[OPTION_CMDMODE] = __setopt(cmdmode),
+		[OPTION_CHOICE]  = __setopt(choice),
 	};
 
 	map[opt->mode](opt, arg, flags);
