@@ -11,6 +11,8 @@ configure_file(unitest.h.in ${CMAKE_CURRENT_SOURCE_DIR}/unitest.h)
 file(GLOB unit_tests *.c)
 list(FILTER unit_tests EXCLUDE REGEX "(main|ussert)\\.c")
 
+link_libraries(OpenSSL::CryptoSO SQLite::SQLiteSO)
+
 foreach(name ${unit_tests})
   get_filename_component(name ${name} NAME_WE)
 

@@ -24,3 +24,4 @@ add_subdirectory(param)
 add_subdirectory(unit)
 
 add_executable(masarg masarg.c)
+target_link_libraries(masarg OpenSSL::CryptoSO SQLite::SQLiteSO)
