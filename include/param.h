@@ -18,6 +18,7 @@ enum opt_mode {
 	OPTION_NUMBER,
 	OPTION_STRING,
 	OPTION_CMDMODE,
+	OPTION_CHOICE,
 
 	__OPTION__SIZE,
 
@@ -120,7 +121,7 @@ void __noreturn param_show_help(const char **usage,
 	.lnam   = __opt_lnam(l),	\
 	.__lnam = l,			\
 	.ptr    = __opt_ptr(p, u32),	\
-	.val    = v,			\
+	.val    = (intptr_t)v,		\
 	.usage  = h,			\
 	.flags  = OPT_NO_ARG | (f),	\
 }
@@ -157,7 +158,7 @@ void __noreturn param_show_help(const char **usage,
 	.lnam   = __opt_lnam(l),		\
 	.__lnam = l,				\
 	.ptr    = __opt_ptr(p, const xchar *),	\
-	.val    = v,				\
+	.val    = (intptr_t)v,			\
 	.argh   = a,				\
 	.usage  = h,				\
 	.flags  = f,				\
@@ -171,7 +172,7 @@ void __noreturn param_show_help(const char **usage,
 	.mode   = OPTION__COMMAND,			\
 	.lnam   = __opt_lnam(l),			\
 	.__lnam = l,					\
-	.ptr    = __opt_ptr(p, cmd_cb),	\
+	.ptr    = __opt_ptr(p, cmd_cb),			\
 	.cmd    = c,					\
 	.flags  = f,					\
 }
@@ -183,9 +184,23 @@ void __noreturn param_show_help(const char **usage,
 	.lnam   = __opt_lnam(l),		\
 	.__lnam = l,				\
 	.ptr    = p,				\
-	.val    = v,				\
+	.val    = (intptr_t)v,			\
 	.usage  = h,				\
 	.flags  = OPT_NO_ARG | (f),		\
+}
+
+#define OPT_CHOICE(s, l, p, v, h) __OPT_CHOICE(s, l, p, v, h, OPT_NO_NEG)
+#define __OPT_CHOICE(s, l, p, v, h, f) ___OPT_CHOICE(s, l, p, v, 0, h, f)
+#define ___OPT_CHOICE(s, l, p, v, a, h, f) {	\
+	.mode   = OPTION_CHOICE,		\
+	.snam   = __opt_snam(s),		\
+	.lnam   = __opt_lnam(l),		\
+	.__lnam = l,				\
+	.ptr    = __opt_ptr(p, const xchar *),	\
+	.val    = (intptr_t)v,			\
+	.argh   = a,				\
+	.usage  = h,				\
+	.flags  = f,				\
 }
 
 #endif /* NG39_PARAM_H */
