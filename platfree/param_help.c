@@ -74,8 +74,10 @@ static void show_opt_usage(FILE *stream, struct opt *opts)
 		case OPTION__GROUP:
 			if (opt != opts)
 				putc('\n', stream);
-			fputs(opt->__lnam, stream);
-			putc('\n', stream);
+			if (opt->__lnam) {
+				fputs(_(opt->__lnam), stream);
+				putc('\n', stream);
+			}
 		case OPTION__COMMAND:
 			continue;
 		}
