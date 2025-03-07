@@ -46,7 +46,7 @@ static struct opt opts[] = {
 		       N_("specify output destination"), 0),
 	OPT_FILENAME(0, "prefix", &udef_prefix, N_("specify cred prefix")),
 	OPT_FILENAME(0, "cred", &udef_cred, N_("specify cred file")),
-	OPT_FILENAME(0, "key", &udef_cred_key, N_("specify key file")),
+	OPT_FILENAME(0, "cred-key", &udef_cred_key, N_("specify key file")),
 
 	OPT_COMMAND("version", &subcmd, cmd_version),
 	OPT_END(),
