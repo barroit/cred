@@ -20,6 +20,9 @@ extern int udef_termas_ts;	/* prefix message with timestamp */
 
 extern int udef_termas_pid;	/* prefix message with process id */
 
+extern const xchar *udef_prefix;
+				/* cred prefix path */
+
 extern const xchar *udef_cred;	/* cred file path */
 
 extern const xchar *udef_key;	/* key file path */

@@ -15,6 +15,8 @@ int udef_termas_ts;
 
 int udef_termas_pid;
 
+const xchar *udef_prefix = UDEF_DEF_PTR;
+
 const xchar *udef_cred = UDEF_DEF_PTR;
 
 const xchar *udef_key = UDEF_DEF_PTR;

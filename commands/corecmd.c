@@ -42,6 +42,7 @@ static struct opt opts[] = {
 	OPT_GROUP("Crucial file options:"),
 	__OPT_FILENAME(0, "termas", &udef_termas_dest,
 		       N_("specify output destination"), 0),
+	OPT_FILENAME(0, "prefix", &udef_prefix, N_("specify cred prefix")),
 	OPT_FILENAME(0, "cred", &udef_cred, N_("specify cred file")),
 	OPT_FILENAME(0, "key", &udef_key, N_("specify key file")),
 
