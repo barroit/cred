@@ -119,6 +119,20 @@ const char *sqlite3_errstr(int rc);
 #define die_sqlite(rc, fmt, ...) \
 	__tm_die(sqlite3_errstr(rc), 0, fmt, ##__VA_ARGS__)
 
+unsigned long ERR_get_error(void);
+const char *ERR_reason_error_string(unsigned long e);
+
+#define __cryptoerr ERR_reason_error_string(ERR_get_error())
+
+#define warn_crypto(fmt, ...) \
+	__tm_warn(__cryptoerr, 0, fmt, ##__VA_ARGS__)
+
+#define error_crypto(fmt, ...) \
+	__tm_error(__cryptoerr, 0, fmt, ##__VA_ARGS__)
+
+#define die_crypto(fmt, ...) \
+	__tm_die(__cryptoerr, 0, fmt, ##__VA_ARGS__)
+
 void __termas_output_mode(int mode);
 
 #define TM_O_CHAR  1
