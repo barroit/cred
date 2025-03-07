@@ -49,4 +49,28 @@ const xchar *pth_locale(void);
 
 const xchar *pth_cwd(void);
 
+/*
+ * Cred (key) path search strategy
+ *
+ *	--cred - no
+ *	   --prefix - yes
+ *	      path/to/$prefix/negi
+ *	   env(CRED_DIR) - yes
+ *	      path/to/$env(CRED_DIR)/negi
+ *	   default
+ *	      path/to/$home/negi
+ *	--cred - yes
+ *	   pth_is_abs(--cred) - yes
+ *	      path/to/$cred
+ *	   --prefix - yes
+ *	      path/to/$prefix/$cred
+ *	   default
+ *	      path/to/$cwd/$cred
+ */
+const xchar *pth_cred_raw(void);
+
+const xchar *pth_cred_enc(void);
+
+const xchar *pth_cred_key(void);
+
 #endif /* NG39_PATH_H */
