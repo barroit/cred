@@ -67,7 +67,7 @@ int cmd_main(int argc, const xchar **argv)
 	if (UDEF_DEFINED(udef_cred) &&
 	    UDEF_DEFINED(udef_cred_key) &&
 	    xc_strcmp(udef_cred, udef_cred_key) == 0)
-		die(_("--cred and --key point to the same file `%s'"),
+		die(_("--cred and --cred-key point to the same file `%s'"),
 		    udef_cred);
 
 	return subcmd(argc, argv);
