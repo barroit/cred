@@ -7,8 +7,10 @@
 
 #include "param.h"
 #include "proc.h"
+#include "string.h"
 #include "termas.h"
 #include "udef.h"
+#include "xcf.h"
 
 static const char *usage[] = {
 	PROGRAM_NAME " [--termas=<path> | --no-termas] [--no-tercol]"
@@ -61,6 +63,12 @@ int cmd_main(int argc, const xchar **argv)
 		if (err)
 			warn(_("failed to run process in silent mode"));
 	}
+
+	if (UDEF_DEFINED(udef_cred) &&
+	    UDEF_DEFINED(udef_cred_key) &&
+	    xc_strcmp(udef_cred, udef_cred_key) == 0)
+		die(_("--cred and --key point to the same file `%s'"),
+		    udef_cred);
 
 	return subcmd(argc, argv);
 }
