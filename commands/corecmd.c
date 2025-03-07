@@ -31,7 +31,7 @@ N_(
 static cmd_cb subcmd;
 
 static struct opt opts[] = {
-	OPT_GROUP("Format options:"),
+	OPT_GROUP(N_("Format options:")),
 	OPT_SWITCH(0, "tercol", &udef_use_tercol,
 		   N_("enable colorized terminal output")),
 	__OPT_SWITCH(0, "show-ts", &udef_termas_ts,
@@ -39,7 +39,7 @@ static struct opt opts[] = {
 	__OPT_SWITCH(0, "show-pid", &udef_termas_pid,
 		     N_("prefix messages with current PID"), OPT_NO_NEG),
 
-	OPT_GROUP("Crucial file options:"),
+	OPT_GROUP(N_("Crucial file options:")),
 	__OPT_FILENAME(0, "termas", &udef_termas_dest,
 		       N_("specify output destination"), 0),
 	OPT_FILENAME(0, "prefix", &udef_prefix, N_("specify cred prefix")),
