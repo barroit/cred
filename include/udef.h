@@ -25,7 +25,7 @@ extern const xchar *udef_prefix;
 
 extern const xchar *udef_cred;	/* cred file path */
 
-extern const xchar *udef_key;	/* key file path */
+extern const xchar *udef_cred_key;	/* key file path */
 
 extern int udef_no_console;	/* do not allocate console */
 
