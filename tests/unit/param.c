@@ -16,7 +16,7 @@
 # undef __argv
 #endif
 
-static const xchar *usage[] = {
+static const char *usage[] = {
 	NULL,
 	NULL,
 };
