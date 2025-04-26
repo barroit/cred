@@ -5,9 +5,8 @@
 
 #include "unitest.h"
 
-#include "proc.h"
-
 #include "iter.h"
+#include "proc.h"
 
 #if defined(__unix__)
 # define PROG_PATH "tests/masarg"
@@ -15,9 +14,9 @@
 # define PROG_PATH "tests/masarg.exe"
 #endif
 
-TESTDECL_BEGIN();
+UT_BEGIN();
 
-TESTDECL_ROUTINE(proc_exec_wait)
+UT_ROUTINE(proc_exec_wait)
 {
 	const xchar *file = XC(PROG_PATH);
 	u32 flags[] = {
@@ -33,7 +32,7 @@ TESTDECL_ROUTINE(proc_exec_wait)
 		int err;
 
 		err = proc_exec(flags[i], &proc[i], file, file, NULL);
-		USSERT_EQ(err, 0);
+		UA_EQ(err, 0);
 	}
 
 	idx_for_each(i, sizeof_array(flags)) {
@@ -41,10 +40,10 @@ TESTDECL_ROUTINE(proc_exec_wait)
 		int err;
 
 		err = proc_wait(&proc[i], &ret);
-		USSERT_EQ(err, 0);
-		USSERT_EQ(ret, 0);
+		UA_EQ(err, 0);
+		UA_EQ(ret, 0);
 	}
 
 }
 
-TESTDECL_END();
+UT_END();

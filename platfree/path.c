@@ -21,7 +21,7 @@ const xchar *pth_prefix(void)
 		struct strbuf sb = SB_INIT;
 
 		sb_puts(&sb, child);
-		sb_pth_to_dirname(&sb);
+		sb_pth_legacy_to_dirname(&sb);
 		name = sb_detach(&sb);
 	}
 
@@ -37,7 +37,7 @@ const xchar *pth_locale(void)
 		struct strbuf sb = SB_INIT;
 
 		sb_puts(&sb, prefix);
-		sb_pth_append(&sb, XC("locale"));
+		sb_pth_legacy_append(&sb, XC("locale"));
 		name = sb_detach(&sb);
 	}
 

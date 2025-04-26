@@ -12,26 +12,9 @@
 
 #include "strconv.h"
 #include "path.h"
-#include "termas.h"
+#include "pathwalk.h"
 #include "xalloc.h"
 #include "xcf.h"
-
-#define __DO_SB_PRINTF(sb, off, fmt)	\
-({					\
-	va_list ap[2];			\
-	uint ret;			\
-					\
-	va_start(ap[0], fmt);		\
-	va_copy(ap[1], ap[0]);		\
-					\
-	ret = __sb_printf_at(sb, off,	\
-			     fmt, ap);	\
-					\
-	va_end(ap[0]);			\
-	va_end(ap[1]);			\
-					\
-	ret;				\
-})
 
 void sb_init(struct strbuf *sb)
 {
@@ -55,13 +38,11 @@ xchar *sb_detach(struct strbuf *sb)
 	return ret;
 }
 
-/*
- * Ensure strbuf has at least sb->len + new spaces (excluding null terminator)
- * to store characters.
- */
 static inline void sb_grow(struct strbuf *sb, uint new)
 {
-	REALLOCBUF(sb->buf, sb->len + new + 1, sb->cap);
+	uint size = sb->len + new + 1;
+
+	REALLOCBUF(sb->buf, size, sb->cap);
 }
 
 uint sb_puts_at(struct strbuf *sb, uint off, const xchar *s)
@@ -98,12 +79,6 @@ uint sb_putc_at(struct strbuf *sb, uint off, const xchar c)
 	return 1;
 }
 
-/*
- * Tell the compiler this fmt cannot be NULL.
- */
-static uint __sb_printf_at(struct strbuf *sb, uint off,
-			   const xchar *fmt, va_list *ap) __nonnull((3));
-
 static uint __sb_printf_at(struct strbuf *sb, uint off,
 			   const xchar *fmt, va_list *ap)
 {
@@ -129,19 +104,36 @@ retry:
 	return nr;
 }
 
+#define SB_PRINTF(sb, off, fmt)		\
+({					\
+	va_list ap[2];			\
+	uint ret;			\
+					\
+	va_start(ap[0], fmt);		\
+	va_copy(ap[1], ap[0]);		\
+					\
+	ret = __sb_printf_at(sb, off,	\
+			     fmt, ap);	\
+					\
+	va_end(ap[0]);			\
+	va_end(ap[1]);			\
+					\
+	ret;				\
+})
+
 uint sb_printf_at(struct strbuf *sb, uint off, const xchar *fmt, ...)
 {
-	return __DO_SB_PRINTF(sb, off, fmt);
+	return SB_PRINTF(sb, off, fmt);
 }
 
 uint sb_printf(struct strbuf *sb, const xchar *fmt, ...)
 {
-	return __DO_SB_PRINTF(sb, sb->len, fmt);
+	return SB_PRINTF(sb, sb->len, fmt);
 }
 
-uint sb_printf_at_ws(struct strbuf *sb, const xchar *fmt, ...)
+uint sb_printf_at_cwd(struct strbuf *sb, const xchar *fmt, ...)
 {
-	return __DO_SB_PRINTF(sb, sb->off.ws, fmt);
+	return SB_PRINTF(sb, sb->off.cwd, fmt);
 }
 
 void sb_trim(struct strbuf *sb)
@@ -171,63 +163,19 @@ void sb_trim(struct strbuf *sb)
 	sb->buf[sb->len] = 0;
 }
 
-static inline int is_tail_sep(const xchar *sep, const xchar *base)
-{
-	return sep && sep != base && sep[1] == 0;
-}
-
-static void sanitize_pth_sep(struct strbuf *sb)
-{
-	const xchar *base = sb->buf;
-	const xchar *usep = xc_strrchr(base, PTH_SEP_UNI);
-	const xchar *wsep = xc_strrchr(sb->buf, PTH_SEP_WIN);
-
-	int mixed = usep && wsep;
-	int suffixed = is_tail_sep(usep, base) && is_tail_sep(wsep, base);
-
-	if (likely(!mixed && !suffixed))
-		return;
-
-	char *path = (char *)base;
-
-	if (IS_ENABLED(CONFIG_ENABLE_WCHAR)) {
-		size_t len = mb_wcstombs(&path, (wchar_t *)base);
-
-		if (len == maxof(len)) {
-			__tm_warn(NULL, MAS_SHOW_FUNC,
-				  "mixed: %d, suffixed: %d", mixed, suffixed);
-			return;
-		}
-	}
-
-	if (mixed)
-		warn("path '%s' is mixing separators", path);
-	if (suffixed)
-		warn("path '%s' has trailing separator", path);
-
-	if (IS_ENABLED(CONFIG_ENABLE_WCHAR))
-		free(path);
-}
-
-void sb_init_ws(struct strbuf *sb, const xchar *name)
+void sb_pth_legacy_init_cwd(struct strbuf *sb, const xchar *name)
 {
 	memset(sb, 0, sizeof(*sb));
-	sb->off.ws = sb_puts(sb, name);
-
-	if (IS_ENABLED(CONFIG_STRBUF_SANITIZE_PATH))
-		sanitize_pth_sep(sb);
+	sb->off.cwd = sb_puts(sb, name);
 }
 
-void sb_reinit_ws(struct strbuf *sb, const xchar *name)
+void sb_pth_legacy_reinit_cwd(struct strbuf *sb, const xchar *name)
 {
 	sb_trunc(sb, sb->len);
-	sb->off.ws = sb_puts(sb, name);
-
-	if (IS_ENABLED(CONFIG_STRBUF_SANITIZE_PATH))
-		sanitize_pth_sep(sb);
+	sb->off.cwd = sb_puts(sb, name);
 }
 
-uint sb_pth_append(struct strbuf *sb, const xchar *name)
+uint sb_pth_legacy_append(struct strbuf *sb, const xchar *name)
 {
 	uint __len = xc_strlen(name);
 	uint len = __len + 1;
@@ -240,24 +188,21 @@ uint sb_pth_append(struct strbuf *sb, const xchar *name)
 	memcpy(&sb->buf[sb->len], name, (__len + 1) * sizeof(*name));
 	sb->len += __len;
 
-	/* sanitize this fucking path */
-	if (IS_ENABLED(CONFIG_STRBUF_SANITIZE_PATH))
-		sanitize_pth_sep(sb);
 	return len;
 }
 
-uint sb_pth_append_at_ws(struct strbuf *sb, const xchar *name)
+uint sb_pth_legacy_append_at_cwd(struct strbuf *sb, const xchar *name)
 {
 	uint __len = xc_strlen(name);
 	uint len = __len + 1;
-	uint overlap = sb->len - sb->off.ws;
+	uint overlap = sb->len - sb->off.cwd;
 
 	if (len > overlap)
 		sb_grow(sb, len - overlap);
 
-	sb->buf[sb->off.ws] = PTH_SEP;
+	sb->buf[sb->off.cwd] = PTH_SEP;
 
-	memcpy(&sb->buf[sb->off.ws + 1], name, (__len + 1) * sizeof(*name));
+	memcpy(&sb->buf[sb->off.cwd + 1], name, (__len + 1) * sizeof(*name));
 	if (len > overlap)
 		sb->len += len - overlap;
 	else
@@ -266,7 +211,7 @@ uint sb_pth_append_at_ws(struct strbuf *sb, const xchar *name)
 	return len;
 }
 
-void sb_pth_to_dirname(struct strbuf *sb)
+void sb_pth_legacy_to_dirname(struct strbuf *sb)
 {
 	xchar *sep = pth_last_sep(sb->buf);
 
@@ -316,4 +261,165 @@ char *sb_mb_str_fb(struct strbuf *sb, const char *fb)
 		ret = strdup((char *)ret);
 
 	return ret;
+}
+
+#define PW(sb) ((struct pathwalk *)((void *)sb + sizeof(*sb)))
+
+void sb_pth_init(struct strbuf **__sb, const xchar *name)
+{
+	struct strbuf *sb;
+	struct pathwalk *pw;
+
+	uint size = sizeof(*sb) + sizeof(*pw);
+
+	sb = xmalloc(size);
+	pw = (void *)sb + sizeof(*sb);
+
+	memset(sb, 0, sizeof(*sb));
+
+	sb_pth_push_no_sep(sb, name);
+
+	__pw_init(pw, sb->buf, sb->len, sb->buf, 0);
+	*__sb = sb;
+}
+
+void sb_pth_reinit(struct strbuf **__sb, const xchar *name)
+{
+	struct strbuf *sb = *__sb;
+	struct pathwalk *pw = (void *)sb + sizeof(*sb);
+
+	sb_trunc(sb, sb->len);
+	sb->off.cwd = 0;
+
+	sb_pth_push_no_sep(sb, name);
+
+	__pw_init(pw, sb->buf, sb->len, sb->buf, 0);
+}
+
+void sb_pth_destroy(struct strbuf **__sb)
+{
+	struct strbuf *sb = *__sb;
+
+	free(sb->buf);
+	free(sb);
+}
+
+static void __sb_pth_add_no_sep(struct strbuf *sb, const xchar *name, uint len)
+{
+	memcpy(&sb->buf[sb->len], name, (len + 1) * sizeof(*name));
+	sb->len += len;
+
+	__pw_init(PW(sb), sb->buf, sb->len, sb->buf, 0);
+}
+
+static void __sb_pth_add(struct strbuf *sb, const xchar *name, uint len)
+{
+	if (!pw_in_root(PW(sb))) {
+		sb->buf[sb->len] = PTH_SEP;
+		sb->len += 1;
+	}
+
+	__sb_pth_add_no_sep(sb, name, len);
+}
+
+uint sb_pth_push_cwd(struct strbuf *sb, const xchar *name)
+{
+	if (!sb->off.cwd) {
+		sb_trunc(sb, sb->len);
+		return sb_pth_push_no_sep(sb, name);
+	}
+
+	uint comp_len = xc_strlen(name);
+	uint len = comp_len + 1;
+	uint overlap = sb->len - sb->off.cwd;
+
+	if (len > overlap)
+		sb_grow(sb, len - overlap);
+
+	xchar *dst = &sb->buf[sb->off.cwd + 1];
+
+	if (!pw_in_root(PW(sb)))
+		sb->buf[sb->off.cwd] = PTH_SEP;
+	else
+		dst = &dst[-1];
+
+	memcpy(dst, name, (comp_len + 1) * sizeof(*name));
+
+	if (len > overlap)
+		sb->len += len - overlap;
+	else
+		sb->len -= overlap - len;
+
+	__pw_init(PW(sb), sb->buf, sb->len, sb->buf, 0);
+	return len;
+}
+
+#define SB_PTH_ADD(sb, name, fn)	\
+({					\
+	uint comp_len = xc_strlen(name);\
+	uint len = comp_len + 1;	\
+					\
+	sb_grow(sb, len);		\
+	fn(sb, name, comp_len);		\
+					\
+	len;				\
+})
+
+uint sb_pth_push(struct strbuf *sb, const xchar *name)
+{
+	return SB_PTH_ADD(sb, name, __sb_pth_add);
+}
+
+uint sb_pth_push_no_sep(struct strbuf *sb, const xchar *name)
+{
+	return SB_PTH_ADD(sb, name, __sb_pth_add_no_sep);
+}
+
+uint __sb_pth_join(struct strbuf *sb, ...)
+{
+	va_list ap;
+	va_list cp;
+	uint len = 0;
+
+	va_start(ap, sb);
+	va_copy(cp, ap);
+
+	while (39) {
+		const xchar *str = va_arg(ap, const xchar *);
+
+		if (!str)
+			break;
+
+		len += xc_strlen(str) + 1;
+	}
+
+	va_end(ap);
+	sb_grow(sb, len);
+
+	while (39) {
+		const xchar *str = va_arg(cp, const xchar *);
+
+		if (!str)
+			break;
+
+		uint comp_len = xc_strlen(str);
+
+		__sb_pth_add(sb, str, comp_len);
+	}
+
+	va_end(cp);
+	return len;
+}
+
+void sb_pth_pop(struct strbuf *sb)
+{
+	struct pathwalk *pw = PW(sb);
+
+	pw_to_dirname(pw);
+	sb->len = pw->len;
+}
+
+int sb_pth_in_root(struct strbuf *sb)
+{
+	return pw_in_root(PW(sb));
 }

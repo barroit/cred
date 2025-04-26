@@ -6,6 +6,16 @@
 #ifndef	NG39_ATTR_H
 #define NG39_ATTR_H
 
+#ifdef __pure
+# undef __pure
+#endif
+#ifdef __cold
+# undef __cold
+#endif
+#ifdef __used
+# undef __used
+#endif
+
 #define __attr __attribute__
 
 #define __maybe_unused __attr((__unused__))
@@ -14,16 +24,8 @@
 
 #define __pure __attr((__pure__))
 
-/*
- * Due to compatibility, the usage of __nonnull() is different than other
- * attributes.
- */
-#ifndef __nonnull
-# define __nonnull(...) __attr((__nonnull__ __VA_ARGS__))
-#endif
-
 #ifndef CONFIG_ENABLE_WCHAR
-# define __printf(m, n) __attr((__format__(__printf__, m, n))) __nonnull((m))
+# define __printf(m, n) __attr((__format__(__printf__, m, n)))
 #else
 # define __printf(m, n)
 #endif
@@ -37,8 +39,6 @@
 #endif
 
 #define __warn_unused_result __attr((__warn_unused_result__))
-
-#define __leaf __attr((__leaf__))
 
 #undef __always_inline
 #define __always_inline inline __attr((__always_inline__))

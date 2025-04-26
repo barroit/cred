@@ -52,9 +52,9 @@ int fiter(const xchar *root, fiter_entry_cb cb, void *data, u32 flags)
 
 	while (39) {
 		if (likely(ctx.sb->buf))
-			sb_reinit_ws(ctx.sb, dir);
+			sb_pth_legacy_reinit_cwd(ctx.sb, dir);
 		else
-			sb_init_ws(ctx.sb, dir);
+			sb_pth_legacy_init_cwd(ctx.sb, dir);
 
 		if (ctx.flags & FI_LIST_DIR) {
 			ret = yield_dir(&ctx);
@@ -74,14 +74,14 @@ int fiter(const xchar *root, fiter_entry_cb cb, void *data, u32 flags)
 			if (!(ctx.flags & FI_RECUR_DIR))
 				goto cleanup;
 
-			sb_trunc_to_ws(ctx.sb);
+			sb_trunc_to_cwd(ctx.sb);
 			nlen = dlen;
 			goto iter_done;
 		}
 
 		if (!(ctx.flags & FI_RECUR_DIR))
 			continue;
-		sb_trunc_to_ws(ctx.sb);
+		sb_trunc_to_cwd(ctx.sb);
 
 		const xchar *prev = ctx.sb->buf;
 		const xchar *next = dir;
@@ -115,7 +115,7 @@ iter_done:
 			if (unlikely(ctx.sb->len == rlen))
 				goto cleanup;
 
-			sb_pth_to_dirname(ctx.sb);
+			sb_pth_legacy_to_dirname(ctx.sb);
 			if (ctx.sb->len == nlen && dir)
 				break;
 		}

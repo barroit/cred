@@ -25,6 +25,11 @@
 				"${workspaceFolder}/sqlite/win32.install/include",
 				"${workspaceFolder}/sqlite/win32.build.crypto/include"
 			]
+		},
+		{
+			"name": "clang",
+			"intelliSenseMode": "macos-clang-arm64",
+			"compilerPath": "/opt/homebrew/opt/llvm/bin/clang"
 		}
 	],
 	"version": 4

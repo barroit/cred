@@ -82,7 +82,7 @@ static int yield_file(struct __fiter *ctx, struct dirent *ent)
 
 	if (pth_is_dot(name))
 		return 0;
-	sb_pth_append(ctx->sb, name);
+	sb_pth_legacy_append(ctx->sb, name);
 
 	const char *path = ctx->sb->buf;
 	const char *subp = strskip(path, ctx->root);
@@ -142,7 +142,7 @@ int __fiter_loop_dir(struct __fiter *ctx)
 		if (ret)
 			break;
 
-		sb_trunc_to_ws(ctx->sb);
+		sb_trunc_to_cwd(ctx->sb);
 	}
 
 	closedir(dir);
